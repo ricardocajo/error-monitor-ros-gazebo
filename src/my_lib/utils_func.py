@@ -12,12 +12,13 @@ def update_modelStates_info(topic_msg: ModelStates):
     """ Update the dictionary with the information about the /gazebo/model_states topic
     :param topic_msg: The last message received from the ModelStates topic
     """
+    global modelStates_indexes
     names = topic_msg.name
     indexes = {}
     index_counter = 0
     for name in names:
-        indexes[name] = indexCounter
-        indexCounter += 1
+        indexes[name] = index_counter
+        index_counter += 1
     modelStates_indexes = indexes.copy()
     
 def get_modelStates_pos(object_name: str, topic_msg: ModelStates):
@@ -34,11 +35,6 @@ def get_topic_msg(topic: str, msg_type):#TODO is there a type for Message in ros
     :param msg_type: The message type of the message received from the topic
     """
     return rospy.wait_for_message(topic, msg_type)
-
-def get_topic_msg_modelStates():
-    """ The last message received in the '/gazebo/model_states' topic
-    """
-    return get_topic('/gazebo/model_states', ModelStates)
     
 def distance_between_gazebo(object1_name: str, object2_name: str, topic_msg: ModelStates):
     """ The absolute distance between two objects in the gazebo simulation for the x/y axis
