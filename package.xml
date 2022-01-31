@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>my_lib</name>
+  <name>sim_monitor_compiler</name>
   <version>0.0.0</version>
-  <description>The my_lib package</description>
+  <description>The sim_monitor_compiler package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
