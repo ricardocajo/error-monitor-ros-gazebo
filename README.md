@@ -1,2 +1,15 @@
-# my_lib
- ROS package with usefull functions for the compiler - sim_monitor_compiler
+# Simulation Monitor Compiler
+ Brief summary of the repo
+ 
+ Prerequisites
+.............
+
+ROS
+~~~~~~
+
+ROS installs
+
+Gazebo
+~~~~~~
+
+Gazebo installs
