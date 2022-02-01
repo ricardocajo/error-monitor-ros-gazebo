@@ -1,7 +1,7 @@
 # Simulation Monitor Compiler
  Brief summary of the repo
- 
- Prerequisites
+
+Prerequisites
 .............
 
 ROS
@@ -10,6 +10,6 @@ ROS
 ROS installs
 
 Gazebo
-~~~~~~
+~~~~~~~~~~
 
 Gazebo installs
