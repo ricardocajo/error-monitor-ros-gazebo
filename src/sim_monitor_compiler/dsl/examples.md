@@ -31,4 +31,21 @@ localization_error X (The difference between to robot perception of its position
 ### A robot always stops at the stop sign:
 always (eventually ((distance robot1 stop_sign1) < 2) and ((orientation robot1) - (orientation stop_sign1) < 90) implies eventually ((velocity robot1) <= 0))
 
-### A robot wheels never turn more than 90 degrees:
+### A robot's wheels never turn more than 90 degrees:
+The problem i sent an email, if i write something like left_wheel_orientation how will my compiler internally know which topic to search for? (it depends on the robot and can change dynamically)
+
+In the case that the topic name doesn't change dynamically, i can have a robot_config_file that the user fills before running so the compiler has this type of information 
+
+### 
+
+
+###
+
+
+###
+
+
+###
+
+
+###
