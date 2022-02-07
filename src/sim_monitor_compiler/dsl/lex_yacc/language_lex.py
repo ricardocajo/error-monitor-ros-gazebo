@@ -1,13 +1,8 @@
-reserved = {
-    'always' : 'ALWAYS',
-    'position_x' : 'POSITION_X',
-    'position_y' : 'POSITION_Y',
-    'and' : 'AND'
-}
+import tokens as tok
 
-literals = ['>','(',')']
-
-tokens = ['NAME','FLOAT'] + list(reserved.values())
+tokens = tok.tokens
+literals = tok.literals
+reserved = tok.reserved
 
 t_ignore = ' \t'
 t_ignore_COMMENT = r'\#.*'
