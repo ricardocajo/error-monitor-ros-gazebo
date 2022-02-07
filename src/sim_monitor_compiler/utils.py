@@ -46,7 +46,7 @@ def localization_error(robot_name: str, robot_topic_msg, simulator_topic_msg):
     	#msg_od = rospy.wait_for_message('/odom', Odometry)
     	#object_pos_gaz = msg_ms.pose[object_index].position
     	#object_pos_od = msg_od.pose.pose.position
-    return distance_xy(object_pos_gaz,object_pos_od)
+        #return distance_xy(object_pos_gaz,object_pos_od)
         return "teste"
     elif config.simulator == config.simulators_dic["unity"]:
         warnings.warn("localization_error function for this simulator not implemented.")
