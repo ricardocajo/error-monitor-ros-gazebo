@@ -51,3 +51,10 @@ def distance_xy(point1: Point, point2: Point):
     """ The absolute distance between 2 points in the cartesian coordinate system
     """
     return math.sqrt((point1.x - point2.x)*(point1.x - point2.x) + (point1.y - point2.y)*(point1.y - point2.y))
+
+def position_gazebo(robot_name: str, topic_msg: ModelStates):
+    """ The position of the robot in the gazebo simulation
+    :param robot_name: A string with the robot name in the ros environment
+    :param topic_msg: The last message received from the ModelStates topic
+    """
+    return get_modelStates_pos(robot_name, topic_msg)
