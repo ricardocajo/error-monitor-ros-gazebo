@@ -27,5 +27,5 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> operator","S'",1,None,None,None),
-  ('operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )','operator',20,'p_test','language_yacc.py',8),
+  ('operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )','operator',20,'p_test','language_yacc.py',10),
 ]

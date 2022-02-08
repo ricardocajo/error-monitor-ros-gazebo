@@ -1,3 +1,5 @@
+""" The language possible tokens """
+
 reserved = {
     'always' : 'ALWAYS',
     'position_x' : 'POSITION_X',

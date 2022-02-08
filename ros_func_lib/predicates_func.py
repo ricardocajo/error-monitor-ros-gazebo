@@ -27,13 +27,27 @@ def distance_between(object1_name: str, object2_name: str, simulator_topic_msg):
         warnings.warn("The simulator defined in config.py file doesn't exist.")
     return None
     
-def position(robot_name: str, simulator_topic_msg):
-    """ The position of the robot in the simulation
+def position_x(robot_name: str, simulator_topic_msg):
+    """ The position in the x axis of the robot in the simulation
     :param robot_name: A string with the robot name in the ros environment
     :param simulator_topic_msg: The last message received from the localization topic of the simulator being used
     """
     if config.simulator == config.simulators_dic["gazebo"]:
-        return utils_func.position_gazebo(robot_name,simulator_topic_msg)
+        return utils_func.position_x_gazebo(robot_name,simulator_topic_msg)
+    elif config.simulator == config.simulators_dic["unity"]:
+        warnings.warn("position function for this simulator not implemented.")
+        return None
+    else:
+        warnings.warn("The simulator defined in config.py file doesn't exist.")
+    return None
+
+def position_y(robot_name: str, simulator_topic_msg):
+    """ The position in the y axis of the robot in the simulation
+    :param robot_name: A string with the robot name in the ros environment
+    :param simulator_topic_msg: The last message received from the localization topic of the simulator being used
+    """
+    if config.simulator == config.simulators_dic["gazebo"]:
+        return utils_func.position_y_gazebo(robot_name,simulator_topic_msg)
     elif config.simulator == config.simulators_dic["unity"]:
         warnings.warn("position function for this simulator not implemented.")
         return None

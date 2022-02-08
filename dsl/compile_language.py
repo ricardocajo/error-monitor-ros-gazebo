@@ -1,4 +1,6 @@
 from utils import Context
 
-def interpret_ros_py(ctx:Context, node):
+def compile_ros_py(ctx:Context, node):
+    """ Creates a ros package capable of running the associated monitor code"""
+    print("compile")
     return True

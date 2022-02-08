@@ -1,6 +1,5 @@
 # Simulation Monitor Compiler
- This repository is a ROS (Robot Operating System) package that provides a convenient DSL (Domain Specific Language) for specifying robots expected behaviour, as well as the respective compiler to monitor these behaviours while in a simulation.
-
+ This repository provides a convenient DSL (Domain Specific Language) for specifying robots expected behaviour, as well as the respective compiler to monitor these behaviours while in a simulation.
 
 ## Table of content
 * [Installs](#installs)
@@ -51,7 +50,9 @@ X > Y | X >= Y | X < Y | X <= Y
 X + Y | X - Y | X * Y | X / Y
 
 ### Usefull Predicates
-position X (The position of the robot in the simulation)
+position_x X (The position in the x axis of the robot in the simulation)
+
+position_y X (The position in the y axis of the robot in the simulation)
 
 distance X Y (The absolute distance between two objects in the simulation)
 

@@ -7,7 +7,7 @@ from verify_language import *
 from compile_language import *
 
 lexer = lex.lex(module=language_lex)
-parser = yacc.yacc(module=language_yacc, outputdir="out_files")
+parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 
 """              TEST LEXER
 data = '''always (((position_x robot1) > 0.0) and ((position_y robot1) > 0.0))'''
@@ -26,4 +26,4 @@ ast = parser.parse(lexer=lexer, input=_input)
 print(ast)
 #"""
 verify(Context(),ast)
-interpret_ros_py(Context(),ast)
+compile_ros_py(Context(),ast)

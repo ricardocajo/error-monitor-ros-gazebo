@@ -1,3 +1,5 @@
+""" The lex tokenizer to split the language tokens """
+
 import tokens as tok
 
 tokens = tok.tokens

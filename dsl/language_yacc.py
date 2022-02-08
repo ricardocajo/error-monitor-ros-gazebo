@@ -1,3 +1,5 @@
+""" The language grammar """
+
 import tokens as tok
 
 tokens = tok.tokens
