@@ -3,8 +3,8 @@ import ply.lex as lex
 import language_yacc
 import ply.yacc as yacc
 from utils import Context
-from verify import *
-from interpret_ros_py import *
+from verify_language import *
+from compile_language import *
 
 lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="out_files")

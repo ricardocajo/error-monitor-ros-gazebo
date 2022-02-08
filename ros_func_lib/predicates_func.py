@@ -63,7 +63,7 @@ def localization_error(robot_name: str, robot_topic_msg, simulator_topic_msg):
         warnings.warn("The simulator defined in config.py file doesn't exist.")
     return None
 
-    
+
 """                             Possible functions                             """
 #def rotation_between(object1: [str,int], object2: [str,int]):
 #def velocity_error(object_index: int): #The velocity error between the robot and the gazebo simulation

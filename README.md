@@ -24,14 +24,10 @@ To install Gazebo in Ubuntu through the command line follow the link [gazebo_ins
 
 
 ## Structure and Files
-Being this repository a ROS package, the files **_CMakeLists.txt_** and **_package.xml_** are automatically created.
 
-For this package to be imported and used by other ROS packages, the file **_setup.py_** exists as well as the directory path **_src/package_name_** where are the files which can be imported.
- 
-In this path **_src/sim_monitor_compiler_** there is the file **_utils.py_** which has functions that will be helpful for the compiler of the DSL, the other files in this directory are auxiliary functions as well as configuration files for **_utils.py_** to work properly.
+The directory **_/dsl/_** is where all the files for the DSL operators, compiler, etc.. are gathered.
 
-Inside this path there is also the directory **_dsl/_** where all the files for the DSL are gathered.
-
+The directory **_/ros_func_lib/_** is where all the files for implementing the monitor functions in ros are gathered.
 
 ## Language
 
@@ -55,7 +51,9 @@ X > Y | X >= Y | X < Y | X <= Y
 X + Y | X - Y | X * Y | X / Y
 
 ### Usefull Predicates
-distance X Y (The absolute distance between two objects in the simulation) 
+position X (The position of the robot in the simulation)
+
+distance X Y (The absolute distance between two objects in the simulation)
 
 orientation X (The orientation of a object in the simulation)
 
