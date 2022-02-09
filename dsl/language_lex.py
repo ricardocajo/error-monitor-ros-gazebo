@@ -6,6 +6,11 @@ tokens = tok.tokens
 literals = tok.literals
 reserved = tok.reserved
 
+t_EQ = r'=='
+t_DIF = r'!='
+t_GTE = r'>='
+t_LEE = r'<='
+
 t_ignore = ' \t'
 t_ignore_COMMENT = r'\#.*'
 

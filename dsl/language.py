@@ -11,7 +11,7 @@ lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 
 """              TEST LEXER
-data = '''always (((position_x robot1) > 0.0) and ((position_y robot1) > 0.0))'''
+data = '''always (((position_x robot1) >= 0.0) and ((position_y robot1) > 0.0))'''
 lexer.input(data)
 while True:
     tok = lexer.token()
@@ -33,10 +33,11 @@ if not Path(ros_package_dir_path).is_dir():
 f = open(filename, 'r')
 _input = f.read()
 ast = parser.parse(lexer=lexer, input=_input)
-verify(Context(),ast)
-code = compile_ros_py(Context(), ast, file_prefix)
-filename = file_prefix + ".py"
-filepath = os.path.join(ros_package_dir_path, filename)
-with open(filepath, "w") as f_out:
-    f_out.write(code)
+print(str(ast))
+#verify(Context(),ast)
+#code = compile_ros_py(Context(), ast, file_prefix)
+#filename = file_prefix + ".py"
+#filepath = os.path.join(ros_package_dir_path, filename)
+#with open(filepath, "w") as f_out:
+#    f_out.write(code)
 #"""

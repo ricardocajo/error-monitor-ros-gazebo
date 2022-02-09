@@ -1,180 +1,933 @@
 Created by PLY version 3.11 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    NOT
+
 Grammar
 
-Rule 0     S' -> operator
-Rule 1     operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+Rule 0     S' -> opargs
+Rule 1     opargs -> operator
+Rule 2     opargs -> comparison
+Rule 3     operator -> ALWAYS opargs
+Rule 4     operator -> EVENTUALLY opargs
+Rule 5     operator -> opargs UNTIL opargs
+Rule 6     operator -> opargs IMPLIES opargs
+Rule 7     operator -> opargs AND opargs
+Rule 8     operator -> opargs OR opargs
+Rule 9     comparison -> func opbin FLOAT
+Rule 10    comparison -> FLOAT opbin func
+Rule 11    opbin -> +
+Rule 12    opbin -> -
+Rule 13    opbin -> >
+Rule 14    opbin -> <
+Rule 15    opbin -> *
+Rule 16    opbin -> /
+Rule 17    opbin -> GTE
+Rule 18    opbin -> LEE
+Rule 19    opbin -> EQ
+Rule 20    opbin -> DIF
+Rule 21    func -> POSITION_X NAME
+Rule 22    func -> POSITION_Y NAME
+Rule 23    func -> ORIENTATION NAME
+Rule 24    func -> VELOCITY NAME
+Rule 25    func -> LOCALIZATION_ERROR NAME
+Rule 26    func -> DISTANCE NAME NAME
 
 Terminals, with rules where they appear
 
-(                    : 1 1 1 1 1
-)                    : 1 1 1 1 1
->                    : 1 1
-ALWAYS               : 1
-AND                  : 1
-FLOAT                : 1 1
-NAME                 : 1 1
-POSITION_X           : 1
-POSITION_Y           : 1
+*                    : 15
++                    : 11
+-                    : 12
+/                    : 16
+<                    : 14
+>                    : 13
+ALWAYS               : 3
+AND                  : 7
+DIF                  : 20
+DISTANCE             : 26
+EQ                   : 19
+EVENTUALLY           : 4
+FLOAT                : 9 10
+GTE                  : 17
+IMPLIES              : 6
+LEE                  : 18
+LOCALIZATION_ERROR   : 25
+NAME                 : 21 22 23 24 25 26 26
+NOT                  : 
+OR                   : 8
+ORIENTATION          : 23
+POSITION_X           : 21
+POSITION_Y           : 22
+UNTIL                : 5
+VELOCITY             : 24
 error                : 
 
 Nonterminals, with rules where they appear
 
-operator             : 0
+comparison           : 2
+func                 : 9 10
+opargs               : 3 4 5 5 6 6 7 7 8 8 0
+opbin                : 9 10
+operator             : 1
 
 Parsing method: LALR
 
 state 0
 
-    (0) S' -> . operator
-    (1) operator -> . ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (0) S' -> . opargs
+    (1) opargs -> . operator
+    (2) opargs -> . comparison
+    (3) operator -> . ALWAYS opargs
+    (4) operator -> . EVENTUALLY opargs
+    (5) operator -> . opargs UNTIL opargs
+    (6) operator -> . opargs IMPLIES opargs
+    (7) operator -> . opargs AND opargs
+    (8) operator -> . opargs OR opargs
+    (9) comparison -> . func opbin FLOAT
+    (10) comparison -> . FLOAT opbin func
+    (21) func -> . POSITION_X NAME
+    (22) func -> . POSITION_Y NAME
+    (23) func -> . ORIENTATION NAME
+    (24) func -> . VELOCITY NAME
+    (25) func -> . LOCALIZATION_ERROR NAME
+    (26) func -> . DISTANCE NAME NAME
 
-    ALWAYS          shift and go to state 2
+    ALWAYS          shift and go to state 4
+    EVENTUALLY      shift and go to state 5
+    FLOAT           shift and go to state 7
+    POSITION_X      shift and go to state 8
+    POSITION_Y      shift and go to state 9
+    ORIENTATION     shift and go to state 10
+    VELOCITY        shift and go to state 11
+    LOCALIZATION_ERROR shift and go to state 12
+    DISTANCE        shift and go to state 13
 
-    operator                       shift and go to state 1
+    opargs                         shift and go to state 1
+    operator                       shift and go to state 2
+    comparison                     shift and go to state 3
+    func                           shift and go to state 6
 
 state 1
 
-    (0) S' -> operator .
+    (0) S' -> opargs .
+    (5) operator -> opargs . UNTIL opargs
+    (6) operator -> opargs . IMPLIES opargs
+    (7) operator -> opargs . AND opargs
+    (8) operator -> opargs . OR opargs
 
+    UNTIL           shift and go to state 14
+    IMPLIES         shift and go to state 15
+    AND             shift and go to state 16
+    OR              shift and go to state 17
 
 
 state 2
 
-    (1) operator -> ALWAYS . ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (1) opargs -> operator .
 
-    (               shift and go to state 3
+    UNTIL           reduce using rule 1 (opargs -> operator .)
+    IMPLIES         reduce using rule 1 (opargs -> operator .)
+    AND             reduce using rule 1 (opargs -> operator .)
+    OR              reduce using rule 1 (opargs -> operator .)
+    $end            reduce using rule 1 (opargs -> operator .)
 
 
 state 3
 
-    (1) operator -> ALWAYS ( . ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (2) opargs -> comparison .
 
-    (               shift and go to state 4
+    UNTIL           reduce using rule 2 (opargs -> comparison .)
+    IMPLIES         reduce using rule 2 (opargs -> comparison .)
+    AND             reduce using rule 2 (opargs -> comparison .)
+    OR              reduce using rule 2 (opargs -> comparison .)
+    $end            reduce using rule 2 (opargs -> comparison .)
 
 
 state 4
 
-    (1) operator -> ALWAYS ( ( . ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (3) operator -> ALWAYS . opargs
+    (1) opargs -> . operator
+    (2) opargs -> . comparison
+    (3) operator -> . ALWAYS opargs
+    (4) operator -> . EVENTUALLY opargs
+    (5) operator -> . opargs UNTIL opargs
+    (6) operator -> . opargs IMPLIES opargs
+    (7) operator -> . opargs AND opargs
+    (8) operator -> . opargs OR opargs
+    (9) comparison -> . func opbin FLOAT
+    (10) comparison -> . FLOAT opbin func
+    (21) func -> . POSITION_X NAME
+    (22) func -> . POSITION_Y NAME
+    (23) func -> . ORIENTATION NAME
+    (24) func -> . VELOCITY NAME
+    (25) func -> . LOCALIZATION_ERROR NAME
+    (26) func -> . DISTANCE NAME NAME
 
-    (               shift and go to state 5
+    ALWAYS          shift and go to state 4
+    EVENTUALLY      shift and go to state 5
+    FLOAT           shift and go to state 7
+    POSITION_X      shift and go to state 8
+    POSITION_Y      shift and go to state 9
+    ORIENTATION     shift and go to state 10
+    VELOCITY        shift and go to state 11
+    LOCALIZATION_ERROR shift and go to state 12
+    DISTANCE        shift and go to state 13
 
+    opargs                         shift and go to state 18
+    operator                       shift and go to state 2
+    comparison                     shift and go to state 3
+    func                           shift and go to state 6
 
 state 5
 
-    (1) operator -> ALWAYS ( ( ( . POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (4) operator -> EVENTUALLY . opargs
+    (1) opargs -> . operator
+    (2) opargs -> . comparison
+    (3) operator -> . ALWAYS opargs
+    (4) operator -> . EVENTUALLY opargs
+    (5) operator -> . opargs UNTIL opargs
+    (6) operator -> . opargs IMPLIES opargs
+    (7) operator -> . opargs AND opargs
+    (8) operator -> . opargs OR opargs
+    (9) comparison -> . func opbin FLOAT
+    (10) comparison -> . FLOAT opbin func
+    (21) func -> . POSITION_X NAME
+    (22) func -> . POSITION_Y NAME
+    (23) func -> . ORIENTATION NAME
+    (24) func -> . VELOCITY NAME
+    (25) func -> . LOCALIZATION_ERROR NAME
+    (26) func -> . DISTANCE NAME NAME
 
-    POSITION_X      shift and go to state 6
+    ALWAYS          shift and go to state 4
+    EVENTUALLY      shift and go to state 5
+    FLOAT           shift and go to state 7
+    POSITION_X      shift and go to state 8
+    POSITION_Y      shift and go to state 9
+    ORIENTATION     shift and go to state 10
+    VELOCITY        shift and go to state 11
+    LOCALIZATION_ERROR shift and go to state 12
+    DISTANCE        shift and go to state 13
 
+    opargs                         shift and go to state 19
+    operator                       shift and go to state 2
+    comparison                     shift and go to state 3
+    func                           shift and go to state 6
 
 state 6
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X . NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (9) comparison -> func . opbin FLOAT
+    (11) opbin -> . +
+    (12) opbin -> . -
+    (13) opbin -> . >
+    (14) opbin -> . <
+    (15) opbin -> . *
+    (16) opbin -> . /
+    (17) opbin -> . GTE
+    (18) opbin -> . LEE
+    (19) opbin -> . EQ
+    (20) opbin -> . DIF
 
-    NAME            shift and go to state 7
+    +               shift and go to state 21
+    -               shift and go to state 22
+    >               shift and go to state 23
+    <               shift and go to state 24
+    *               shift and go to state 25
+    /               shift and go to state 26
+    GTE             shift and go to state 27
+    LEE             shift and go to state 28
+    EQ              shift and go to state 29
+    DIF             shift and go to state 30
 
+    opbin                          shift and go to state 20
 
 state 7
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME . ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (10) comparison -> FLOAT . opbin func
+    (11) opbin -> . +
+    (12) opbin -> . -
+    (13) opbin -> . >
+    (14) opbin -> . <
+    (15) opbin -> . *
+    (16) opbin -> . /
+    (17) opbin -> . GTE
+    (18) opbin -> . LEE
+    (19) opbin -> . EQ
+    (20) opbin -> . DIF
 
-    )               shift and go to state 8
+    +               shift and go to state 21
+    -               shift and go to state 22
+    >               shift and go to state 23
+    <               shift and go to state 24
+    *               shift and go to state 25
+    /               shift and go to state 26
+    GTE             shift and go to state 27
+    LEE             shift and go to state 28
+    EQ              shift and go to state 29
+    DIF             shift and go to state 30
 
+    opbin                          shift and go to state 31
 
 state 8
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) . > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (21) func -> POSITION_X . NAME
 
-    >               shift and go to state 9
+    NAME            shift and go to state 32
 
 
 state 9
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > . FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (22) func -> POSITION_Y . NAME
 
-    FLOAT           shift and go to state 10
+    NAME            shift and go to state 33
 
 
 state 10
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT . ) AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (23) func -> ORIENTATION . NAME
 
-    )               shift and go to state 11
+    NAME            shift and go to state 34
 
 
 state 11
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) . AND ( ( POSITION_Y NAME ) > FLOAT ) )
+    (24) func -> VELOCITY . NAME
 
-    AND             shift and go to state 12
+    NAME            shift and go to state 35
 
 
 state 12
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND . ( ( POSITION_Y NAME ) > FLOAT ) )
+    (25) func -> LOCALIZATION_ERROR . NAME
 
-    (               shift and go to state 13
+    NAME            shift and go to state 36
 
 
 state 13
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( . ( POSITION_Y NAME ) > FLOAT ) )
+    (26) func -> DISTANCE . NAME NAME
 
-    (               shift and go to state 14
+    NAME            shift and go to state 37
 
 
 state 14
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( . POSITION_Y NAME ) > FLOAT ) )
+    (5) operator -> opargs UNTIL . opargs
+    (1) opargs -> . operator
+    (2) opargs -> . comparison
+    (3) operator -> . ALWAYS opargs
+    (4) operator -> . EVENTUALLY opargs
+    (5) operator -> . opargs UNTIL opargs
+    (6) operator -> . opargs IMPLIES opargs
+    (7) operator -> . opargs AND opargs
+    (8) operator -> . opargs OR opargs
+    (9) comparison -> . func opbin FLOAT
+    (10) comparison -> . FLOAT opbin func
+    (21) func -> . POSITION_X NAME
+    (22) func -> . POSITION_Y NAME
+    (23) func -> . ORIENTATION NAME
+    (24) func -> . VELOCITY NAME
+    (25) func -> . LOCALIZATION_ERROR NAME
+    (26) func -> . DISTANCE NAME NAME
 
-    POSITION_Y      shift and go to state 15
+    ALWAYS          shift and go to state 4
+    EVENTUALLY      shift and go to state 5
+    FLOAT           shift and go to state 7
+    POSITION_X      shift and go to state 8
+    POSITION_Y      shift and go to state 9
+    ORIENTATION     shift and go to state 10
+    VELOCITY        shift and go to state 11
+    LOCALIZATION_ERROR shift and go to state 12
+    DISTANCE        shift and go to state 13
 
+    opargs                         shift and go to state 38
+    operator                       shift and go to state 2
+    comparison                     shift and go to state 3
+    func                           shift and go to state 6
 
 state 15
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y . NAME ) > FLOAT ) )
+    (6) operator -> opargs IMPLIES . opargs
+    (1) opargs -> . operator
+    (2) opargs -> . comparison
+    (3) operator -> . ALWAYS opargs
+    (4) operator -> . EVENTUALLY opargs
+    (5) operator -> . opargs UNTIL opargs
+    (6) operator -> . opargs IMPLIES opargs
+    (7) operator -> . opargs AND opargs
+    (8) operator -> . opargs OR opargs
+    (9) comparison -> . func opbin FLOAT
+    (10) comparison -> . FLOAT opbin func
+    (21) func -> . POSITION_X NAME
+    (22) func -> . POSITION_Y NAME
+    (23) func -> . ORIENTATION NAME
+    (24) func -> . VELOCITY NAME
+    (25) func -> . LOCALIZATION_ERROR NAME
+    (26) func -> . DISTANCE NAME NAME
 
-    NAME            shift and go to state 16
+    ALWAYS          shift and go to state 4
+    EVENTUALLY      shift and go to state 5
+    FLOAT           shift and go to state 7
+    POSITION_X      shift and go to state 8
+    POSITION_Y      shift and go to state 9
+    ORIENTATION     shift and go to state 10
+    VELOCITY        shift and go to state 11
+    LOCALIZATION_ERROR shift and go to state 12
+    DISTANCE        shift and go to state 13
 
+    opargs                         shift and go to state 39
+    operator                       shift and go to state 2
+    comparison                     shift and go to state 3
+    func                           shift and go to state 6
 
 state 16
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME . ) > FLOAT ) )
+    (7) operator -> opargs AND . opargs
+    (1) opargs -> . operator
+    (2) opargs -> . comparison
+    (3) operator -> . ALWAYS opargs
+    (4) operator -> . EVENTUALLY opargs
+    (5) operator -> . opargs UNTIL opargs
+    (6) operator -> . opargs IMPLIES opargs
+    (7) operator -> . opargs AND opargs
+    (8) operator -> . opargs OR opargs
+    (9) comparison -> . func opbin FLOAT
+    (10) comparison -> . FLOAT opbin func
+    (21) func -> . POSITION_X NAME
+    (22) func -> . POSITION_Y NAME
+    (23) func -> . ORIENTATION NAME
+    (24) func -> . VELOCITY NAME
+    (25) func -> . LOCALIZATION_ERROR NAME
+    (26) func -> . DISTANCE NAME NAME
 
-    )               shift and go to state 17
+    ALWAYS          shift and go to state 4
+    EVENTUALLY      shift and go to state 5
+    FLOAT           shift and go to state 7
+    POSITION_X      shift and go to state 8
+    POSITION_Y      shift and go to state 9
+    ORIENTATION     shift and go to state 10
+    VELOCITY        shift and go to state 11
+    LOCALIZATION_ERROR shift and go to state 12
+    DISTANCE        shift and go to state 13
 
+    opargs                         shift and go to state 40
+    operator                       shift and go to state 2
+    comparison                     shift and go to state 3
+    func                           shift and go to state 6
 
 state 17
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) . > FLOAT ) )
+    (8) operator -> opargs OR . opargs
+    (1) opargs -> . operator
+    (2) opargs -> . comparison
+    (3) operator -> . ALWAYS opargs
+    (4) operator -> . EVENTUALLY opargs
+    (5) operator -> . opargs UNTIL opargs
+    (6) operator -> . opargs IMPLIES opargs
+    (7) operator -> . opargs AND opargs
+    (8) operator -> . opargs OR opargs
+    (9) comparison -> . func opbin FLOAT
+    (10) comparison -> . FLOAT opbin func
+    (21) func -> . POSITION_X NAME
+    (22) func -> . POSITION_Y NAME
+    (23) func -> . ORIENTATION NAME
+    (24) func -> . VELOCITY NAME
+    (25) func -> . LOCALIZATION_ERROR NAME
+    (26) func -> . DISTANCE NAME NAME
 
-    >               shift and go to state 18
+    ALWAYS          shift and go to state 4
+    EVENTUALLY      shift and go to state 5
+    FLOAT           shift and go to state 7
+    POSITION_X      shift and go to state 8
+    POSITION_Y      shift and go to state 9
+    ORIENTATION     shift and go to state 10
+    VELOCITY        shift and go to state 11
+    LOCALIZATION_ERROR shift and go to state 12
+    DISTANCE        shift and go to state 13
 
+    opargs                         shift and go to state 41
+    operator                       shift and go to state 2
+    comparison                     shift and go to state 3
+    func                           shift and go to state 6
 
 state 18
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > . FLOAT ) )
+    (3) operator -> ALWAYS opargs .
+    (5) operator -> opargs . UNTIL opargs
+    (6) operator -> opargs . IMPLIES opargs
+    (7) operator -> opargs . AND opargs
+    (8) operator -> opargs . OR opargs
 
-    FLOAT           shift and go to state 19
+  ! shift/reduce conflict for UNTIL resolved as shift
+  ! shift/reduce conflict for IMPLIES resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+    $end            reduce using rule 3 (operator -> ALWAYS opargs .)
+    UNTIL           shift and go to state 14
+    IMPLIES         shift and go to state 15
+    AND             shift and go to state 16
+    OR              shift and go to state 17
+
+  ! UNTIL           [ reduce using rule 3 (operator -> ALWAYS opargs .) ]
+  ! IMPLIES         [ reduce using rule 3 (operator -> ALWAYS opargs .) ]
+  ! AND             [ reduce using rule 3 (operator -> ALWAYS opargs .) ]
+  ! OR              [ reduce using rule 3 (operator -> ALWAYS opargs .) ]
 
 
 state 19
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT . ) )
+    (4) operator -> EVENTUALLY opargs .
+    (5) operator -> opargs . UNTIL opargs
+    (6) operator -> opargs . IMPLIES opargs
+    (7) operator -> opargs . AND opargs
+    (8) operator -> opargs . OR opargs
 
-    )               shift and go to state 20
+  ! shift/reduce conflict for UNTIL resolved as shift
+  ! shift/reduce conflict for IMPLIES resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+    $end            reduce using rule 4 (operator -> EVENTUALLY opargs .)
+    UNTIL           shift and go to state 14
+    IMPLIES         shift and go to state 15
+    AND             shift and go to state 16
+    OR              shift and go to state 17
+
+  ! UNTIL           [ reduce using rule 4 (operator -> EVENTUALLY opargs .) ]
+  ! IMPLIES         [ reduce using rule 4 (operator -> EVENTUALLY opargs .) ]
+  ! AND             [ reduce using rule 4 (operator -> EVENTUALLY opargs .) ]
+  ! OR              [ reduce using rule 4 (operator -> EVENTUALLY opargs .) ]
 
 
 state 20
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) . )
+    (9) comparison -> func opbin . FLOAT
 
-    )               shift and go to state 21
+    FLOAT           shift and go to state 42
 
 
 state 21
 
-    (1) operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) ) .
+    (11) opbin -> + .
 
-    $end            reduce using rule 1 (operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) ) .)
+    FLOAT           reduce using rule 11 (opbin -> + .)
+    POSITION_X      reduce using rule 11 (opbin -> + .)
+    POSITION_Y      reduce using rule 11 (opbin -> + .)
+    ORIENTATION     reduce using rule 11 (opbin -> + .)
+    VELOCITY        reduce using rule 11 (opbin -> + .)
+    LOCALIZATION_ERROR reduce using rule 11 (opbin -> + .)
+    DISTANCE        reduce using rule 11 (opbin -> + .)
 
+
+state 22
+
+    (12) opbin -> - .
+
+    FLOAT           reduce using rule 12 (opbin -> - .)
+    POSITION_X      reduce using rule 12 (opbin -> - .)
+    POSITION_Y      reduce using rule 12 (opbin -> - .)
+    ORIENTATION     reduce using rule 12 (opbin -> - .)
+    VELOCITY        reduce using rule 12 (opbin -> - .)
+    LOCALIZATION_ERROR reduce using rule 12 (opbin -> - .)
+    DISTANCE        reduce using rule 12 (opbin -> - .)
+
+
+state 23
+
+    (13) opbin -> > .
+
+    FLOAT           reduce using rule 13 (opbin -> > .)
+    POSITION_X      reduce using rule 13 (opbin -> > .)
+    POSITION_Y      reduce using rule 13 (opbin -> > .)
+    ORIENTATION     reduce using rule 13 (opbin -> > .)
+    VELOCITY        reduce using rule 13 (opbin -> > .)
+    LOCALIZATION_ERROR reduce using rule 13 (opbin -> > .)
+    DISTANCE        reduce using rule 13 (opbin -> > .)
+
+
+state 24
+
+    (14) opbin -> < .
+
+    FLOAT           reduce using rule 14 (opbin -> < .)
+    POSITION_X      reduce using rule 14 (opbin -> < .)
+    POSITION_Y      reduce using rule 14 (opbin -> < .)
+    ORIENTATION     reduce using rule 14 (opbin -> < .)
+    VELOCITY        reduce using rule 14 (opbin -> < .)
+    LOCALIZATION_ERROR reduce using rule 14 (opbin -> < .)
+    DISTANCE        reduce using rule 14 (opbin -> < .)
+
+
+state 25
+
+    (15) opbin -> * .
+
+    FLOAT           reduce using rule 15 (opbin -> * .)
+    POSITION_X      reduce using rule 15 (opbin -> * .)
+    POSITION_Y      reduce using rule 15 (opbin -> * .)
+    ORIENTATION     reduce using rule 15 (opbin -> * .)
+    VELOCITY        reduce using rule 15 (opbin -> * .)
+    LOCALIZATION_ERROR reduce using rule 15 (opbin -> * .)
+    DISTANCE        reduce using rule 15 (opbin -> * .)
+
+
+state 26
+
+    (16) opbin -> / .
+
+    FLOAT           reduce using rule 16 (opbin -> / .)
+    POSITION_X      reduce using rule 16 (opbin -> / .)
+    POSITION_Y      reduce using rule 16 (opbin -> / .)
+    ORIENTATION     reduce using rule 16 (opbin -> / .)
+    VELOCITY        reduce using rule 16 (opbin -> / .)
+    LOCALIZATION_ERROR reduce using rule 16 (opbin -> / .)
+    DISTANCE        reduce using rule 16 (opbin -> / .)
+
+
+state 27
+
+    (17) opbin -> GTE .
+
+    FLOAT           reduce using rule 17 (opbin -> GTE .)
+    POSITION_X      reduce using rule 17 (opbin -> GTE .)
+    POSITION_Y      reduce using rule 17 (opbin -> GTE .)
+    ORIENTATION     reduce using rule 17 (opbin -> GTE .)
+    VELOCITY        reduce using rule 17 (opbin -> GTE .)
+    LOCALIZATION_ERROR reduce using rule 17 (opbin -> GTE .)
+    DISTANCE        reduce using rule 17 (opbin -> GTE .)
+
+
+state 28
+
+    (18) opbin -> LEE .
+
+    FLOAT           reduce using rule 18 (opbin -> LEE .)
+    POSITION_X      reduce using rule 18 (opbin -> LEE .)
+    POSITION_Y      reduce using rule 18 (opbin -> LEE .)
+    ORIENTATION     reduce using rule 18 (opbin -> LEE .)
+    VELOCITY        reduce using rule 18 (opbin -> LEE .)
+    LOCALIZATION_ERROR reduce using rule 18 (opbin -> LEE .)
+    DISTANCE        reduce using rule 18 (opbin -> LEE .)
+
+
+state 29
+
+    (19) opbin -> EQ .
+
+    FLOAT           reduce using rule 19 (opbin -> EQ .)
+    POSITION_X      reduce using rule 19 (opbin -> EQ .)
+    POSITION_Y      reduce using rule 19 (opbin -> EQ .)
+    ORIENTATION     reduce using rule 19 (opbin -> EQ .)
+    VELOCITY        reduce using rule 19 (opbin -> EQ .)
+    LOCALIZATION_ERROR reduce using rule 19 (opbin -> EQ .)
+    DISTANCE        reduce using rule 19 (opbin -> EQ .)
+
+
+state 30
+
+    (20) opbin -> DIF .
+
+    FLOAT           reduce using rule 20 (opbin -> DIF .)
+    POSITION_X      reduce using rule 20 (opbin -> DIF .)
+    POSITION_Y      reduce using rule 20 (opbin -> DIF .)
+    ORIENTATION     reduce using rule 20 (opbin -> DIF .)
+    VELOCITY        reduce using rule 20 (opbin -> DIF .)
+    LOCALIZATION_ERROR reduce using rule 20 (opbin -> DIF .)
+    DISTANCE        reduce using rule 20 (opbin -> DIF .)
+
+
+state 31
+
+    (10) comparison -> FLOAT opbin . func
+    (21) func -> . POSITION_X NAME
+    (22) func -> . POSITION_Y NAME
+    (23) func -> . ORIENTATION NAME
+    (24) func -> . VELOCITY NAME
+    (25) func -> . LOCALIZATION_ERROR NAME
+    (26) func -> . DISTANCE NAME NAME
+
+    POSITION_X      shift and go to state 8
+    POSITION_Y      shift and go to state 9
+    ORIENTATION     shift and go to state 10
+    VELOCITY        shift and go to state 11
+    LOCALIZATION_ERROR shift and go to state 12
+    DISTANCE        shift and go to state 13
+
+    func                           shift and go to state 43
+
+state 32
+
+    (21) func -> POSITION_X NAME .
+
+    +               reduce using rule 21 (func -> POSITION_X NAME .)
+    -               reduce using rule 21 (func -> POSITION_X NAME .)
+    >               reduce using rule 21 (func -> POSITION_X NAME .)
+    <               reduce using rule 21 (func -> POSITION_X NAME .)
+    *               reduce using rule 21 (func -> POSITION_X NAME .)
+    /               reduce using rule 21 (func -> POSITION_X NAME .)
+    GTE             reduce using rule 21 (func -> POSITION_X NAME .)
+    LEE             reduce using rule 21 (func -> POSITION_X NAME .)
+    EQ              reduce using rule 21 (func -> POSITION_X NAME .)
+    DIF             reduce using rule 21 (func -> POSITION_X NAME .)
+    UNTIL           reduce using rule 21 (func -> POSITION_X NAME .)
+    IMPLIES         reduce using rule 21 (func -> POSITION_X NAME .)
+    AND             reduce using rule 21 (func -> POSITION_X NAME .)
+    OR              reduce using rule 21 (func -> POSITION_X NAME .)
+    $end            reduce using rule 21 (func -> POSITION_X NAME .)
+
+
+state 33
+
+    (22) func -> POSITION_Y NAME .
+
+    +               reduce using rule 22 (func -> POSITION_Y NAME .)
+    -               reduce using rule 22 (func -> POSITION_Y NAME .)
+    >               reduce using rule 22 (func -> POSITION_Y NAME .)
+    <               reduce using rule 22 (func -> POSITION_Y NAME .)
+    *               reduce using rule 22 (func -> POSITION_Y NAME .)
+    /               reduce using rule 22 (func -> POSITION_Y NAME .)
+    GTE             reduce using rule 22 (func -> POSITION_Y NAME .)
+    LEE             reduce using rule 22 (func -> POSITION_Y NAME .)
+    EQ              reduce using rule 22 (func -> POSITION_Y NAME .)
+    DIF             reduce using rule 22 (func -> POSITION_Y NAME .)
+    UNTIL           reduce using rule 22 (func -> POSITION_Y NAME .)
+    IMPLIES         reduce using rule 22 (func -> POSITION_Y NAME .)
+    AND             reduce using rule 22 (func -> POSITION_Y NAME .)
+    OR              reduce using rule 22 (func -> POSITION_Y NAME .)
+    $end            reduce using rule 22 (func -> POSITION_Y NAME .)
+
+
+state 34
+
+    (23) func -> ORIENTATION NAME .
+
+    +               reduce using rule 23 (func -> ORIENTATION NAME .)
+    -               reduce using rule 23 (func -> ORIENTATION NAME .)
+    >               reduce using rule 23 (func -> ORIENTATION NAME .)
+    <               reduce using rule 23 (func -> ORIENTATION NAME .)
+    *               reduce using rule 23 (func -> ORIENTATION NAME .)
+    /               reduce using rule 23 (func -> ORIENTATION NAME .)
+    GTE             reduce using rule 23 (func -> ORIENTATION NAME .)
+    LEE             reduce using rule 23 (func -> ORIENTATION NAME .)
+    EQ              reduce using rule 23 (func -> ORIENTATION NAME .)
+    DIF             reduce using rule 23 (func -> ORIENTATION NAME .)
+    UNTIL           reduce using rule 23 (func -> ORIENTATION NAME .)
+    IMPLIES         reduce using rule 23 (func -> ORIENTATION NAME .)
+    AND             reduce using rule 23 (func -> ORIENTATION NAME .)
+    OR              reduce using rule 23 (func -> ORIENTATION NAME .)
+    $end            reduce using rule 23 (func -> ORIENTATION NAME .)
+
+
+state 35
+
+    (24) func -> VELOCITY NAME .
+
+    +               reduce using rule 24 (func -> VELOCITY NAME .)
+    -               reduce using rule 24 (func -> VELOCITY NAME .)
+    >               reduce using rule 24 (func -> VELOCITY NAME .)
+    <               reduce using rule 24 (func -> VELOCITY NAME .)
+    *               reduce using rule 24 (func -> VELOCITY NAME .)
+    /               reduce using rule 24 (func -> VELOCITY NAME .)
+    GTE             reduce using rule 24 (func -> VELOCITY NAME .)
+    LEE             reduce using rule 24 (func -> VELOCITY NAME .)
+    EQ              reduce using rule 24 (func -> VELOCITY NAME .)
+    DIF             reduce using rule 24 (func -> VELOCITY NAME .)
+    UNTIL           reduce using rule 24 (func -> VELOCITY NAME .)
+    IMPLIES         reduce using rule 24 (func -> VELOCITY NAME .)
+    AND             reduce using rule 24 (func -> VELOCITY NAME .)
+    OR              reduce using rule 24 (func -> VELOCITY NAME .)
+    $end            reduce using rule 24 (func -> VELOCITY NAME .)
+
+
+state 36
+
+    (25) func -> LOCALIZATION_ERROR NAME .
+
+    +               reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    -               reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    >               reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    <               reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    *               reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    /               reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    GTE             reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    LEE             reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    EQ              reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    DIF             reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    UNTIL           reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    IMPLIES         reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    AND             reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    OR              reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+    $end            reduce using rule 25 (func -> LOCALIZATION_ERROR NAME .)
+
+
+state 37
+
+    (26) func -> DISTANCE NAME . NAME
+
+    NAME            shift and go to state 44
+
+
+state 38
+
+    (5) operator -> opargs UNTIL opargs .
+    (5) operator -> opargs . UNTIL opargs
+    (6) operator -> opargs . IMPLIES opargs
+    (7) operator -> opargs . AND opargs
+    (8) operator -> opargs . OR opargs
+
+  ! shift/reduce conflict for UNTIL resolved as shift
+  ! shift/reduce conflict for IMPLIES resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+    $end            reduce using rule 5 (operator -> opargs UNTIL opargs .)
+    UNTIL           shift and go to state 14
+    IMPLIES         shift and go to state 15
+    AND             shift and go to state 16
+    OR              shift and go to state 17
+
+  ! UNTIL           [ reduce using rule 5 (operator -> opargs UNTIL opargs .) ]
+  ! IMPLIES         [ reduce using rule 5 (operator -> opargs UNTIL opargs .) ]
+  ! AND             [ reduce using rule 5 (operator -> opargs UNTIL opargs .) ]
+  ! OR              [ reduce using rule 5 (operator -> opargs UNTIL opargs .) ]
+
+
+state 39
+
+    (6) operator -> opargs IMPLIES opargs .
+    (5) operator -> opargs . UNTIL opargs
+    (6) operator -> opargs . IMPLIES opargs
+    (7) operator -> opargs . AND opargs
+    (8) operator -> opargs . OR opargs
+
+  ! shift/reduce conflict for UNTIL resolved as shift
+  ! shift/reduce conflict for IMPLIES resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+    $end            reduce using rule 6 (operator -> opargs IMPLIES opargs .)
+    UNTIL           shift and go to state 14
+    IMPLIES         shift and go to state 15
+    AND             shift and go to state 16
+    OR              shift and go to state 17
+
+  ! UNTIL           [ reduce using rule 6 (operator -> opargs IMPLIES opargs .) ]
+  ! IMPLIES         [ reduce using rule 6 (operator -> opargs IMPLIES opargs .) ]
+  ! AND             [ reduce using rule 6 (operator -> opargs IMPLIES opargs .) ]
+  ! OR              [ reduce using rule 6 (operator -> opargs IMPLIES opargs .) ]
+
+
+state 40
+
+    (7) operator -> opargs AND opargs .
+    (5) operator -> opargs . UNTIL opargs
+    (6) operator -> opargs . IMPLIES opargs
+    (7) operator -> opargs . AND opargs
+    (8) operator -> opargs . OR opargs
+
+  ! shift/reduce conflict for UNTIL resolved as shift
+  ! shift/reduce conflict for IMPLIES resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+    $end            reduce using rule 7 (operator -> opargs AND opargs .)
+    UNTIL           shift and go to state 14
+    IMPLIES         shift and go to state 15
+    AND             shift and go to state 16
+    OR              shift and go to state 17
+
+  ! UNTIL           [ reduce using rule 7 (operator -> opargs AND opargs .) ]
+  ! IMPLIES         [ reduce using rule 7 (operator -> opargs AND opargs .) ]
+  ! AND             [ reduce using rule 7 (operator -> opargs AND opargs .) ]
+  ! OR              [ reduce using rule 7 (operator -> opargs AND opargs .) ]
+
+
+state 41
+
+    (8) operator -> opargs OR opargs .
+    (5) operator -> opargs . UNTIL opargs
+    (6) operator -> opargs . IMPLIES opargs
+    (7) operator -> opargs . AND opargs
+    (8) operator -> opargs . OR opargs
+
+  ! shift/reduce conflict for UNTIL resolved as shift
+  ! shift/reduce conflict for IMPLIES resolved as shift
+  ! shift/reduce conflict for AND resolved as shift
+  ! shift/reduce conflict for OR resolved as shift
+    $end            reduce using rule 8 (operator -> opargs OR opargs .)
+    UNTIL           shift and go to state 14
+    IMPLIES         shift and go to state 15
+    AND             shift and go to state 16
+    OR              shift and go to state 17
+
+  ! UNTIL           [ reduce using rule 8 (operator -> opargs OR opargs .) ]
+  ! IMPLIES         [ reduce using rule 8 (operator -> opargs OR opargs .) ]
+  ! AND             [ reduce using rule 8 (operator -> opargs OR opargs .) ]
+  ! OR              [ reduce using rule 8 (operator -> opargs OR opargs .) ]
+
+
+state 42
+
+    (9) comparison -> func opbin FLOAT .
+
+    UNTIL           reduce using rule 9 (comparison -> func opbin FLOAT .)
+    IMPLIES         reduce using rule 9 (comparison -> func opbin FLOAT .)
+    AND             reduce using rule 9 (comparison -> func opbin FLOAT .)
+    OR              reduce using rule 9 (comparison -> func opbin FLOAT .)
+    $end            reduce using rule 9 (comparison -> func opbin FLOAT .)
+
+
+state 43
+
+    (10) comparison -> FLOAT opbin func .
+
+    UNTIL           reduce using rule 10 (comparison -> FLOAT opbin func .)
+    IMPLIES         reduce using rule 10 (comparison -> FLOAT opbin func .)
+    AND             reduce using rule 10 (comparison -> FLOAT opbin func .)
+    OR              reduce using rule 10 (comparison -> FLOAT opbin func .)
+    $end            reduce using rule 10 (comparison -> FLOAT opbin func .)
+
+
+state 44
+
+    (26) func -> DISTANCE NAME NAME .
+
+    +               reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    -               reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    >               reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    <               reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    *               reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    /               reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    GTE             reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    LEE             reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    EQ              reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    DIF             reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    UNTIL           reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    IMPLIES         reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    AND             reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    OR              reduce using rule 26 (func -> DISTANCE NAME NAME .)
+    $end            reduce using rule 26 (func -> DISTANCE NAME NAME .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for UNTIL in state 18 resolved as shift
+WARNING: shift/reduce conflict for IMPLIES in state 18 resolved as shift
+WARNING: shift/reduce conflict for AND in state 18 resolved as shift
+WARNING: shift/reduce conflict for OR in state 18 resolved as shift
+WARNING: shift/reduce conflict for UNTIL in state 19 resolved as shift
+WARNING: shift/reduce conflict for IMPLIES in state 19 resolved as shift
+WARNING: shift/reduce conflict for AND in state 19 resolved as shift
+WARNING: shift/reduce conflict for OR in state 19 resolved as shift
+WARNING: shift/reduce conflict for UNTIL in state 38 resolved as shift
+WARNING: shift/reduce conflict for IMPLIES in state 38 resolved as shift
+WARNING: shift/reduce conflict for AND in state 38 resolved as shift
+WARNING: shift/reduce conflict for OR in state 38 resolved as shift
+WARNING: shift/reduce conflict for UNTIL in state 39 resolved as shift
+WARNING: shift/reduce conflict for IMPLIES in state 39 resolved as shift
+WARNING: shift/reduce conflict for AND in state 39 resolved as shift
+WARNING: shift/reduce conflict for OR in state 39 resolved as shift
+WARNING: shift/reduce conflict for UNTIL in state 40 resolved as shift
+WARNING: shift/reduce conflict for IMPLIES in state 40 resolved as shift
+WARNING: shift/reduce conflict for AND in state 40 resolved as shift
+WARNING: shift/reduce conflict for OR in state 40 resolved as shift
+WARNING: shift/reduce conflict for UNTIL in state 41 resolved as shift
+WARNING: shift/reduce conflict for IMPLIES in state 41 resolved as shift
+WARNING: shift/reduce conflict for AND in state 41 resolved as shift
+WARNING: shift/reduce conflict for OR in state 41 resolved as shift

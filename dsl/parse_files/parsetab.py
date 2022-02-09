@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = "ALWAYS AND FLOAT NAME POSITION_X POSITION_Yoperator : ALWAYS '(' '(' '(' POSITION_X NAME ')' '>' FLOAT ')' AND '(' '(' POSITION_Y NAME ')' '>' FLOAT ')' ')'\n    "
+_lr_signature = "ALWAYS AND DIF DISTANCE EQ EVENTUALLY FLOAT GTE IMPLIES LEE LOCALIZATION_ERROR NAME NOT OR ORIENTATION POSITION_X POSITION_Y UNTIL VELOCITYopargs : operator\n              | comparisonoperator : ALWAYS opargs\n                | EVENTUALLY opargs\n                | opargs UNTIL opargs\n                | opargs IMPLIES opargs\n                | opargs AND opargs\n                | opargs OR opargscomparison : func opbin FLOAT\n                  | FLOAT opbin funcopbin : '+'\n             | '-'\n             | '>'\n             | '<'\n             | '*'\n             | '/'\n             | GTE\n             | LEE\n             | EQ\n             | DIFfunc : POSITION_X NAME\n            | POSITION_Y NAME\n            | ORIENTATION NAME\n            | VELOCITY NAME\n            | LOCALIZATION_ERROR NAMEfunc : DISTANCE NAME NAME"
     
-_lr_action_items = {'ALWAYS':([0,],[2,]),'$end':([1,21,],[0,-1,]),'(':([2,3,4,12,13,],[3,4,5,13,14,]),'POSITION_X':([5,],[6,]),'NAME':([6,15,],[7,16,]),')':([7,10,16,19,20,],[8,11,17,20,21,]),'>':([8,17,],[9,18,]),'FLOAT':([9,18,],[10,19,]),'AND':([11,],[12,]),'POSITION_Y':([14,],[15,]),}
+_lr_action_items = {'ALWAYS':([0,4,5,14,15,16,17,],[4,4,4,4,4,4,4,]),'EVENTUALLY':([0,4,5,14,15,16,17,],[5,5,5,5,5,5,5,]),'FLOAT':([0,4,5,14,15,16,17,20,21,22,23,24,25,26,27,28,29,30,],[7,7,7,7,7,7,7,42,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,]),'POSITION_X':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[8,8,8,8,8,8,8,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,8,]),'POSITION_Y':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[9,9,9,9,9,9,9,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,9,]),'ORIENTATION':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[10,10,10,10,10,10,10,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,10,]),'VELOCITY':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[11,11,11,11,11,11,11,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,11,]),'LOCALIZATION_ERROR':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[12,12,12,12,12,12,12,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,12,]),'DISTANCE':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[13,13,13,13,13,13,13,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,13,]),'$end':([1,2,3,18,19,32,33,34,35,36,38,39,40,41,42,43,44,],[0,-1,-2,-3,-4,-21,-22,-23,-24,-25,-5,-6,-7,-8,-9,-10,-26,]),'UNTIL':([1,2,3,18,19,32,33,34,35,36,38,39,40,41,42,43,44,],[14,-1,-2,14,14,-21,-22,-23,-24,-25,14,14,14,14,-9,-10,-26,]),'IMPLIES':([1,2,3,18,19,32,33,34,35,36,38,39,40,41,42,43,44,],[15,-1,-2,15,15,-21,-22,-23,-24,-25,15,15,15,15,-9,-10,-26,]),'AND':([1,2,3,18,19,32,33,34,35,36,38,39,40,41,42,43,44,],[16,-1,-2,16,16,-21,-22,-23,-24,-25,16,16,16,16,-9,-10,-26,]),'OR':([1,2,3,18,19,32,33,34,35,36,38,39,40,41,42,43,44,],[17,-1,-2,17,17,-21,-22,-23,-24,-25,17,17,17,17,-9,-10,-26,]),'+':([6,7,32,33,34,35,36,44,],[21,21,-21,-22,-23,-24,-25,-26,]),'-':([6,7,32,33,34,35,36,44,],[22,22,-21,-22,-23,-24,-25,-26,]),'>':([6,7,32,33,34,35,36,44,],[23,23,-21,-22,-23,-24,-25,-26,]),'<':([6,7,32,33,34,35,36,44,],[24,24,-21,-22,-23,-24,-25,-26,]),'*':([6,7,32,33,34,35,36,44,],[25,25,-21,-22,-23,-24,-25,-26,]),'/':([6,7,32,33,34,35,36,44,],[26,26,-21,-22,-23,-24,-25,-26,]),'GTE':([6,7,32,33,34,35,36,44,],[27,27,-21,-22,-23,-24,-25,-26,]),'LEE':([6,7,32,33,34,35,36,44,],[28,28,-21,-22,-23,-24,-25,-26,]),'EQ':([6,7,32,33,34,35,36,44,],[29,29,-21,-22,-23,-24,-25,-26,]),'DIF':([6,7,32,33,34,35,36,44,],[30,30,-21,-22,-23,-24,-25,-26,]),'NAME':([8,9,10,11,12,13,37,],[32,33,34,35,36,37,44,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'operator':([0,],[1,]),}
+_lr_goto_items = {'opargs':([0,4,5,14,15,16,17,],[1,18,19,38,39,40,41,]),'operator':([0,4,5,14,15,16,17,],[2,2,2,2,2,2,2,]),'comparison':([0,4,5,14,15,16,17,],[3,3,3,3,3,3,3,]),'func':([0,4,5,14,15,16,17,31,],[6,6,6,6,6,6,6,43,]),'opbin':([6,7,],[20,31,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,6 +26,31 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> operator","S'",1,None,None,None),
-  ('operator -> ALWAYS ( ( ( POSITION_X NAME ) > FLOAT ) AND ( ( POSITION_Y NAME ) > FLOAT ) )','operator',20,'p_test','language_yacc.py',10),
+  ("S' -> opargs","S'",1,None,None,None),
+  ('opargs -> operator','opargs',1,'p_opargs','language_yacc.py',11),
+  ('opargs -> comparison','opargs',1,'p_opargs','language_yacc.py',12),
+  ('operator -> ALWAYS opargs','operator',2,'p_operator','language_yacc.py',15),
+  ('operator -> EVENTUALLY opargs','operator',2,'p_operator','language_yacc.py',16),
+  ('operator -> opargs UNTIL opargs','operator',3,'p_operator','language_yacc.py',17),
+  ('operator -> opargs IMPLIES opargs','operator',3,'p_operator','language_yacc.py',18),
+  ('operator -> opargs AND opargs','operator',3,'p_operator','language_yacc.py',19),
+  ('operator -> opargs OR opargs','operator',3,'p_operator','language_yacc.py',20),
+  ('comparison -> func opbin FLOAT','comparison',3,'p_comparison','language_yacc.py',23),
+  ('comparison -> FLOAT opbin func','comparison',3,'p_comparison','language_yacc.py',24),
+  ('opbin -> +','opbin',1,'p_opbin','language_yacc.py',27),
+  ('opbin -> -','opbin',1,'p_opbin','language_yacc.py',28),
+  ('opbin -> >','opbin',1,'p_opbin','language_yacc.py',29),
+  ('opbin -> <','opbin',1,'p_opbin','language_yacc.py',30),
+  ('opbin -> *','opbin',1,'p_opbin','language_yacc.py',31),
+  ('opbin -> /','opbin',1,'p_opbin','language_yacc.py',32),
+  ('opbin -> GTE','opbin',1,'p_opbin','language_yacc.py',33),
+  ('opbin -> LEE','opbin',1,'p_opbin','language_yacc.py',34),
+  ('opbin -> EQ','opbin',1,'p_opbin','language_yacc.py',35),
+  ('opbin -> DIF','opbin',1,'p_opbin','language_yacc.py',36),
+  ('func -> POSITION_X NAME','func',2,'p_func_onearg','language_yacc.py',39),
+  ('func -> POSITION_Y NAME','func',2,'p_func_onearg','language_yacc.py',40),
+  ('func -> ORIENTATION NAME','func',2,'p_func_onearg','language_yacc.py',41),
+  ('func -> VELOCITY NAME','func',2,'p_func_onearg','language_yacc.py',42),
+  ('func -> LOCALIZATION_ERROR NAME','func',2,'p_func_onearg','language_yacc.py',43),
+  ('func -> DISTANCE NAME NAME','func',3,'p_func_twoarg','language_yacc.py',46),
 ]

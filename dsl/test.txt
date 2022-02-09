@@ -1,1 +1,1 @@
-always (((position_x robot1) > 0.0) and ((position_y robot1) > 0.0))
+always (((position_x robot1) >= 0.0) and ((position_y robot1) > 0.0))
