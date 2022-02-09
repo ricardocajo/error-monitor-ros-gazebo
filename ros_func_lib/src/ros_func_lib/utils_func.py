@@ -29,7 +29,7 @@ def get_modelStates_pos(object_name: str, topic_msg: ModelStates):
     object_index = modelStates_indexes[object_name]
     return topic_msg.pose[object_index].position
 
-def get_topic_msg(topic: str, msg_type):#TODO is there a type for Message in ros
+def get_topic_msg(topic: str, msg_type):
     """ The last message received in the topic "topic"
     :param topic: The topic we want to get information from. Ex. '/topic_xpto'
     :param msg_type: The message type of the message received from the topic
@@ -57,6 +57,7 @@ def position_x_gazebo(robot_name: str, topic_msg: ModelStates):
     :param robot_name: A string with the robot name in the ros environment
     :param topic_msg: The last message received from the ModelStates topic
     """
+    update_modelStates_info(topic_msg)
     return get_modelStates_pos(robot_name, topic_msg).x
 
 def position_y_gazebo(robot_name: str, topic_msg: ModelStates):
@@ -64,4 +65,5 @@ def position_y_gazebo(robot_name: str, topic_msg: ModelStates):
     :param robot_name: A string with the robot name in the ros environment
     :param topic_msg: The last message received from the ModelStates topic
     """
+    update_modelStates_info(topic_msg)
     return get_modelStates_pos(robot_name, topic_msg).y
