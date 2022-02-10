@@ -2,7 +2,7 @@ from utils import *
 import os
 from pathlib import Path
 
-def compile_ros_py(ctx:Context, node, file_prefix, emitter=None):
+def compile_ros_py(ctx: Context, node: Node, file_prefix, emitter=None):
     """ Creates a python script capable of running the associated monitor code in ROS"""
 
     emitter = Emitter()

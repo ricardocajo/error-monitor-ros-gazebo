@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = "ALWAYS AND DIF DISTANCE EQ EVENTUALLY FLOAT GTE IMPLIES LEE LOCALIZATION_ERROR NAME NOT OR ORIENTATION POSITION_X POSITION_Y UNTIL VELOCITYopargs : operator\n              | comparisonoperator : ALWAYS opargs\n                | EVENTUALLY opargs\n                | opargs UNTIL opargs\n                | opargs IMPLIES opargs\n                | opargs AND opargs\n                | opargs OR opargscomparison : func opbin FLOAT\n                  | FLOAT opbin funcopbin : '+'\n             | '-'\n             | '>'\n             | '<'\n             | '*'\n             | '/'\n             | GTE\n             | LEE\n             | EQ\n             | DIFfunc : POSITION_X NAME\n            | POSITION_Y NAME\n            | ORIENTATION NAME\n            | VELOCITY NAME\n            | LOCALIZATION_ERROR NAMEfunc : DISTANCE NAME NAME"
+_lr_signature = "leftUNTILIMPLIESANDORALWAYSEVENTUALLYNOTnonassocGTELEEEQDIF><ALWAYS AND DIF DISTANCE EQ EVENTUALLY FLOAT GTE IMPLIES LEE LOCALIZATION_ERROR NAME NOT OR ORIENTATION POSITION_X POSITION_Y UNTIL VELOCITYopargs : operator\n              | comparisonoperator : ALWAYS '(' opargs ')'\n                | EVENTUALLY '(' opargs ')'\n                | NOT '(' opargs ')' operator : '(' opargs ')' UNTIL '(' opargs ')'\n                | '(' opargs ')' IMPLIES '(' opargs ')'\n                | '(' opargs ')' AND '(' opargs ')'\n                | '(' opargs ')' OR '(' opargs ')' comparison : func opbin FLOAT\n                  | FLOAT opbin func\n                  | func opbin funcopbin : '+'\n             | '-'\n             | '>'\n             | '<'\n             | '*'\n             | '/'\n             | GTE\n             | LEE\n             | EQ\n             | DIFfunc : POSITION_X NAME\n            | POSITION_Y NAME\n            | ORIENTATION NAME\n            | VELOCITY NAME\n            | LOCALIZATION_ERROR NAMEfunc : DISTANCE NAME NAME"
     
-_lr_action_items = {'ALWAYS':([0,4,5,14,15,16,17,],[4,4,4,4,4,4,4,]),'EVENTUALLY':([0,4,5,14,15,16,17,],[5,5,5,5,5,5,5,]),'FLOAT':([0,4,5,14,15,16,17,20,21,22,23,24,25,26,27,28,29,30,],[7,7,7,7,7,7,7,42,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,]),'POSITION_X':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[8,8,8,8,8,8,8,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,8,]),'POSITION_Y':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[9,9,9,9,9,9,9,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,9,]),'ORIENTATION':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[10,10,10,10,10,10,10,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,10,]),'VELOCITY':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[11,11,11,11,11,11,11,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,11,]),'LOCALIZATION_ERROR':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[12,12,12,12,12,12,12,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,12,]),'DISTANCE':([0,4,5,14,15,16,17,21,22,23,24,25,26,27,28,29,30,31,],[13,13,13,13,13,13,13,-11,-12,-13,-14,-15,-16,-17,-18,-19,-20,13,]),'$end':([1,2,3,18,19,32,33,34,35,36,38,39,40,41,42,43,44,],[0,-1,-2,-3,-4,-21,-22,-23,-24,-25,-5,-6,-7,-8,-9,-10,-26,]),'UNTIL':([1,2,3,18,19,32,33,34,35,36,38,39,40,41,42,43,44,],[14,-1,-2,14,14,-21,-22,-23,-24,-25,14,14,14,14,-9,-10,-26,]),'IMPLIES':([1,2,3,18,19,32,33,34,35,36,38,39,40,41,42,43,44,],[15,-1,-2,15,15,-21,-22,-23,-24,-25,15,15,15,15,-9,-10,-26,]),'AND':([1,2,3,18,19,32,33,34,35,36,38,39,40,41,42,43,44,],[16,-1,-2,16,16,-21,-22,-23,-24,-25,16,16,16,16,-9,-10,-26,]),'OR':([1,2,3,18,19,32,33,34,35,36,38,39,40,41,42,43,44,],[17,-1,-2,17,17,-21,-22,-23,-24,-25,17,17,17,17,-9,-10,-26,]),'+':([6,7,32,33,34,35,36,44,],[21,21,-21,-22,-23,-24,-25,-26,]),'-':([6,7,32,33,34,35,36,44,],[22,22,-21,-22,-23,-24,-25,-26,]),'>':([6,7,32,33,34,35,36,44,],[23,23,-21,-22,-23,-24,-25,-26,]),'<':([6,7,32,33,34,35,36,44,],[24,24,-21,-22,-23,-24,-25,-26,]),'*':([6,7,32,33,34,35,36,44,],[25,25,-21,-22,-23,-24,-25,-26,]),'/':([6,7,32,33,34,35,36,44,],[26,26,-21,-22,-23,-24,-25,-26,]),'GTE':([6,7,32,33,34,35,36,44,],[27,27,-21,-22,-23,-24,-25,-26,]),'LEE':([6,7,32,33,34,35,36,44,],[28,28,-21,-22,-23,-24,-25,-26,]),'EQ':([6,7,32,33,34,35,36,44,],[29,29,-21,-22,-23,-24,-25,-26,]),'DIF':([6,7,32,33,34,35,36,44,],[30,30,-21,-22,-23,-24,-25,-26,]),'NAME':([8,9,10,11,12,13,37,],[32,33,34,35,36,37,44,]),}
+_lr_action_items = {'ALWAYS':([0,5,16,18,19,53,54,55,56,],[4,4,4,4,4,4,4,4,4,]),'EVENTUALLY':([0,5,16,18,19,53,54,55,56,],[6,6,6,6,6,6,6,6,6,]),'NOT':([0,5,16,18,19,53,54,55,56,],[7,7,7,7,7,7,7,7,7,]),'(':([0,4,5,6,7,16,18,19,47,48,49,50,53,54,55,56,],[5,16,5,18,19,5,5,5,53,54,55,56,5,5,5,5,]),'FLOAT':([0,5,16,18,19,20,21,22,23,24,25,26,27,28,29,30,53,54,55,56,],[9,9,9,9,9,43,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,9,9,9,9,]),'POSITION_X':([0,5,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,53,54,55,56,],[10,10,10,10,10,10,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,10,10,10,10,10,]),'POSITION_Y':([0,5,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,53,54,55,56,],[11,11,11,11,11,11,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,11,11,11,11,11,]),'ORIENTATION':([0,5,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,53,54,55,56,],[12,12,12,12,12,12,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,12,12,12,12,12,]),'VELOCITY':([0,5,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,53,54,55,56,],[13,13,13,13,13,13,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,13,13,13,13,13,]),'LOCALIZATION_ERROR':([0,5,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,53,54,55,56,],[14,14,14,14,14,14,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,14,14,14,14,14,]),'DISTANCE':([0,5,16,18,19,20,21,22,23,24,25,26,27,28,29,30,31,53,54,55,56,],[15,15,15,15,15,15,-13,-14,-15,-16,-17,-18,-19,-20,-21,-22,15,15,15,15,15,]),'$end':([1,2,3,32,33,34,35,36,42,43,44,45,46,51,52,61,62,63,64,],[0,-1,-2,-23,-24,-25,-26,-27,-12,-10,-11,-28,-3,-4,-5,-6,-7,-8,-9,]),')':([2,3,17,32,33,34,35,36,38,40,41,42,43,44,45,46,51,52,57,58,59,60,61,62,63,64,],[-1,-2,39,-23,-24,-25,-26,-27,46,51,52,-12,-10,-11,-28,-3,-4,-5,61,62,63,64,-6,-7,-8,-9,]),'+':([8,9,32,33,34,35,36,45,],[21,21,-23,-24,-25,-26,-27,-28,]),'-':([8,9,32,33,34,35,36,45,],[22,22,-23,-24,-25,-26,-27,-28,]),'>':([8,9,32,33,34,35,36,45,],[23,23,-23,-24,-25,-26,-27,-28,]),'<':([8,9,32,33,34,35,36,45,],[24,24,-23,-24,-25,-26,-27,-28,]),'*':([8,9,32,33,34,35,36,45,],[25,25,-23,-24,-25,-26,-27,-28,]),'/':([8,9,32,33,34,35,36,45,],[26,26,-23,-24,-25,-26,-27,-28,]),'GTE':([8,9,32,33,34,35,36,45,],[27,27,-23,-24,-25,-26,-27,-28,]),'LEE':([8,9,32,33,34,35,36,45,],[28,28,-23,-24,-25,-26,-27,-28,]),'EQ':([8,9,32,33,34,35,36,45,],[29,29,-23,-24,-25,-26,-27,-28,]),'DIF':([8,9,32,33,34,35,36,45,],[30,30,-23,-24,-25,-26,-27,-28,]),'NAME':([10,11,12,13,14,15,37,],[32,33,34,35,36,37,45,]),'UNTIL':([39,],[47,]),'IMPLIES':([39,],[48,]),'AND':([39,],[49,]),'OR':([39,],[50,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'opargs':([0,4,5,14,15,16,17,],[1,18,19,38,39,40,41,]),'operator':([0,4,5,14,15,16,17,],[2,2,2,2,2,2,2,]),'comparison':([0,4,5,14,15,16,17,],[3,3,3,3,3,3,3,]),'func':([0,4,5,14,15,16,17,31,],[6,6,6,6,6,6,6,43,]),'opbin':([6,7,],[20,31,]),}
+_lr_goto_items = {'opargs':([0,5,16,18,19,53,54,55,56,],[1,17,38,40,41,57,58,59,60,]),'operator':([0,5,16,18,19,53,54,55,56,],[2,2,2,2,2,2,2,2,2,]),'comparison':([0,5,16,18,19,53,54,55,56,],[3,3,3,3,3,3,3,3,3,]),'func':([0,5,16,18,19,20,31,53,54,55,56,],[8,8,8,8,8,42,44,8,8,8,8,]),'opbin':([8,9,],[20,31,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,30 +27,32 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> opargs","S'",1,None,None,None),
-  ('opargs -> operator','opargs',1,'p_opargs','language_yacc.py',11),
-  ('opargs -> comparison','opargs',1,'p_opargs','language_yacc.py',12),
-  ('operator -> ALWAYS opargs','operator',2,'p_operator','language_yacc.py',15),
-  ('operator -> EVENTUALLY opargs','operator',2,'p_operator','language_yacc.py',16),
-  ('operator -> opargs UNTIL opargs','operator',3,'p_operator','language_yacc.py',17),
-  ('operator -> opargs IMPLIES opargs','operator',3,'p_operator','language_yacc.py',18),
-  ('operator -> opargs AND opargs','operator',3,'p_operator','language_yacc.py',19),
-  ('operator -> opargs OR opargs','operator',3,'p_operator','language_yacc.py',20),
-  ('comparison -> func opbin FLOAT','comparison',3,'p_comparison','language_yacc.py',23),
-  ('comparison -> FLOAT opbin func','comparison',3,'p_comparison','language_yacc.py',24),
-  ('opbin -> +','opbin',1,'p_opbin','language_yacc.py',27),
-  ('opbin -> -','opbin',1,'p_opbin','language_yacc.py',28),
-  ('opbin -> >','opbin',1,'p_opbin','language_yacc.py',29),
-  ('opbin -> <','opbin',1,'p_opbin','language_yacc.py',30),
-  ('opbin -> *','opbin',1,'p_opbin','language_yacc.py',31),
-  ('opbin -> /','opbin',1,'p_opbin','language_yacc.py',32),
-  ('opbin -> GTE','opbin',1,'p_opbin','language_yacc.py',33),
-  ('opbin -> LEE','opbin',1,'p_opbin','language_yacc.py',34),
-  ('opbin -> EQ','opbin',1,'p_opbin','language_yacc.py',35),
-  ('opbin -> DIF','opbin',1,'p_opbin','language_yacc.py',36),
-  ('func -> POSITION_X NAME','func',2,'p_func_onearg','language_yacc.py',39),
-  ('func -> POSITION_Y NAME','func',2,'p_func_onearg','language_yacc.py',40),
-  ('func -> ORIENTATION NAME','func',2,'p_func_onearg','language_yacc.py',41),
-  ('func -> VELOCITY NAME','func',2,'p_func_onearg','language_yacc.py',42),
-  ('func -> LOCALIZATION_ERROR NAME','func',2,'p_func_onearg','language_yacc.py',43),
-  ('func -> DISTANCE NAME NAME','func',3,'p_func_twoarg','language_yacc.py',46),
+  ('opargs -> operator','opargs',1,'p_opargs','language_yacc.py',17),
+  ('opargs -> comparison','opargs',1,'p_opargs','language_yacc.py',18),
+  ('operator -> ALWAYS ( opargs )','operator',4,'p_operator_5','language_yacc.py',24),
+  ('operator -> EVENTUALLY ( opargs )','operator',4,'p_operator_5','language_yacc.py',25),
+  ('operator -> NOT ( opargs )','operator',4,'p_operator_5','language_yacc.py',26),
+  ('operator -> ( opargs ) UNTIL ( opargs )','operator',7,'p_operator_8','language_yacc.py',32),
+  ('operator -> ( opargs ) IMPLIES ( opargs )','operator',7,'p_operator_8','language_yacc.py',33),
+  ('operator -> ( opargs ) AND ( opargs )','operator',7,'p_operator_8','language_yacc.py',34),
+  ('operator -> ( opargs ) OR ( opargs )','operator',7,'p_operator_8','language_yacc.py',35),
+  ('comparison -> func opbin FLOAT','comparison',3,'p_comparison','language_yacc.py',41),
+  ('comparison -> FLOAT opbin func','comparison',3,'p_comparison','language_yacc.py',42),
+  ('comparison -> func opbin func','comparison',3,'p_comparison','language_yacc.py',43),
+  ('opbin -> +','opbin',1,'p_opbin','language_yacc.py',49),
+  ('opbin -> -','opbin',1,'p_opbin','language_yacc.py',50),
+  ('opbin -> >','opbin',1,'p_opbin','language_yacc.py',51),
+  ('opbin -> <','opbin',1,'p_opbin','language_yacc.py',52),
+  ('opbin -> *','opbin',1,'p_opbin','language_yacc.py',53),
+  ('opbin -> /','opbin',1,'p_opbin','language_yacc.py',54),
+  ('opbin -> GTE','opbin',1,'p_opbin','language_yacc.py',55),
+  ('opbin -> LEE','opbin',1,'p_opbin','language_yacc.py',56),
+  ('opbin -> EQ','opbin',1,'p_opbin','language_yacc.py',57),
+  ('opbin -> DIF','opbin',1,'p_opbin','language_yacc.py',58),
+  ('func -> POSITION_X NAME','func',2,'p_func_onearg','language_yacc.py',64),
+  ('func -> POSITION_Y NAME','func',2,'p_func_onearg','language_yacc.py',65),
+  ('func -> ORIENTATION NAME','func',2,'p_func_onearg','language_yacc.py',66),
+  ('func -> VELOCITY NAME','func',2,'p_func_onearg','language_yacc.py',67),
+  ('func -> LOCALIZATION_ERROR NAME','func',2,'p_func_onearg','language_yacc.py',68),
+  ('func -> DISTANCE NAME NAME','func',3,'p_func_twoarg','language_yacc.py',74),
 ]
