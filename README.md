@@ -43,6 +43,8 @@ after(X,Y) (after the event X is observed, Y has to hold on the entire subsequen
 
 (X)until(Y) (Y holds at the current or future position, and X has to hold until that position. At that position X does not have to hold any more)
 
+after(X,Y)until(Z) (after the event X is observed, Y has to hold on the entire subsequent path up until Z happens, at that position X does not have to hold any more)
+
 (X)implies(Y)
 
 not(X)
@@ -78,7 +80,7 @@ localization_error X (The difference between to robot perception of its position
 
 #### A robot always stops at the stop sign:
 ```
-always ((eventually (distance robot1 stop_sign1 < 2) and (orientation robot1 - orientation stop_sign1 < 90)) implies (eventually velocity robot1 <= 0))
+always (after ((distance robot1 stop_sign1 < 2) and (orientation robot1 - orientation stop_sign1 < 90), eventually (velocity robot1 <= 0)) until ((distance robot1 stop_sign1 > 2) or (orientation robot1 - orientation stop_sign1 > 90)))
 ```
 
 #### The localization error (difference between the robot perception of its location and the simulation actual location) of the robot is never above a certain value:
@@ -99,7 +101,7 @@ never (localization_error robot1 > 0.2)
 decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
 decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 
-(after (position_z drone > 5, rotor1_vel{0.2} == rotor2_vel{0.2})) until (position_z drone < 5)
+after (position_z drone > 5, rotor1_vel{0.2} == rotor2_vel{0.2}) until (position_z drone < 5)
 ```
 
 #### A robot never makes a rotation of more than X degrees in a period of time
