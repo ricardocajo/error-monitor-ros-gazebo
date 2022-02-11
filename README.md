@@ -1,5 +1,7 @@
 # Simulation Monitor Compiler
- This repository provides a convenient DSL (Domain Specific Language) for specifying robots expected behaviour, as well as the respective compiler to monitor these behaviours while in a simulation.
+ This repository provides a convenient DSL (Domain Specific Language) for specifying robots expected behaviour, in the **_/dsl/_** directory are the respective implementation and compiler to monitor these behaviours while in a simulation.
+
+ The **_/ros_func_lib/_** directory is an implementation of a ROS (Robot Operating System) package, that functions as a library required for the output code of the compiler to run properly in ROS.
 
 ## Table of content
 * [Installs](#installs)
@@ -24,9 +26,11 @@ To install Gazebo in Ubuntu through the command line follow the link [gazebo_ins
 
 ## Structure and Files
 
-The directory **_/dsl/_** is where all the files for the DSL operators, compiler, etc.. are gathered.
-
-The directory **_/ros_func_lib/_** is where all the files for implementing the monitor functions in ros are gathered.
+- The directory **_/dsl/_** is where all the files for the DSL operators, compiler, etc.. are gathered:
+**_tokens.py_** has all the available tokens that will be used to build the lexer of the language in ***language_lex.py***. ***language_yacc.py*** has the grammar specification of the language. ***verify_language.py*** has the implementation of a function to verify the syntax of the code. ***compile_language.py*** has the implementation of the compiler. **_utils.py_** are usefull classes for the function of the whole DSL.
+- The directory **_/ros_func_lib/_** is where all the files for implementing ROS package library for the monitoring are gathered:
+**_CMakeLists.txt_** and **_package.xml_** are used to define the ROS package. **_setup.py_** allows this package to be used by other ROS packages. ***/src/ros_func_lib/*** directory is where the library functions are implemented (it needs to be in this directory so the functions can be properly imported by other ROS packages).
+***predicates_func.py*** acts like an API of available functions that will be used by the compiler. ***utils_func.py*** are utility functions that are used by ***predicates_func.py***. **_config.py_** is a configuration file where the used simulator, among others, are specified.
 
 ## Language
 
