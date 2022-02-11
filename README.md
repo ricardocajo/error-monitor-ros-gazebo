@@ -94,8 +94,8 @@ never (localization_error robot1 > 0.2)
 #### After a drone is at a certain altitude both rotors always have the same velocity up until the drone decreases to a certain altitude
 ```
 # The language can't inherently have a way to interact with specific components of a robot 
-# like the rotors, because it doesn't know which topic get information from. The user needs
-# to declare these specific topics to be able to interact with them.
+# like the rotors, because it doesn't know which topic to get information from. The user
+# needs to declare these specific topics to be able to interact with them.
 decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
 decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 
