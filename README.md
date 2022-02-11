@@ -49,7 +49,9 @@ not(X)
 
 (X)and(Y) | (X)or(Y)
 
-X == Y | X != Y
+X{y} (the value X can have an error margin of y)
+
+X == Y | X != Y | X = y
 
 X > Y | X >= Y | X < Y | X <= Y
 
@@ -95,16 +97,14 @@ never (localization_error robot1 > 0.2)
 decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
 decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 
-# X{y} means that the value X can have an error margin of y
 (after (position_z drone > 5, rotor1_vel{0.2} == rotor2_vel{0.2})) until (position_z drone < 5)
 ```
 
-#### A robot never makes a rotation of more than X degrees in a period of time (maybe usefull for an airplane/drone simulation)
-How would i express the period of time? And how would i even monitor this
+#### A robot never makes a rotation of more than X degrees in a period of time
+```
+robot_ori = orientation robot
+robot_ori_prev1 = @{robot_ori, -1}
+robot_ori_prev2 = @{robot_ori, -2}
 
-#### A robot's wheels never turn more than 90 degrees:
-The problem i sent an email, if i write something like left_wheel_orientation how will my compiler internally know which topic to search for? (it depends on the robot and can change dynamically)
-
-In the case that the topic name doesn't change dynamically, i can have a robot_config_file that the user fills before running so the compiler has this type of information 
-
-Even if i could have this information how would i be able to use it? different robots will have different Message structures
+never ()
+```
