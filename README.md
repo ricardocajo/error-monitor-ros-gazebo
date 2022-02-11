@@ -51,6 +51,8 @@ not(X)
 
 X{y} (the value X can have an error margin of y)
 
+@{X, -y} (the value of the variable X in the point in time -y)
+
 X == Y | X != Y | X = y
 
 X > Y | X >= Y | X < Y | X <= Y
@@ -89,7 +91,7 @@ model robot1:
 never (localization_error robot1 > 0.2)
 ```
 
-#### After a drone is at a certain altitude both rotors always have the same velocity until the drone decreases to a certain altitude
+#### After a drone is at a certain altitude both rotors always have the same velocity up until the drone decreases to a certain altitude
 ```
 # The language can't inherently have a way to interact with specific components of a robot 
 # like the rotors, because it doesn't know which topic get information from. The user needs
@@ -105,6 +107,7 @@ decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 robot_ori = orientation robot
 robot_ori_prev1 = @{robot_ori, -1}
 robot_ori_prev2 = @{robot_ori, -2}
+robot_ori_prev3 = @{robot_ori, -3}
 
-never ()
+never ((robot_ori - robot_ori_prev1 > 12) or (robot_ori - robot_ori_prev2 > 12) or (robot_ori - robot_ori_prev3 > 12))
 ```
