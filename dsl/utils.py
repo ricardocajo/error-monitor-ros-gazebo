@@ -1,5 +1,8 @@
 """ A set of usefull classes for the whole compiler """
 
+from jinja2 import Environment, FileSystemLoader
+from typing import Tuple, Dict
+
 class Context(object):
     """ Save the context of a program """
     def __init__(self):
@@ -7,9 +10,13 @@ class Context(object):
 
 class Emitter(object):
     """ Save the strings to be written in the monitor file """
-    def __init__(self):
+    def __init__(self, _file_prefix):
         self.count = 0
-        self.lines = []
+        self.blocks = []
+        self.file_loader = FileSystemLoader('templates')
+        self.env = Environment(loader=self.file_loader)
+        data = {'file_prefix': _file_prefix}
+        self << ('file_beginning.python.jinja', data)
 
     def get_count(self):
         self.count += 1
@@ -19,11 +26,15 @@ class Emitter(object):
         id = self.get_count()
         return f"var{id}"
 
-    def __lshift__(self, v):
-        self.lines.append(v)
+    def __lshift__(self, jinja_info: Tuple[str,Dict[str,str]]):
+        template_file, data_dic = jinja_info
+        template = self.env.get_template(template_file)
+        output = template.render(data=data_dic)
+        self.blocks.append(output)
 
     def get_code(self):
-        return "\n".join(self.lines)
+        template = self.env.get_template('join_code.python.jinja')
+        return template.render(code=self.blocks)
 
 class Node(object):
     """ The ast of a program """

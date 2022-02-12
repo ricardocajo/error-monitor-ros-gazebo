@@ -6,6 +6,7 @@ from utils import *
 from verify_language import *
 from compile_language import *
 from pathlib import Path
+import os
 
 lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
