@@ -9,7 +9,7 @@ from pathlib import Path
 import os
 
 lexer = lex.lex(module=language_lex)
-#parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
+parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 
 """              TEST LEXER
 data = '''always (((position_x robot1) >= 0) and ((position_y robot1) > -1))
