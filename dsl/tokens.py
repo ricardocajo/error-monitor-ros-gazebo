@@ -23,4 +23,4 @@ reserved = {
 
 literals = ['>','<','(',')','+','-','*','/','{','}','@','=',':',',','.']
 
-tokens = ['NAME','INTEGER','FLOAT','EQ','DIF','GTE','LEE'] + list(reserved.values())
+tokens = ['NAME','TOPIC_NAME','INTEGER','FLOAT','EQ','DIF','GTE','LEE'] + list(reserved.values())

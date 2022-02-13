@@ -18,6 +18,11 @@ def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     t.type = reserved.get(t.value,'NAME')
     return t
+
+def t_TOPIC_NAME(t):
+    r'[a-zA-Z~/][a-zA-Z0-9_/]*'
+    t.type = reserved.get(t.value,'TOPIC_NAME')
+    return t
     
 def t_FLOAT(t):
     r'[-]?[0-9]*[.][0-9]+'

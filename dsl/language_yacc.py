@@ -8,41 +8,51 @@ literals = tok.literals
 reserved = tok.reserved
 
 precedence = (
-    ('left','UNTIL','IMPLIES','AND','OR','ALWAYS','EVENTUALLY','NOT'),
     ('nonassoc','GTE','LEE','EQ','DIF','>','<'),
 )
 
-#comparison needs to be non-associative?
-def p_opargs(p):
-    '''opargs : operator
-              | comparison'''
-    p[0] = Node('opargs', p[1])
-    #print("teste1")
-    #print(p[0])
-
-def p_operator_5(p):
-    '''operator : ALWAYS '(' opargs ')'
-                | EVENTUALLY '(' opargs ')'
-                | NOT '(' opargs ')' '''
-    p[0] = Node('operator_5', p[1], p[2], p[3], p[4])
-    #print("teste3")
-    #print(p[0])
-
-def p_operator_8(p):
-    '''operator : '(' opargs ')' UNTIL '(' opargs ')'
-                | '(' opargs ')' IMPLIES '(' opargs ')'
-                | '(' opargs ')' AND '(' opargs ')'
-                | '(' opargs ')' OR '(' opargs ')' '''
-    p[0] = Node('operator_8', p[1], p[2], p[3], p[4], p[5], p[6], p[7])
+def p_declaration(p):
+    '''declaration : DECL NAME TOPIC_NAME msgtype
+                   | DECL NAME NAME msgtype'''
+    p[0] = Node('declaration', p[1], p[2], p[3], p[4])
     #print("teste2")
     #print(p[0])
 
-def p_comparison(p):
-    '''comparison : func opbin NUMBER
-                  | NUMBER opbin func
-                  | func opbin func'''
-    p[0] = Node('comparison', p[1], p[2], p[3])
-    #print("teste4")
+def p_msgtype(p):
+    '''msgtype : NAME
+               | NAME '.' msgtype'''
+    p[0] = Node('declaration', p[1], p[2], p[3], p[4])
+    #print("teste2")
+    #print(p[0])
+    
+def p_pattern_4(p):
+    '''pattern : ALWAYS '(' opargs ')'
+               | NEVER '(' opargs ')'
+               | EVENTUALLY '(' opargs ')'
+               | NOT '(' opargs ')' '''
+    p[0] = Node('pattern_4', p[1], p[2], p[3], p[4])
+    #print("teste3")
+    #print(p[0])
+
+def p_pattern_6(p):
+    '''pattern : AFTER '(' opargs ',' opargs ')' '''
+    p[0] = Node('pattern_6', p[1], p[2], p[3], p[4], p[5], p[6])
+    #print("teste2")
+    #print(p[0])
+
+def p_pattern_7(p):
+    '''pattern : '(' opargs ')' UNTIL '(' opargs ')'
+               | '(' opargs ')' IMPLIES '(' opargs ')'
+               | '(' opargs ')' AND '(' opargs ')'
+               | '(' opargs ')' OR '(' opargs ')' '''
+    p[0] = Node('pattern_7', p[1], p[2], p[3], p[4], p[5], p[6], p[7])
+    #print("teste2")
+    #print(p[0])
+
+def p_pattern_10(p):
+    '''pattern : AFTER '(' opargs ',' opargs ')' UNTIL '(' opargs ')' '''
+    p[0] = Node('pattern_10', p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9], p[10])
+    #print("teste2")
     #print(p[0])
 
 def p_opbin(p):
@@ -63,6 +73,7 @@ def p_opbin(p):
 def p_func_onearg(p):
     '''func : POSITION_X NAME
             | POSITION_Y NAME
+            | POSITION_Z NAME
             | ORIENTATION NAME
             | VELOCITY NAME
             | LOCALIZATION_ERROR NAME'''

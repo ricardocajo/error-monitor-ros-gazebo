@@ -9,7 +9,7 @@ from pathlib import Path
 import os
 
 lexer = lex.lex(module=language_lex)
-parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
+#parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 
 """              TEST LEXER
 data = '''always (((position_x robot1) >= 0) and ((position_y robot1) > -1))
@@ -24,7 +24,12 @@ never ((robot_ori - robot_ori_prev1 > 12) or (robot_ori - robot_ori_prev2 > 12) 
 decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
 decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 
-after (position_z drone > 5, rotor1_vel{0.2} == rotor2_vel{0.2}) until (position_z drone < 0.5)'''
+after (position_z drone > 5, rotor1_vel{0.2} == rotor2_vel{0.2}) until (position_z drone < 0.5)
+
+model robot1:
+    position /odom Odometry.pose.pose.position
+
+never (localization_error robot1 > 0.2)'''
 lexer.input(data)
 while True:
     tok = lexer.token()

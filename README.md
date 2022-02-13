@@ -37,6 +37,8 @@ To install Gazebo in Ubuntu through the command line follow the link [gazebo_ins
 ### Operators
 always(X) (X has to hold on the entire subsequent path)
 
+never(X) (X never holds on the entire subsequent path)
+
 eventually(X) (X eventually has to hold, somewhere on the subsequent path)
 
 after(X,Y) (after the event X is observed, Y has to hold on the entire subsequent path)
