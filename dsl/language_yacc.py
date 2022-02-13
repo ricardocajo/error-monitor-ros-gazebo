@@ -38,8 +38,8 @@ def p_operator_8(p):
     #print(p[0])
 
 def p_comparison(p):
-    '''comparison : func opbin FLOAT
-                  | FLOAT opbin func
+    '''comparison : func opbin NUMBER
+                  | NUMBER opbin func
                   | func opbin func'''
     p[0] = Node('comparison', p[1], p[2], p[3])
     #print("teste4")

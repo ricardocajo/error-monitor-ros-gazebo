@@ -27,6 +27,15 @@ def t_FLOAT(t):
         print("Float value too large %d", t.value)
         t.value = 0
     return t
+
+def t_INTEGER(t):
+    r'[-]?[0-9][0-9_]*(?<!_)'
+    try:
+        t.value = int(t.value)
+    except ValueError:
+        print("Integer value too large %d", t.value)
+        t.value = 0
+    return t
     
 def t_newline(t):
     r'\n+'
