@@ -3,13 +3,13 @@ from utils import *
 def compile_ros_py(ctx: Context, node: Node, emitter=None, file_prefix=None):
     """ Creates a python script capable of running the associated monitor code in ROS """
     data = {}  # data['var1'] = value / data['var2'] = value / emitter << ('file_X.python.jinja', data)
-    print(node)
     if emitter is None:
         emitter = Emitter(file_prefix)
         compile_ros_py(ctx, node, emitter)
         return emitter.get_code()
     elif node.type == 'program':
         #....
+        print("entrei")
         compile_ros_py(ctx, node.args[0], emitter)
     else:
         print("Node type doesn't exist")

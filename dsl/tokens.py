@@ -1,6 +1,8 @@
 """ The language possible tokens """
 
 reserved = {
+    'true' : 'TRUE',
+    'false' : 'FALSE',
     'decl' : 'DECL',
     'model' : 'MODEL',
     'always' : 'ALWAYS',

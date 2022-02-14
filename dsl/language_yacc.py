@@ -8,6 +8,7 @@ literals = tok.literals
 reserved = tok.reserved
 
 precedence = (
+    ('left','+','-','/','*'), #TODO remove this probably?
     ('nonassoc','GTE','LEE','EQ','DIF','>','<'),
 )
 
@@ -57,7 +58,8 @@ def p_msgtype(p):
     print(p[0])
 
 def p_association(p):
-    '''association : NAME '=' expression'''
+    '''association : NAME '=' expression
+                   | NAME '=' comparison'''
     p[0] = Node('association', p[1], p[2], p[3])
     print("teste6")
     print(p[0])
@@ -101,22 +103,28 @@ def p_paargs(p):
     print(p[0])
 
 def p_comparison(p):
-    '''comparison : operand '>' operand
-                  | operand '<' operand
-                  | operand GTE operand
-                  | operand LEE operand
-                  | operand EQ operand
-                  | operand DIF operand'''
+    '''comparison : expression '>' expression
+                  | expression '<' expression
+                  | expression GTE expression
+                  | expression LEE expression
+                  | expression EQ expression
+                  | expression DIF expression'''
     p[0] = Node('comparison', p[1], p[2], p[3])
     print("teste12")
     print(p[0])
 
 def p_expression(p):
-    '''expression : operand '+' operand
-                  | operand '-' operand
-                  | operand '*' operand
-                  | operand '/' operand'''
-    p[0] = Node('expression', p[1], p[2], p[3])
+    '''expression : expression '+' expression
+                  | expression '-' expression
+                  | expression '*' expression
+                  | expression '/' expression
+                  | expression
+                  | operand
+                  | comparison'''
+    if len(p) > 2:
+        p[0] = Node('expression', p[1], p[2], p[3])
+    else:
+        p[0] = Node('expression', p[1])
     print("teste12.5")
     print(p[0])
 
@@ -125,11 +133,16 @@ def p_operand(p):
                | INTEGER
                | FLOAT
                | NAME
-               | temporalvalue
-               | comparison'''
+               | bool
+               | temporalvalue'''
     p[0] = Node('operand', p[1])
     print("teste14")
     print(p[0])
+
+def p_bool(p):
+    '''bool : TRUE
+            | FALSE'''
+    p[0] = Node('bool', p[1])
 
 def p_func_onearg(p):
     '''func : POSITION_X NAME
