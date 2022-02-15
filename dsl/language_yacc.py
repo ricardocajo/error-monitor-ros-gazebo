@@ -1,19 +1,12 @@
 """ The language grammar """
 
-import tokens as tok
 from utils import *
-
-tokens = tok.tokens
-literals = tok.literals
-reserved = tok.reserved
 
 precedence = (
     ('nonassoc','GTE','LEE','EQ','DIF','>','<'),
     ('left','+','-'),
     ('left','/','*'),
 )
-
-#value{x} missing
 
 def p_program(p):
     '''program : command
@@ -137,18 +130,14 @@ def p_bool(p):
             | FALSE'''
     p[0] = Node('bool', p[1])
 
-def p_func_onearg(p):
-    '''func : POSITION_X NAME
-            | POSITION_Y NAME
-            | POSITION_Z NAME
-            | ORIENTATION NAME
-            | VELOCITY NAME
-            | LOCALIZATION_ERROR NAME'''
-    p[0] = Node('func_onearg', p[1], p[2])
+def p_func(p):
+    '''func : FUNC_MAIN NAME funcargs'''
+    p[0] = Node('func', p[1], p[2], p[3])
 
-def p_func_twoarg(p):
-    '''func : DISTANCE NAME NAME'''
-    p[0] = Node('func_twoarg', p[1], p[2], p[3])
+def p_funcargs(p):
+    '''funcargs : NAME
+                | empty'''
+    p[0] = Node('funcargs', p[1]) #TODO see how to handle empty
 
 def p_temporalvalue(p):
     '''temporalvalue : '@' '{' NAME ',' INTEGER '}' '''

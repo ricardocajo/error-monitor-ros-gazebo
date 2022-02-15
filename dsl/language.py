@@ -12,7 +12,7 @@ lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 
 """              TEST LEXER
-data = '''never (robot_ori + robot_ori_prev1 > 12)'''
+data = '''never (position_x robot1 + robot_ori_prev1 > 12)'''
 lexer.input(data)
 while True:
     tok = lexer.token()
@@ -24,7 +24,7 @@ while True:
 import sys
 filename = sys.argv[1]
 file_prefix = filename[:-4]
-#for test: /home/rcordeiro/ros_workspace/src/test_pkg   /src and /launch
+#for test: /home/rcordeiro/ros_workspace/src/test_pkg/src
 ros_package_dir_path = sys.argv[2]
 
 if not Path(ros_package_dir_path).is_dir():
@@ -33,12 +33,13 @@ if not Path(ros_package_dir_path).is_dir():
 
 f = open(filename, 'r')
 _input = f.read()
+print(tokens)
 ast = parser.parse(lexer=lexer, input=_input)
 #print(ast)
-verify(Context(),ast)
-code = compile_ros_py(Context(), ast, file_prefix=file_prefix)
-filename = file_prefix + ".py"
-filepath = os.path.join(ros_package_dir_path, filename)
-with open(filepath, "w") as f_out:
-    f_out.write(code)
+#verify(Context(),ast)
+#code = compile_ros_py(Context(), ast, file_prefix=file_prefix)
+#filename = file_prefix + ".py"
+#filepath = os.path.join(ros_package_dir_path, filename)
+#with open(filepath, "w") as f_out:
+#    f_out.write(code)
 #"""

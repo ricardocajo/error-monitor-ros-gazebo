@@ -1,10 +1,6 @@
 """ The lex tokenizer to split the language tokens """
 
-import tokens as tok
-
-tokens = tok.tokens
-literals = tok.literals
-reserved = tok.reserved
+from utils import *
 
 t_EQ = r'=='
 t_DIF = r'!='
@@ -17,6 +13,8 @@ t_ignore_COMMENT = r'\#.*'
 def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     t.type = reserved.get(t.value,'NAME')
+    if t.value in func_main:
+        t.type = func_main_token_type
     return t
 
 def t_TOPIC_NAME(t):

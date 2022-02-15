@@ -1,4 +1,4 @@
-""" A set of usefull classes for the whole compiler """
+""" A set of usefull classes and structures for the whole compiler """
 
 from jinja2 import Environment, FileSystemLoader
 from typing import Tuple, Dict
@@ -46,3 +46,38 @@ class Node(object):
         s = "rule: " + str(self.type) + "\n"
         s += "".join(["i: " + str(i) + "\n" for i in self.args])
         return s
+
+
+""" The language possible tokens """
+
+func_main_token_type = 'FUNC_MAIN'
+func_main = {
+    'position_x' : 'POSITION_X',
+    'position_y' : 'POSITION_Y',
+    'position_z' : 'POSITION_Z',
+    'velocity' : 'VELOCITY',
+    'distance' : 'DISTANCE',
+    'localization_error' : 'LOCALIZATION_ERROR',
+    'orientation' : 'ORIENTATION'
+}
+
+reserved = {
+    'true' : 'TRUE',
+    'false' : 'FALSE',
+    'decl' : 'DECL',
+    'model' : 'MODEL',
+    'always' : 'ALWAYS',
+    'never' : 'NEVER',
+    'eventually' : 'EVENTUALLY',
+    'after' : 'AFTER',
+    'until' : 'UNTIL',
+    'implies' : 'IMPLIES',
+    'not' : 'NOT',
+    'and' : 'AND',
+    'or' : 'OR'
+}
+
+literals = ['>','<','(',')','+','-','*','/','{','}','@','=',':',',','.']
+
+tokens = ['NAME','TOPIC_NAME','INTEGER','FLOAT','EQ','DIF','GTE',
+         'LEE',func_main_token_type] + list(reserved.values()) + list(func_main.values())
