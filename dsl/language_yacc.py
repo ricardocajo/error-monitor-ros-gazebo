@@ -33,12 +33,12 @@ def p_command(p):
 def p_declaration(p):
     '''declaration : DECL NAME TOPIC_NAME msgtype
                    | DECL NAME NAME msgtype'''
-    p[0] = Node('declaration', p[1], p[2], p[3], p[4])
+    p[0] = Node('declaration', p[2], p[3], p[4])
 
 def p_model(p):
     '''model : MODEL NAME ':' NAME TOPIC_NAME msgtype
              | MODEL NAME ':' NAME NAME msgtype'''
-    p[0] = Node('model', p[1], p[2], p[3], p[4], p[5], p[6])
+    p[0] = Node('model', p[2], p[4], p[5], p[6])
 
 def p_msgtype(p):
     '''msgtype : NAME
@@ -50,7 +50,7 @@ def p_msgtype(p):
 
 def p_association(p):
     '''association : NAME '=' expression'''
-    p[0] = Node('association', p[1], p[2], p[3])
+    p[0] = Node('association', p[1], p[3])
 
 def p_expression(p):
     '''expression : operation
@@ -59,7 +59,7 @@ def p_expression(p):
                   | operation '{' number '}'
                   | operand '{' number '}' '''
     if len(p) > 2:
-        p[0] = Node('expression', p[1], p[2], p[3], p[4])
+        p[0] = Node('expression', p[1], p[3])
     else:
         p[0] = Node('expression', p[1])
 
@@ -68,36 +68,34 @@ def p_pattern_4(p):
                | NEVER '(' paargs ')'
                | EVENTUALLY '(' paargs ')'
                | NOT '(' paargs ')' '''
-    p[0] = Node('pattern_4', p[1], p[2], p[3], p[4])
+    p[0] = Node('pattern_4', p[1], p[3])
 
 def p_pattern_6(p):
     '''pattern : AFTER '(' paargs ',' paargs ')' '''
-    p[0] = Node('pattern_6', p[1], p[2], p[3], p[4], p[5], p[6])
+    p[0] = Node('pattern_6', p[1], p[3], p[5])
 
 def p_pattern_7(p):
     '''pattern : '(' paargs ')' UNTIL '(' paargs ')'
                | '(' paargs ')' IMPLIES '(' paargs ')' '''
-    p[0] = Node('pattern_7', p[1], p[2], p[3], p[4], p[5], p[6], p[7])
-    print("teste9")
-    print(p[0])
+    p[0] = Node('pattern_7', p[2], p[4], p[6])
 
 def p_patter_multi(p):
     '''pattern : '(' paargs ')' AND '(' paargs ')' pattsup
                | '(' paargs ')' OR '(' paargs ')' pattsup'''
-    p[0] = Node('pattern_multi', p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8])
+    p[0] = Node('pattern_multi', p[2], p[4], p[6], p[8])
 
 def p_pattsup(p):
     '''pattsup : AND '(' paargs ')' 
                | OR '(' paargs ')' 
                | empty'''
     if len(p) > 2:
-        p[0] = Node('pattsup', p[1], p[2], p[3], p[4])
+        p[0] = Node('pattsup', p[1], p[3])
     else:  #TODO maybe this will give an error whiel check None type?
         pass
 
 def p_pattern_10(p):
     '''pattern : AFTER '(' paargs ',' paargs ')' UNTIL '(' paargs ')' '''
-    p[0] = Node('pattern_10', p[1], p[2], p[3], p[4], p[5], p[6], p[7], p[8], p[9], p[10])
+    p[0] = Node('pattern_10', p[1], p[3], p[5], p[7], p[9])
 
 def p_paargs(p):
     '''paargs : pattern
@@ -120,8 +118,6 @@ def p_comparison(p):
                   | expression EQ expression
                   | expression DIF expression'''
     p[0] = Node('comparison', p[1], p[2], p[3])
-    print("teste13")
-    print(p[0])
 
 def p_number(p):
     '''number : FLOAT
@@ -156,7 +152,7 @@ def p_func_twoarg(p):
 
 def p_temporalvalue(p):
     '''temporalvalue : '@' '{' NAME ',' INTEGER '}' '''
-    p[0] = Node('temporalvalue', p[1], p[2], p[3], p[4], p[5], p[6])
+    p[0] = Node('temporalvalue',p[3], p[5])
 
 def p_empty(p):
     'empty :'
