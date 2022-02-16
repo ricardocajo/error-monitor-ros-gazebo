@@ -6,6 +6,7 @@ precedence = (
     ('nonassoc','GTE','LEE','EQ','DIF','>','<'),
     ('left','+','-'),
     ('left','/','*'),
+    ('left','{')
 )
 
 def p_program(p):
@@ -49,8 +50,7 @@ def p_expression(p):
     '''expression : operation
                   | comparison
                   | operand
-                  | operation '{' number '}'
-                  | operand '{' number '}' '''
+                  | expression '{' number '}' '''
     if len(p) > 2:
         p[0] = Node('expression', p[1], p[3])
     else:
@@ -73,18 +73,24 @@ def p_pattern_7(p):
     p[0] = Node('pattern_7', p[2], p[4], p[6])
 
 def p_patter_multi(p):
-    '''pattern : '(' paargs ')' AND '(' paargs ')' pattsup
+    '''pattern : '(' paargs ')' AND '(' paargs ')'
+               | '(' paargs ')' OR '(' paargs ')'
+               | '(' paargs ')' AND '(' paargs ')' pattsup
                | '(' paargs ')' OR '(' paargs ')' pattsup'''
-    p[0] = Node('pattern_multi', p[2], p[4], p[6], p[8])
+    if len(p) > 8:
+        p[0] = Node('pattern_multi', p[2], p[4], p[6], p[8])
+    else:
+        p[0] = Node('pattern_multi', p[2], p[4], p[6])
 
 def p_pattsup(p):
     '''pattsup : AND '(' paargs ')' 
                | OR '(' paargs ')' 
-               | empty'''
-    if len(p) > 2:
+               | AND '(' paargs ')' pattsup 
+               | OR '(' paargs ')' pattsup'''
+    if len(p) > 5:
+        p[0] = Node('pattsup', p[1], p[3], p[5])
+    else:
         p[0] = Node('pattsup', p[1], p[3])
-    else:  #TODO maybe this will give an error whiel check None type?
-        pass
 
 def p_pattern_10(p):
     '''pattern : AFTER '(' paargs ',' paargs ')' UNTIL '(' paargs ')' '''
@@ -101,7 +107,7 @@ def p_operation(p):
                  | expression '-' expression
                  | expression '/' expression
                  | expression '*' expression'''
-    p[0] = Node('operation', p[1], p[2], p[3])           
+    p[0] = Node('operation', p[1], p[2], p[3])       
 
 def p_comparison(p):
     '''comparison : expression '>' expression
@@ -131,21 +137,20 @@ def p_bool(p):
     p[0] = Node('bool', p[1])
 
 def p_func(p):
-    '''func : FUNC_MAIN NAME funcargs'''
-    p[0] = Node('func', p[1], p[2], p[3])
+    '''func : FUNC_MAIN funcargs'''
+    p[0] = Node('func', p[1], p[2])
 
-def p_funcargs(p):
-    '''funcargs : NAME
-                | empty'''
-    p[0] = Node('funcargs', p[1]) #TODO see how to handle empty
+def p_funcargs(p): # this will produce a shift/reduce conflict but it should always shift in favor of the biggest match
+    '''funcargs : funcargs funcargs
+                | NAME'''
+    if len(p) > 2:
+        p[0] = Node('funcargs', p[1], p[2])
+    else:
+        p[0] = Node('funcargs', p[1])
 
 def p_temporalvalue(p):
     '''temporalvalue : '@' '{' NAME ',' INTEGER '}' '''
     p[0] = Node('temporalvalue',p[3], p[5])
-
-def p_empty(p):
-    'empty :'
-    pass
 
 def p_error(p):
     print("Syntax error at '%s'. Line number '%d'" % (p.value, p.lineno))

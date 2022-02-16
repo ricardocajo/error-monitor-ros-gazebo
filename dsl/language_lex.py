@@ -1,6 +1,7 @@
 """ The lex tokenizer to split the language tokens """
 
 from utils import *
+from ply.lex import TOKEN
 
 t_EQ = r'=='
 t_DIF = r'!='
@@ -10,11 +11,13 @@ t_LEE = r'<='
 t_ignore = ' \t'
 t_ignore_COMMENT = r'\#.*'
 
+@TOKEN('|'.join(func_main_list))
+def t_FUNC_MAIN(t):
+    return t
+
 def t_NAME(t):
     r'[a-zA-Z_][a-zA-Z0-9_]*'
     t.type = reserved.get(t.value,'NAME')
-    if t.value in func_main:
-        t.type = func_main_token_type
     return t
 
 def t_TOPIC_NAME(t):

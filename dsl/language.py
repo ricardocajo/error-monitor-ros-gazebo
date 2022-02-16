@@ -33,13 +33,12 @@ if not Path(ros_package_dir_path).is_dir():
 
 f = open(filename, 'r')
 _input = f.read()
-print(tokens)
 ast = parser.parse(lexer=lexer, input=_input)
-#print(ast)
-#verify(Context(),ast)
-#code = compile_ros_py(Context(), ast, file_prefix=file_prefix)
-#filename = file_prefix + ".py"
-#filepath = os.path.join(ros_package_dir_path, filename)
-#with open(filepath, "w") as f_out:
-#    f_out.write(code)
+print(ast)
+verify(Context(),ast)
+code = compile_ros_py(Context(), ast, file_prefix=file_prefix)
+filename = file_prefix + ".py"
+filepath = os.path.join(ros_package_dir_path, filename)
+with open(filepath, "w") as f_out:
+    f_out.write(code)
 #"""

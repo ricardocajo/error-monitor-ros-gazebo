@@ -50,16 +50,16 @@ class Node(object):
 
 """ The language possible tokens """
 
-func_main_token_type = 'FUNC_MAIN'
 func_main = {
-    'position_x' : 'POSITION_X',
-    'position_y' : 'POSITION_Y',
-    'position_z' : 'POSITION_Z',
-    'velocity' : 'VELOCITY',
-    'distance' : 'DISTANCE',
-    'localization_error' : 'LOCALIZATION_ERROR',
-    'orientation' : 'ORIENTATION'
+    'position_x' : '1',
+    'position_y' : '1',
+    'position_z' : '1',
+    'velocity' : '1',
+    'distance' : '2',
+    'localization_error' : '1',
+    'orientation' : '1'
 }
+func_main_list = list(func_main.keys())
 
 reserved = {
     'true' : 'TRUE',
@@ -80,4 +80,4 @@ reserved = {
 literals = ['>','<','(',')','+','-','*','/','{','}','@','=',':',',','.']
 
 tokens = ['NAME','TOPIC_NAME','INTEGER','FLOAT','EQ','DIF','GTE',
-         'LEE',func_main_token_type] + list(reserved.values()) + list(func_main.values())
+         'LEE','FUNC_MAIN'] + list(reserved.values())
