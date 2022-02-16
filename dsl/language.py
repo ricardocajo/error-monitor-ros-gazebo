@@ -6,7 +6,7 @@ from utils import *
 from verify_language import *
 from compile_language import *
 from pathlib import Path
-import os
+import os, stat
 
 lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
@@ -34,11 +34,11 @@ if not Path(ros_package_dir_path).is_dir():
 f = open(filename, 'r')
 _input = f.read()
 ast = parser.parse(lexer=lexer, input=_input)
-print(ast)
 verify(Context(),ast)
 code = compile_ros_py(Context(), ast, file_prefix=file_prefix)
 filename = file_prefix + ".py"
 filepath = os.path.join(ros_package_dir_path, filename)
 with open(filepath, "w") as f_out:
     f_out.write(code)
+    os.chmod(filepath, stat.S_IRWXU)
 #"""

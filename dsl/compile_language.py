@@ -33,37 +33,52 @@ def compile_ros_py(ctx: Context, node: Node, emitter=None, file_prefix=None):
         compile_ros_py(ctx, node.args[1], emitter) # expression
     elif node.type == 'expression':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
-    elif node.type == 'pattern':
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
+    elif node.type == 'pattern_4':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
     elif node.type == 'pattsup':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
     elif node.type == 'paargs':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
     elif node.type == 'operation':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
     elif node.type == 'comparison':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
     elif node.type == 'number':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
     elif node.type == 'operand':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
     elif node.type == 'bool':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
     elif node.type == 'func':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
+    elif node.type == 'funcargs':
+        #....
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
     elif node.type == 'temporalvalue':
         #....
-        compile_ros_py(ctx, node.args[0], emitter)
+        #compile_ros_py(ctx, node.args[0], emitter)
+        pass
     else:
         print("Node type doesn't exist")
     

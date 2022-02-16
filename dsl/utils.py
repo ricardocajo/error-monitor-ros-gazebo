@@ -16,7 +16,7 @@ class Emitter(object):
         self.file_loader = FileSystemLoader('templates')
         self.env = Environment(loader=self.file_loader)
         data = {'file_prefix': _file_prefix}
-        self << ('file_beginning.python.jinja', data)
+        self << ('file_beginning.jinja', data)
 
     def get_count(self):
         self.count += 1
@@ -33,7 +33,7 @@ class Emitter(object):
         self.blocks.append(output)
 
     def get_code(self):
-        template = self.env.get_template('join_code.python.jinja')
+        template = self.env.get_template('join_code.jinja')
         return template.render(code=self.blocks)
 
 class Node(object):
