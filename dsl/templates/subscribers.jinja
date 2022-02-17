@@ -1,0 +1,7 @@
+{% for sub in data %}
+#import the msg_type
+rospy.Subscriber({{ sub.topic }}, {{ sub.msgtype }}, {{ sub.callback_func }})
+def {{ sub.callback_func }}(msg: {{ sub.msgtype }}):
+    # do something
+    pass
+{% endfor %}

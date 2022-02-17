@@ -1,86 +1,11 @@
 from utils import *
 
-def compile_ros_py(ctx: Context, node: Node, emitter=None, file_prefix=None):
+def compile_ros_py(ctx: Context, file_prefix: str):
     """ Creates a python script capable of running the associated monitor code in ROS """
-    data = {}  # data['var1'] = value / data['var2'] = value / emitter << ('file_X.python.jinja', data)
-    if emitter is None:
-        emitter = Emitter(file_prefix)
-        compile_ros_py(ctx, node, emitter)
-        return emitter.get_code()
-    elif node.type == 'program':
-        compile_ros_py(ctx, node.args[0], emitter)  # handle command
-        if len(node.args) > 1:
-            compile_ros_py(ctx, node.args[1], emitter)  # rest of the program
-    elif node.type == 'command':
-        compile_ros_py(ctx, node.args[0], emitter) # handle command
-    elif node.type == 'declaration':
-        #TODO  in what way should i do this?
-        var = node.args[0]
-        topic = node.args[1]
-        msgtype = compile_ros_py(ctx, node.args[2], emitter) # this should return the msgtype
-    elif node.type == 'model':
-        #TODO
-        robot_name = node.args[0]
-        topic_type = node.args[1]
-        topic_name = node.args[2]
-        compile_ros_py(ctx, node.args[3], emitter) # msgtype
-    elif node.type == 'msgtype':
-        #TODO
-        pass
-    elif node.type == 'association':
-        #TODO
-        var_name = node.args[0]
-        compile_ros_py(ctx, node.args[1], emitter) # expression
-    elif node.type == 'expression':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'pattern_4':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'pattsup':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'paargs':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'operation':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'comparison':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'number':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'operand':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'bool':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'func':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'funcargs':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    elif node.type == 'temporalvalue':
-        #....
-        #compile_ros_py(ctx, node.args[0], emitter)
-        pass
-    else:
-        print("Node type doesn't exist")
+    emitter = Emitter(file_prefix)
+    print(ctx.get_subscribers())
+    emitter << ('subscribers.jinja', ctx.get_subscribers())
+    return emitter.get_code()
     
 
     

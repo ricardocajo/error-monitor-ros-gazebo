@@ -7,6 +7,17 @@ class Context(object):
     """ Save the context of a program """
     def __init__(self):
         self.stack = [{}]
+        self.subscribers = [] #TODO a list of dictionaries
+
+    def get_subscribers(self):
+        return self.subscribers
+
+    def add_subscriber(self, topic, msgtype, callback_func):
+        sub_data = {'topic': topic, 'msgtype': msgtype, 'callback_func': callback_func}
+        self.subscribers.append(sub_data)
+    
+    def __str__(self):
+        return str(self.subscribers)
 
 class Emitter(object):
     """ Save the strings to be written in the monitor file """
@@ -47,9 +58,7 @@ class Node(object):
         s += "".join(["i: " + str(i) + "\n" for i in self.args])
         return s
 
-
-""" The language possible tokens """
-
+# The default functions of the language
 func_main = {
     'position_x' : '1',
     'position_y' : '1',
@@ -61,6 +70,7 @@ func_main = {
 }
 func_main_list = list(func_main.keys())
 
+""" The tokens of the language """
 reserved = {
     'true' : 'TRUE',
     'false' : 'FALSE',
