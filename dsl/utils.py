@@ -7,14 +7,22 @@ class Context(object):
     """ Save the context of a program """
     def __init__(self):
         self.stack = [{}]
-        self.subscribers = [] #TODO a list of dictionaries
+        self.subscribers = []
+        self.properties = []
 
     def get_subscribers(self):
         return self.subscribers
 
-    def add_subscriber(self, topic, msgtype, callback_func):
-        sub_data = {'topic': topic, 'msgtype': msgtype, 'callback_func': callback_func}
+    def add_subscriber(self, topic, msgtype, library):
+        sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library}
         self.subscribers.append(sub_data)
+
+    def get_property(self):
+        return self.properties
+
+    def add_property(self):
+        #TODO
+        pass
     
     def __str__(self):
         return str(self.subscribers)
@@ -25,7 +33,7 @@ class Emitter(object):
         self.count = 0
         self.blocks = []
         self.file_loader = FileSystemLoader('templates')
-        self.env = Environment(loader=self.file_loader)
+        self.env = Environment(loader=self.file_loader,extensions=['jinja2.ext.do'])
         data = {'file_prefix': _file_prefix}
         self << ('file_beginning.jinja', data)
 

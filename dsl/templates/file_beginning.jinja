@@ -1,8 +1,7 @@
 #! /usr/bin/env python
 
 import rospy
-from ros_func_lib.predicates_func import *
+from ros_func_lib.predicates_func import *  #TODO this will only be needed if one of my functions is used maybe i can check if needed
+import message_filters
 
 rospy.init_node('{{ data.file_prefix }}')
-
-print("Monitoring...")
