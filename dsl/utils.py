@@ -68,9 +68,7 @@ class Node(object):
 
 # The default functions of the language
 func_main = {
-    'position_x' : '1',
-    'position_y' : '1',
-    'position_z' : '1',
+    'position' : '1',
     'velocity' : '1',
     'distance' : '2',
     'localization_error' : '1',

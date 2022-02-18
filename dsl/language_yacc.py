@@ -49,12 +49,8 @@ def p_association(p):
 def p_expression(p):
     '''expression : operation
                   | comparison
-                  | operand
-                  | expression '{' number '}' '''
-    if len(p) > 2:
-        p[0] = Node('expression', p[1], p[3])
-    else:
-        p[0] = Node('expression', p[1])
+                  | operand'''
+    p[0] = Node('expression', p[1])
 
 def p_pattern_4(p):
     '''pattern : ALWAYS '(' paargs ')'
@@ -110,13 +106,21 @@ def p_operation(p):
     p[0] = Node('operation', p[1], p[2], p[3])       
 
 def p_comparison(p):
-    '''comparison : expression '>' expression
-                  | expression '<' expression
-                  | expression GTE expression
-                  | expression LEE expression
-                  | expression EQ expression
-                  | expression DIF expression'''
-    p[0] = Node('comparison', p[1], p[2], p[3])
+    '''comparison : expression opbin expression 
+                  | expression opbin expression '{' number '}' '''
+    if len(p) > 4:
+        p[0] = Node('comparison', p[1], p[2], p[3], p[5])
+    else:
+        p[0] = Node('comparison', p[1], p[2], p[3])
+
+def p_opbin(p):
+    '''opbin : '<'
+             | '>'
+             | GTE
+             | LEE
+             | EQ
+             | DIF'''
+    p[0] = Node('opbin', p[1])
 
 def p_number(p):
     '''number : FLOAT
@@ -137,16 +141,20 @@ def p_bool(p):
     p[0] = Node('bool', p[1])
 
 def p_func(p):
-    '''func : FUNC_MAIN funcargs'''
-    p[0] = Node('func', p[1], p[2])
-
-def p_funcargs(p): # this will produce a shift/reduce conflict but it should always shift in favor of the biggest match
-    '''funcargs : funcargs funcargs
-                | NAME'''
-    if len(p) > 2:
-        p[0] = Node('funcargs', p[1], p[2])
+    '''func : NAME '.' FUNC_MAIN
+            | NAME '.' FUNC_MAIN funcargs'''
+    if len(p) > 4:
+        p[0] = Node('func', p[1], p[3], p[4])
     else:
-        p[0] = Node('funcargs', p[1])
+        p[0] = Node('func', p[1], p[3])
+
+def p_funcargs(p):
+    '''funcargs : '.' NAME
+                | '.' NAME funcargs'''
+    if len(p) > 3:
+        p[0] = Node('funcargs', p[2], p[3])
+    else:
+        p[0] = Node('funcargs', p[2])
 
 def p_temporalvalue(p):
     '''temporalvalue : '@' '{' NAME ',' INTEGER '}' '''

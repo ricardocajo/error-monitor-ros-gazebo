@@ -12,7 +12,7 @@ lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 
 """              TEST LEXER
-data = '''never (position_x robot1 + robot_ori_prev1 > 12)'''
+data = '''never (robot1.position.x + robot_ori_prev1 > 12)'''
 lexer.input(data)
 while True:
     tok = lexer.token()
@@ -34,6 +34,7 @@ if not Path(ros_package_dir_path).is_dir():
 f = open(filename, 'r')
 _input = f.read()
 ast = parser.parse(lexer=lexer, input=_input)
+print(ast)
 context = Context()
 verify(context, ast)
 code = compile_ros_py(context, file_prefix)
