@@ -7,8 +7,9 @@ class Context(object):
     """ Save the context of a program """
     def __init__(self):
         self.stack = [{}]
-        self.subscribers = []
-        self.properties = []
+        self.subscribers = [] #'topic','msgtype','library'
+        self.sim_subscriber = False
+        self.properties = [] #
 
     def get_subscribers(self):
         return self.subscribers
@@ -16,6 +17,11 @@ class Context(object):
     def add_subscriber(self, topic, msgtype, library):
         sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library}
         self.subscribers.append(sub_data)
+
+    def add_sim_subscriber(self):
+        if self.sim_subscriber is False:
+            self.subscribers = [{'topic': '/gazebo/model_states', 'msgtype': 'ModelStates', 'library': 'gazebo_msgs'}] + self.subscribers
+        self.sim_subscriber = True
 
     def get_property(self):
         return self.properties

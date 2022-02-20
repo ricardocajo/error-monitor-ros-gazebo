@@ -34,7 +34,6 @@ if not Path(ros_package_dir_path).is_dir():
 f = open(filename, 'r')
 _input = f.read()
 ast = parser.parse(lexer=lexer, input=_input)
-print(ast)
 context = Context()
 verify(context, ast)
 code = compile_ros_py(context, file_prefix)

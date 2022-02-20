@@ -53,36 +53,34 @@ not(X)
 
 (X)and(Y) | (X)or(Y)
 
-X{y} (the value X can have an error margin of y)
-
 @{X, -y} (the value of the variable X in the point in time -y)
 
-X == Y | X != Y | X = y
-
-X > Y | X >= Y | X < Y | X <= Y
+X = y
 
 X + Y | X - Y | X * Y | X / Y
 
+X == Y | X != Y | X > Y | X >= Y | X < Y | X <= Y
+
+For any comparison operator X: X{y} (the values being compared will have an error margin of y)
+
 ### Usefull Predicates
-position_x X (The position in the x axis of the robot in the simulation)
+X.position (The position of the robot in the simulation)
 
-position_y X (The position in the y axis of the robot in the simulation)
+X.position.y (The position in the y axis of the robot in the simulation)
 
-position_z X (The position in the z axis of the robot in the simulation)
+X.distance.Y (The absolute distance between two objects in the simulation)
 
-distance X Y (The absolute distance between two objects in the simulation)
+X.orientation (The orientation of a object in the simulation)
 
-orientation X (The orientation of a object in the simulation)
+X.velocity (The velocity of a object in the simulation)
 
-velocity X (The velocity of a object in the simulation)
-
-localization_error X (The difference between to robot perception of its position and the actual position in the simulation)
+X.localization_error (The difference between to robot perception of its position and the actual position in the simulation)
 
 ### Examples
 
 #### A robot always stops at the stop sign:
 ```
-always (after ((distance robot1 stop_sign1 < 2) and (orientation robot1 - orientation stop_sign1 < 90), eventually (velocity robot1 <= 0)) until ((distance robot1 stop_sign1 > 2) or (orientation robot1 - orientation stop_sign1 > 90)))
+always( after( (robot1.distance.stop_sign1 < 2) and (robot1.orientation - stop_sign1.orientation < 90), eventually(robot1.velocity <= 0)) until ( (robot1.distance.stop_sign1 > 2) or (robot1.orientation - stop_sign1.orientation > 90))
 ```
 
 #### The localization error (difference between the robot perception of its location and the simulation actual location) of the robot is never above a certain value:
@@ -92,7 +90,7 @@ always (after ((distance robot1 stop_sign1 < 2) and (orientation robot1 - orient
 model robot1:
     position /odom Odometry.pose.pose.position
 
-never (localization_error robot1 > 0.2)
+never (robot1.localization_error > 0.2)
 ```
 
 #### After a drone is at a certain altitude both rotors always have the same velocity up until the drone decreases to a certain altitude
@@ -103,12 +101,12 @@ never (localization_error robot1 > 0.2)
 decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
 decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 
-after (position_z drone > 5, rotor1_vel{0.2} == rotor2_vel{0.2}) until (position_z drone < 5)
+after (drone.position.z > 5, rotor1_vel =={0.2} rotor2_vel) until (drone.position.z < 5)
 ```
 
 #### A robot never makes a rotation of more than X degrees in a period of time
 ```
-robot_ori = orientation robot
+robot_ori = robot.orientation
 robot_ori_prev1 = @{robot_ori, -1}
 robot_ori_prev2 = @{robot_ori, -2}
 robot_ori_prev3 = @{robot_ori, -3}
