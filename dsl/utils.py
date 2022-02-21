@@ -7,21 +7,33 @@ class Context(object):
     """ Save the context of a program """
     def __init__(self):
         self.stack = [{}]
-        self.subscribers = [] #'topic','msgtype','library'
+        self.subscribers = [] # 'topic','msgtype','library','sub_name'
         self.sim_subscriber = False
+        self.vars = [] # 'name','object_name','args','sim'
         self.properties = [] #
 
     def get_subscribers(self):
         return self.subscribers
 
-    def add_subscriber(self, topic, msgtype, library):
-        sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library}
+    def add_subscriber(self, topic, msgtype, library, sub_name):
+        sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library, 'sub_name': sub_name}
         self.subscribers.append(sub_data)
 
     def add_sim_subscriber(self):
         if self.sim_subscriber is False:
-            self.subscribers = [{'topic': '/gazebo/model_states', 'msgtype': 'ModelStates', 'library': 'gazebo_msgs'}] + self.subscribers
-        self.sim_subscriber = True
+            self.add_subscriber('/gazebo/model_states', 'ModelStates', 'gazebo_msgs', 'model_states_sub')
+            self.sim_subscriber = True
+
+    def get_sim_subscriber(self):
+        return self.sim_subscriber
+
+    def get_vars(self):
+        return self.vars
+
+    def add_var(self, name, object_name, sim, arg, arg_extra=None):
+        var_data = {'name': name, 'object_name': object_name, 'sim': sim, 'arg': arg, 
+                    'arg_extra': arg_extra}
+        self.vars.append(var_data)
 
     def get_property(self):
         return self.properties
@@ -33,33 +45,13 @@ class Context(object):
     def __str__(self):
         return str(self.subscribers)
 
-class Emitter(object):
-    """ Save the strings to be written in the monitor file """
-    def __init__(self, _file_prefix):
-        self.count = 0
-        self.blocks = []
-        self.file_loader = FileSystemLoader('templates')
-        self.env = Environment(loader=self.file_loader,extensions=['jinja2.ext.do'])
-        data = {'file_prefix': _file_prefix}
-        self << ('file_beginning.jinja', data)
-
-    def get_count(self):
-        self.count += 1
-        return self.count
-
-    def get_id(self):
-        id = self.get_count()
-        return f"var{id}"
-
-    def __lshift__(self, jinja_info: Tuple[str,Dict[str,str]]):
-        template_file, data_dic = jinja_info
-        template = self.env.get_template(template_file)
-        output = template.render(data=data_dic)
-        self.blocks.append(output)
-
-    def get_code(self):
-        template = self.env.get_template('join_code.jinja')
-        return template.render(code=self.blocks)
+def compile_ros_py(ctx: Context, file_prefix: str):
+    """ Creates a python script capable of running the associated monitor code in ROS """
+    file_loader = FileSystemLoader('templates')
+    env = Environment(loader=file_loader,extensions=['jinja2.ext.do'])
+    template = env.get_template('program.jinja')
+    return template.render(file_prefix=file_prefix, sim_sub=ctx.get_sim_subscriber(), 
+                           subscribers=ctx.get_subscribers(), var_list=ctx.get_vars())
 
 class Node(object):
     """ The ast of a program """

@@ -1,16 +1,23 @@
-
-sim_state = [{},{},{},{},{}]  #TODO the size could be decided somewhere
 {% set callback_args = [] -%}
-{% for sub in data %}
+{% for sub in subscribers %}
 from {{ sub.library }}.msg import {{ sub.msgtype }}
-sub_{{loop.index}} = rospy.Subscriber('{{ sub.topic }}', {{ sub.msgtype }})
-{% do callback_args.append('sub_' ~ loop.index) -%}
+{{ sub.sub_name }} = rospy.Subscriber('{{ sub.topic }}', {{ sub.msgtype }})
+{% do callback_args.append(sub.sub_name) -%}
 {% endfor %}
 def callback_func({{ callback_args | join(',') }}):
-    # rotate sim_state
+    # Rotate sim_state
     for index in xrange(len(sim_state)-1):
         sim_state[index+1] = sim_state[index]
-    #TODO save relevant info into sim_state[0]
-
+    sim_state[0] = {}
+    {% if sim_sub -%}
+    # Update ModelStates info
+    model_states_indexes = {}
+    model_states_names = model_states_sub.name
+    index_counter = 0
+    for name in model_states_names:
+        model_states_indexes[name] = index_counter
+        index_counter += 1
+    {% endif -%}
+    {% include "save_callbacks_info.jinja" %}
 time_sync = message_filters.ApproximateTimeSynchronizer([{{ callback_args | join(',') }}], queue_size=1, slop=0.1)
 time_sync.registerCallback(callback_func)

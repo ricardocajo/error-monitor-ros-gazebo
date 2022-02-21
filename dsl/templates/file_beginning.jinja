@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 
 import rospy
-from ros_func_lib.predicates_func import *  #TODO this will only be needed if one of my functions is used maybe i can check if needed
 import message_filters
 
-rospy.init_node('{{ data.file_prefix }}')
+rospy.init_node('{{ file_prefix }}')
+
+sim_state = [{},{},{},{},{}]  #TODO the size could be decided somewhere

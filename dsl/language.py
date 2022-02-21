@@ -4,7 +4,6 @@ import language_yacc
 import ply.yacc as yacc
 from utils import *
 from verify_language import *
-from compile_language import *
 from pathlib import Path
 import os, stat
 
