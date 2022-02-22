@@ -3,9 +3,11 @@ import ply.lex as lex
 import language_yacc
 import ply.yacc as yacc
 from utils import *
-from verify_language import *
+from type_checker import *
+from compile_py import *
 from pathlib import Path
-import os, stat
+import os, stat, sys
+#run - python language.py test.txt /home/rcordeiro/ros_workspace/src/test_pkg/src
 
 lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
@@ -19,26 +21,21 @@ while True:
         break
     print(tok)
 """
-#run - python language.py test.txt /home/rcordeiro/ros_workspace/src/test_pkg/src
-import sys
+
 filename = sys.argv[1]
 file_prefix = filename[:-4]
-#for test: /home/rcordeiro/ros_workspace/src/test_pkg/src
 ros_package_dir_path = sys.argv[2]
-
 if not Path(ros_package_dir_path).is_dir():
     print("The given directory for a ROS package doesn't exist.")
     sys.exit()
-
 f = open(filename, 'r')
 _input = f.read()
 ast = parser.parse(lexer=lexer, input=_input)
-context = Context()
-verify(context, ast)
-code = compile_ros_py(context, file_prefix)
+type_checker(TypeCheckerContext(), ast)
+code = compile_py(CompileContext(), file_prefix, ast)
 filename = file_prefix + ".py"
 filepath = os.path.join(ros_package_dir_path, filename)
-with open(filepath, "w") as f_out:
-    f_out.write(code)
-    os.chmod(filepath, stat.S_IRWXU)
+#with open(filepath, "w") as f_out:
+#    f_out.write(code)
+#    os.chmod(filepath, stat.S_IRWXU)
 #"""

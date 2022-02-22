@@ -127,16 +127,16 @@ def p_paargs(p):
     print(p[0])
 
 def p_operation(p):
-    '''operation : expression '+' expression
-                 | expression '-' expression
-                 | expression '/' expression
-                 | expression '*' expression'''
+    '''operation : expression '+' operand
+                 | expression '-' operand
+                 | expression '/' operand
+                 | expression '*' operand'''
     p[0] = Node('operation', p[1], p[2], p[3]) 
     print('teste15')
     print(p[0])      
 
 def p_comparison(p):
-    '''comparison : expression opbin expression 
+    '''comparison : expression opbin expression
                   | expression opbin '{' number '}' expression'''
     if len(p) > 4:
         p[0] = Node('comparison', p[1], p[2], p[4], p[6])

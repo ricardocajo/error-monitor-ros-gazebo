@@ -1,12 +1,16 @@
 """ A set of usefull classes and structures for the whole compiler """
 
-from jinja2 import Environment, FileSystemLoader
-from typing import Tuple, Dict
-
-class Context(object):
-    """ Save the context of a program """
+class TypeCheckerContext(object):
+    """ Save the context of a program (in the paradigm of the type_checker function)"""
     def __init__(self):
         self.stack = [{}]
+
+    def __str__(self):
+        return "implement"
+
+class CompileContext(object):
+    """ Save the context of a program (in the paradigm of the compile_py function)"""
+    def __init__(self):
         self.subscribers = [] # 'topic','msgtype','library','sub_name'
         self.sim_subscriber = False
         self.vars = [] # 'name','object_name','args','sim'
@@ -19,13 +23,13 @@ class Context(object):
         sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library, 'sub_name': sub_name}
         self.subscribers.append(sub_data)
 
+    def get_sim_subscriber(self):
+        return self.sim_subscriber
+
     def add_sim_subscriber(self):
         if self.sim_subscriber is False:
             self.add_subscriber('/gazebo/model_states', 'ModelStates', 'gazebo_msgs', 'model_states_sub')
             self.sim_subscriber = True
-
-    def get_sim_subscriber(self):
-        return self.sim_subscriber
 
     def get_vars(self):
         return self.vars
@@ -43,16 +47,7 @@ class Context(object):
         self.properties.append(property_data)
     
     def __str__(self):
-        return str(self.subscribers)
-
-def compile_ros_py(ctx: Context, file_prefix: str):
-    """ Creates a python script capable of running the associated monitor code in ROS """
-    file_loader = FileSystemLoader('templates')
-    env = Environment(loader=file_loader,extensions=['jinja2.ext.do'])
-    template = env.get_template('program.jinja')
-    return template.render(file_prefix=file_prefix, sim_sub=ctx.get_sim_subscriber(), 
-                           subscribers=ctx.get_subscribers(), var_list=ctx.get_vars(),
-                           properties=ctx.get_properties())
+        return "implement"
 
 class Node(object):
     """ The ast of a program """
