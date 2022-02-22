@@ -1,0 +1,18 @@
+# Properties verification
+    {% for prop in properties -%}
+    {% if prop.property == 'always' -%}
+    {% include "always_patter.jinja" -%}
+    {% endif -%}
+    {% if prop.property == 'never' -%}
+    {% include "never_patter.jinja" -%}
+    {% endif -%}
+    {% if prop.property == 'eventually' -%}
+    {% include "eventually_patter.jinja" -%}
+    {% endif -%}
+    {% if prop.property == 'after' -%}
+    {% include "after_patter.jinja" -%}
+    {% endif -%}
+    {% if prop.property == 'until' -%}
+    {% include "until_patter.jinja" -%}
+    {% endif -%}
+    {% endfor -%}

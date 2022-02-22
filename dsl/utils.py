@@ -10,7 +10,7 @@ class Context(object):
         self.subscribers = [] # 'topic','msgtype','library','sub_name'
         self.sim_subscriber = False
         self.vars = [] # 'name','object_name','args','sim'
-        self.properties = [] #
+        self.properties = [] # 'property',
 
     def get_subscribers(self):
         return self.subscribers
@@ -35,12 +35,12 @@ class Context(object):
                     'arg_extra': arg_extra}
         self.vars.append(var_data)
 
-    def get_property(self):
+    def get_properties(self):
         return self.properties
 
-    def add_property(self):
-        #TODO
-        pass
+    def add_property(self, _property):
+        property_data = {'property': _property}
+        self.properties.append(property_data)
     
     def __str__(self):
         return str(self.subscribers)
@@ -51,7 +51,8 @@ def compile_ros_py(ctx: Context, file_prefix: str):
     env = Environment(loader=file_loader,extensions=['jinja2.ext.do'])
     template = env.get_template('program.jinja')
     return template.render(file_prefix=file_prefix, sim_sub=ctx.get_sim_subscriber(), 
-                           subscribers=ctx.get_subscribers(), var_list=ctx.get_vars())
+                           subscribers=ctx.get_subscribers(), var_list=ctx.get_vars(),
+                           properties=ctx.get_properties())
 
 class Node(object):
     """ The ast of a program """

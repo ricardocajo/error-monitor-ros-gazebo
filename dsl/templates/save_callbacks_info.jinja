@@ -1,7 +1,7 @@
-    # Save relevant info into sim_state[0]
+# Save relevant info into sim_state[0]
     {% for var in var_list -%}
     {% if var.sim is none -%}
-    object_index = model_states_indexes[{{ var.object_name }}]
+    object_index = model_states_indexes['{{ var.object_name }}']
     {{ var.name }} = model_states_sub.{{ var.arg }}[object_index].{{ var.arg_extra }}
     sim_state[0]['{{ var.name }}'] = {{ var.name }}
     {% else -%}
