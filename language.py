@@ -30,12 +30,12 @@ if not Path(ros_package_dir_path).is_dir():
     sys.exit()
 f = open(filename, 'r')
 _input = f.read()
-ast = parser.parse(lexer=lexer, input=_input)
-type_checker(TypeCheckerContext(), ast)
-code = compile_py(CompileContext(), file_prefix, ast)
 filename = file_prefix + ".py"
 filepath = os.path.join(ros_package_dir_path, filename)
-#with open(filepath, "w") as f_out:
-#    f_out.write(code)
-#    os.chmod(filepath, stat.S_IRWXU)
+ast = parser.parse(lexer=lexer, input=_input)
+type_checker(TypeCheckerContext(), ast, filepath)
+code = compile_py(ast, file_prefix=file_prefix, filepath=filepath)
+with open(filepath, "w") as f_out:
+    f_out.write(code)
+    os.chmod(filepath, stat.S_IRWXU)
 #"""

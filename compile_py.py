@@ -1,15 +1,20 @@
 from utils import *
 
-def compile_py(ctx: CompileContext, file_prefix: str, node: Node):
-    """ Creates a python script capable of running the associated monitor code in ROS """
-    if node.type == 'program':
-        #.... do something
-        pass
+def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
+    """ Creates the template of a python script capable of running the associated monitor code in ROS """
+    if ctx is None:
+        ctx = CompileContext(file_prefix, filepath)
+        compile_py(node, ctx)
+        return ctx.get_code()
+    elif node.type == 'program':
+        compile_py(node.args[0], ctx)  # command
+        if len(node.args) > 1:
+            compile_py(node.args[1], ctx)
     elif node.type == 'command':
-        #.... do something
+        compile_py(node.args[0], ctx)
+    elif node.type == 'declaration':
+        ctx.add_subscriber(node.args[1], compile_py(node.args[2]), ctx.get_library(), node.args[0] + '_sub')
         pass
-
-    return None
 
 '''
 #ctx.add_subscriber('/topic/example', 'Odometry', 'nav_msgs', 'robot1_odom_sub') # use this when decl topic
@@ -21,11 +26,4 @@ def compile_py(ctx: CompileContext, file_prefix: str, node: Node):
     ctx.add_var('robot1_vel_var_sim', 'turtlebot3_burger', None, 'twist', 'linear.x')
     ctx.add_property('always')
     ctx.add_property('never')
-    
-    file_loader = FileSystemLoader('templates')
-    env = Environment(loader=file_loader,extensions=['jinja2.ext.do'])
-    template = env.get_template('program.jinja')
-    return template.render(file_prefix=file_prefix, sim_sub=ctx.get_sim_subscriber(), 
-                           subscribers=ctx.get_subscribers(), var_list=ctx.get_vars(),
-                           properties=ctx.get_properties())
 '''

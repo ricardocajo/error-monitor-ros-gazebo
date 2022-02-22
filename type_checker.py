@@ -1,7 +1,8 @@
 from utils import *
 
-def type_checker(ctx: TypeCheckerContext, node: Node):
+def type_checker(ctx: TypeCheckerContext, node: Node, filepath: str):
     """ Verifies the syntax of the language"""
+    #TODO verify if filepath is in rosworkspace
     if node.type == 'program':
         #.... do something
         pass

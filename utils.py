@@ -1,5 +1,8 @@
 """ A set of usefull classes and structures for the whole compiler """
 
+from jinja2 import FileSystemLoader, Environment
+import os
+
 class TypeCheckerContext(object):
     """ Save the context of a program (in the paradigm of the type_checker function)"""
     def __init__(self):
@@ -10,44 +13,43 @@ class TypeCheckerContext(object):
 
 class CompileContext(object):
     """ Save the context of a program (in the paradigm of the compile_py function)"""
-    def __init__(self):
+    def __init__(self, file_prefix, filepath):
+        self.file_prefix = file_prefix
+        self.filepath = filepath
         self.subscribers = [] # 'topic','msgtype','library','sub_name'
         self.sim_subscriber = False
         self.vars = [] # 'name','object_name','args','sim'
         self.properties = [] # 'property',
 
-    def get_subscribers(self):
-        return self.subscribers
-
     def add_subscriber(self, topic, msgtype, library, sub_name):
         sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library, 'sub_name': sub_name}
         self.subscribers.append(sub_data)
-
-    def get_sim_subscriber(self):
-        return self.sim_subscriber
 
     def add_sim_subscriber(self):
         if self.sim_subscriber is False:
             self.add_subscriber('/gazebo/model_states', 'ModelStates', 'gazebo_msgs', 'model_states_sub')
             self.sim_subscriber = True
 
-    def get_vars(self):
-        return self.vars
-
     def add_var(self, name, object_name, sim, arg, arg_extra=None):
         var_data = {'name': name, 'object_name': object_name, 'sim': sim, 'arg': arg, 
                     'arg_extra': arg_extra}
         self.vars.append(var_data)
 
-    def get_properties(self):
-        return self.properties
-
     def add_property(self, _property):
         property_data = {'property': _property}
         self.properties.append(property_data)
-    
-    def __str__(self):
-        return "implement"
+
+    def get_library(self):
+        #TODO
+        pass
+
+    def get_code(self):
+        file_loader = FileSystemLoader('templates')
+        env = Environment(loader=file_loader,extensions=['jinja2.ext.do'])
+        template = env.get_template('program.jinja')
+        return template.render(file_prefix=self.file_prefix, sim_sub=self.sim_subscriber, 
+                               subscribers=self.subscribers, var_list=self.vars,
+                               properties=self.properties)
 
 class Node(object):
     """ The ast of a program """
