@@ -46,7 +46,7 @@ def p_msgtype(p):
     '''msgtype : NAME
                | NAME '.' msgtype'''
     if len(p) > 2:
-        p[0] = Node('msgtype', p[1], p[2], p[3])
+        p[0] = Node('msgtype', p[1], p[3])
     else:
         p[0] = Node('msgtype', p[1])
     print('teste5')
@@ -71,21 +71,27 @@ def p_pattern_4(p):
                | NEVER '(' paargs ')'
                | EVENTUALLY '(' paargs ')'
                | NOT '(' paargs ')' '''
-    p[0] = Node('pattern_4', p[1], p[3])
+    p[0] = Node('property', p[1], p[3])
     print('teste8')
     print(p[0])
 
 def p_pattern_6(p):
     '''pattern : AFTER '(' paargs ',' paargs ')' '''
-    p[0] = Node('pattern_6', p[1], p[3], p[5])
+    p[0] = Node('property', p[1], p[3], p[5])
     print('teste9')
     print(p[0])
 
 def p_pattern_7(p):
     '''pattern : '(' paargs ')' UNTIL '(' paargs ')'
                | '(' paargs ')' IMPLIES '(' paargs ')' '''
-    p[0] = Node('pattern_7', p[2], p[4], p[6])
+    p[0] = Node('property', p[2], p[4], p[6])
     print('teste10')
+    print(p[0])
+
+def p_pattern_10(p):
+    '''pattern : AFTER '(' paargs ',' paargs ')' UNTIL '(' paargs ')' '''
+    p[0] = Node('property', p[1], p[3], p[5], p[7], p[9])
+    print('teste11')
     print(p[0])
 
 def p_patter_multi(p):
@@ -97,7 +103,7 @@ def p_patter_multi(p):
         p[0] = Node('pattern_multi', p[2], p[4], p[6], p[8])
     else:
         p[0] = Node('pattern_multi', p[2], p[4], p[6])
-    print('teste11')
+    print('teste12')
     print(p[0])
 
 def p_pattsup(p):
@@ -109,12 +115,6 @@ def p_pattsup(p):
         p[0] = Node('pattsup', p[1], p[3], p[5])
     else:
         p[0] = Node('pattsup', p[1], p[3])
-    print('teste12')
-    print(p[0])
-
-def p_pattern_10(p):
-    '''pattern : AFTER '(' paargs ',' paargs ')' UNTIL '(' paargs ')' '''
-    p[0] = Node('pattern_10', p[1], p[3], p[5], p[7], p[9])
     print('teste13')
     print(p[0])
 
@@ -139,7 +139,7 @@ def p_comparison(p):
     '''comparison : expression opbin expression
                   | expression opbin '{' number '}' expression'''
     if len(p) > 4:
-        p[0] = Node('comparison', p[1], p[2], p[4], p[6])
+        p[0] = Node('comparison', p[1], p[2], p[6], p[4])
     else:
         p[0] = Node('comparison', p[1], p[2], p[3])
     print('teste16')

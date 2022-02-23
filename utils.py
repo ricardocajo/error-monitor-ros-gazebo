@@ -1,7 +1,7 @@
 """ A set of usefull classes and structures for the whole compiler """
 
 from jinja2 import FileSystemLoader, Environment
-import os
+import subprocess
 
 class TypeCheckerContext(object):
     """ Save the context of a program (in the paradigm of the type_checker function)"""
@@ -39,9 +39,9 @@ class CompileContext(object):
         property_data = {'property': _property}
         self.properties.append(property_data)
 
-    def get_library(self):
-        #TODO
-        pass
+    def get_library(self, msg_type):
+        command = f"cd {self.filepath} | rosmsg show {msg_type}"
+        return subprocess.check_output(command, shell=True).decode("utf-8").split('\n')[0].split('[')[1].split('/')[0]
 
     def get_code(self):
         file_loader = FileSystemLoader('templates')
