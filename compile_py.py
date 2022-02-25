@@ -56,12 +56,3 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
         return [node.args[0]]
     else:
         return node
-
-'''
-    ctx.add_var('robot1_odom_var', 'robot1', 'robot1_odom_sub', 'position')
-    ctx.add_var('robot1_posx_var_sim', 'turtlebot3_burger', None, 'pose', 'position.x')
-    ctx.add_var('robot1_posy_var_sim', 'turtlebot3_burger', None, 'pose', 'position.y')
-    ctx.add_var('robot1_vel_var_sim', 'turtlebot3_burger', None, 'twist', 'linear.x')
-    ctx.add_property('always')
-    ctx.add_property('never')
-'''

@@ -1,11 +1,10 @@
-{% set callback_args = [] -%}
 {% for sub in subscribers -%}
 from {{ sub.library }}.msg import {{ sub.msgtype }}
 {{ sub.sub_name }} = message_filters.Subscriber('{{ sub.topic }}', {{ sub.msgtype }})
 {% do callback_args.append(sub.sub_name) -%}
 {% endfor %}
 def callback_func({{ callback_args | join(',') }}):
-    handle_state()
+    handle_state({{ callback_args | join(',') }})
     verify_properties()
 
 time_sync = message_filters.ApproximateTimeSynchronizer([{{ callback_args | join(',') }}], queue_size=1, slop=0.1, allow_headerless=True)

@@ -1,4 +1,4 @@
-def handle_state():
+def handle_state({{ callback_args | join(',') }}):
     # Rotate sim_state
     for index in range(len(sim_state)-1):
         sim_state[index+1] = sim_state[index]
