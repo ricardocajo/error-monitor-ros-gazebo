@@ -1,5 +1,9 @@
-# Properties verification
-    {% for prop in properties -%}
+def verify_properties():
+    global {% for prop in properties -%}
+    {{ prop.property }}_pattern_var{{ loop.index }},{% endfor -%} sim_state
+    # Properties verification
+    {% for prop in properties %}
+    {% set index = loop.index -%}
     {% if prop.property == 'always' -%}
     {% include "always_patter.jinja" -%}
     {% endif -%}

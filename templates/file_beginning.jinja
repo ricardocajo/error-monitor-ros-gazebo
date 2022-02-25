@@ -9,4 +9,4 @@ rospy.init_node('{{ file_prefix }}')
 sim_state = [{},{},{},{},{}]  #TODO the size could be decided somewhere
 # Properties global variables
 {% for prop in properties -%}{{ prop.property }}_pattern_var{{ loop.index }} = True
-{% endfor %}
+{% endfor -%}

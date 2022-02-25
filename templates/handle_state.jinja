@@ -1,0 +1,15 @@
+def handle_state():
+    # Rotate sim_state
+    for index in range(len(sim_state)-1):
+        sim_state[index+1] = sim_state[index]
+    sim_state[0] = {}
+    {% if sim_sub -%}
+    # Update ModelStates info
+    model_states_indexes = {}
+    model_states_names = model_states_sub.name
+    index_counter = 0
+    for name in model_states_names:
+        model_states_indexes[name] = index_counter
+        index_counter += 1
+    {% endif -%}
+    {% include "save_state_info.jinja" -%}

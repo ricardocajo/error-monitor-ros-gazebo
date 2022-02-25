@@ -30,13 +30,13 @@ class CompileContext(object):
             self.add_subscriber('/gazebo/model_states', 'ModelStates', 'gazebo_msgs', 'model_states_sub')
             self.sim_subscriber = True
 
-    def add_var(self, name, object_name, sim, arg, arg_extra=None):
-        var_data = {'name': name, 'object_name': object_name, 'sim': sim, 'arg': arg, 
+    def add_var(self, name, object_name, sub, arg, arg_extra):
+        var_data = {'name': name, 'object_name': object_name, 'sub': sub, 'arg': arg, 
                     'arg_extra': arg_extra}
         self.vars.append(var_data)
 
-    def add_property(self, _property):
-        property_data = {'property': _property}
+    def add_property(self, _property, comp_var1, comp_var2, op_bin):
+        property_data = {'property': _property, 'comp_var1': comp_var1, 'comp_var2': comp_var2, 'op_bin': op_bin}
         self.properties.append(property_data)
 
     def get_library(self, msg_type):
@@ -50,6 +50,18 @@ class CompileContext(object):
         return template.render(file_prefix=self.file_prefix, sim_sub=self.sim_subscriber, 
                                subscribers=self.subscribers, var_list=self.vars,
                                properties=self.properties)
+
+def sim_funcs(_object, func, args, ctx):
+    """ Update the context depending on the function used """
+    if func == 'position':
+        args = set(['position'] + (args or []))
+        var_name = _object + '_pose_' + '_'.join(args) + '_var_sim'
+        ctx.add_var(var_name, _object, 'position', 'pose', '.'.join(args))
+    elif func == 'velocity':
+        args = set(['linear', 'x'] + (args or []))
+        var_name = _object + '_twist_' + '_'.join(args) + '_var_sim'
+        ctx.add_var(var_name, _object, 'velocity', 'twist', '.'.join(args))
+    return 'sim_state[0].get(\'' + var_name + '\')'
 
 class Node(object):
     """ The ast of a program """

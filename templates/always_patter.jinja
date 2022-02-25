@@ -1,13 +1,5 @@
-if always_pattern_var1:
-        if sim_state[0].get('robot1_posx_var_sim') < -1:
+# always property ...
+    if {{ prop.property }}_pattern_var{{ index }}:
+        if not {{ prop.comp_var1 }} {{ prop.op_bin }} {{ prop.comp_var2 }}:
             print("my_error_message")
-            always_pattern_var1 = False
-
-        if sim_state[0].get('robot1_posy_var_sim') < -1:
-            print("my_error_message")
-            always_pattern_var1 = False
-       
-    if never_pattern_var1:
-        if sim_state[0].get('robot1_vel_var_sim') > 0.05:
-            print("my_error_message")
-            never_pattern_var1 = False
+            {{ prop.property }}_pattern_var{{ index }} = False
