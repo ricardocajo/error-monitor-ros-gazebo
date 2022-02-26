@@ -35,8 +35,9 @@ class CompileContext(object):
                     'arg_extra': arg_extra}
         self.vars.append(var_data)
 
-    def add_property(self, _property, comp_var1, comp_var2, op_bin):
-        property_data = {'property': _property, 'comp_var1': comp_var1, 'comp_var2': comp_var2, 'op_bin': op_bin}
+    def add_property(self, _property, comp1_var1, comp1_var2, op_bin1, comp2_var1=None, comp2_var2=None):
+        property_data = {'property': _property, 'comp1_var1': comp1_var1, 'comp1_var2': comp1_var2, 
+                        'op_bin1': op_bin1, 'comp2_var1': comp2_var1, 'comp2_var2': comp2_var2}
         self.properties.append(property_data)
 
     def get_library(self, msg_type):
@@ -62,6 +63,10 @@ def sim_funcs(_object, func, args, ctx):
         var_name = _object + '_twist_' + '_'.join(args) + '_var_sim'
         ctx.add_var(var_name, _object, 'velocity', 'twist', '.'.join(args))
     return 'sim_state[0].get(\'' + var_name + '\')'
+
+ops = {'<':lambda x,y:x+y}
+#ops[op](left,right)
+#abs(a-b) <= max( rel_tol * max(abs(a), abs(b)), abs_tol)
 
 class Node(object):
     """ The ast of a program """

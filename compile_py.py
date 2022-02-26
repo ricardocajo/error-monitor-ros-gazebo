@@ -19,7 +19,7 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
         if len(node.args) > 1:
             return [node.args[0]] + compile_py(node.args[1], ctx)
         return [node.args[0]]
-    elif node.type == 'property': # TODO i might be able to do this without checking for the properties names
+    elif node.type == 'property':
         vars_dic = compile_py(node.args[1], ctx)
         ctx.add_property(node.args[0], vars_dic.get('comp_var1'), vars_dic.get('comp_var2'), vars_dic.get('bin_op'))
     elif node.type == 'paargs':
@@ -31,7 +31,7 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
         if len(node.args) > 3:  # has error margin
             #TODO see how to handle this
             pass
-        return {'comp_var1': left, 'comp_var2': right, 'bin_op': op}
+        return {'comp1_var1': left, 'comp1_var2': right, 'bin_op1': op}
     elif node.type == 'opbin':
         return node.args[0]
     elif node.type == 'expression':
@@ -56,3 +56,66 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
         return [node.args[0]]
     else:
         return node
+
+'''
+# always property ...
+    if {{ prop.property }}_pattern_var{{ index }}:
+        if not {{ prop.comp1_var1 }} {{ prop.op_bin }} {{ prop.comp1_var2 }}: and/or not x
+            print("my_error_message")
+            {{ prop.property }}_pattern_var{{ index }} = False
+            
+# always property ...
+    if {{ prop.property }}_pattern_var{{ index }}:
+        do_after()
+        if not global_after_var: and/or not x
+            print("my_error_message")
+            {{ prop.property }}_pattern_var{{ index }} = False
+
+# always property ...
+    if {{ prop.property }}_pattern_var{{ index }}:
+        if not given_var: and/or not x
+            print("my_error_message")
+            {{ prop.property }}_pattern_var{{ index }} = False
+            
+            
+            
+# never property ...
+    if {{ prop.property }}_pattern_var{{ index }}:
+        if {{ prop.comp1_var1 }} {{ prop.op_bin }} {{ prop.comp1_var2 }}: and/or x
+            print("my_error_message")
+            {{ prop.property }}_pattern_var{{ index }} = False
+            
+            
+  
+# after property ...
+    if {{ prop.property }}_pattern_var{{ index }}:
+        if comp1_var1 opbin comp1_var2: and/or x
+            if comp2_var1 opbin comp2_var2: and/or x
+                print("my error message after")
+                {{ prop.property }}_pattern_var{{ loop.index }} = False
+                
+                
+                
+# until property ...
+    if {{ prop.property }}_pattern_var{{ index }}:
+        if not comp1_var1 opbin comp1_var2: and/or not x
+            if comp2_var1 opbin comp2_var2: and/or x
+                print("my error message after")
+                {{ prop.property }}_pattern_var{{ loop.index }} = False
+                
+                
+                
+# after_until property ...
+    if {{ prop.property }}_pattern_var{{ index }}:
+        if comp1_var1 opbin comp1_var2 and not comp2_var1 opbin comp2_var2: and/or x | and/or not x
+            if comp3_var1 opbin comp3_var2: and/or x
+                print("my error message after")
+                {{ prop.property }}_pattern_var{{ loop.index }} = False
+                
+                
+                
+# eventually property ...
+    if {{ prop.property }}_pattern_var{{ index }}:
+
+                {{ prop.property }}_pattern_var{{ loop.index }} = False
+'''

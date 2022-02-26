@@ -1,5 +1,5 @@
-# always property ...
+# never property ...
     if {{ prop.property }}_pattern_var{{ index }}:
-        if not {{ prop.comp_var1 }} {{ prop.op_bin }} {{ prop.comp_var2 }}:
+        if {{ prop.comp1_var1 }} {{ prop.op_bin }} {{ prop.comp1_var2 }}:
             print("my_error_message")
             {{ prop.property }}_pattern_var{{ index }} = False
