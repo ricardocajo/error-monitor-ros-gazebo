@@ -36,11 +36,20 @@ def p_declaration(p):
     print(p[0])
 
 def p_model(p):
-    '''model : MODEL NAME ':' NAME TOPIC_NAME msgtype
-             | MODEL NAME ':' NAME NAME msgtype'''
-    p[0] = Node('model', p[2], p[4], p[5], p[6])
+    '''model : MODEL NAME ':' modelargs'''
+    p[0] = Node('model', p[2], p[4])
     print('teste4')
     print(p[0])
+
+def p_modelargs(p):
+    '''modelargs : NAME TOPIC_NAME msgtype
+                 | NAME NAME msgtype
+                 | NAME TOPIC_NAME msgtype modelargs
+                 | NAME NAME msgtype modelargs'''
+    if len(p) > 4:
+        p[0] = Node('modelargs', p[1], p[2], p[3], p[4])
+    else:
+        p[0] = Node('modelargs', p[1], p[2], p[3])
 
 def p_msgtype(p):
     '''msgtype : NAME

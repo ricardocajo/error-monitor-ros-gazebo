@@ -15,6 +15,18 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
     elif node.type == 'declaration':
         msg_type = compile_py(node.args[2], ctx)
         ctx.add_subscriber(node.args[1], '.'.join(msg_type), ctx.get_library(msg_type[0]), node.args[0] + '_sub')
+    elif node.type == 'model':
+        modelargs = compile_py(node.args[1], ctx)
+        for dic in modelargs:
+            msg_type = dic.get('msgtype')
+            sub_name = node.args[0] + dic.get('topic_name') + '_sub'
+            ctx.add_subscriber(dic.get('topic_name'), '.'.join(msg_type), ctx.get_library(msg_type[0]), sub_name)
+        return None
+    elif node.type == 'modelargs':
+        return_dic = [{'func': node.args[0], 'topic_name': node.args[1], 'msgtype': compile_py(node.args[2], ctx)}]
+        if len(node.args > 3):
+            return return_dic + compile_py(node.args[3], ctx)
+        return return_dic
     elif node.type == 'msgtype':  # returns a list with msgtype and args
         if len(node.args) > 1:
             return [node.args[0]] + compile_py(node.args[1], ctx)
