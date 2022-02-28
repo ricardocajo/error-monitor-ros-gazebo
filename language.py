@@ -13,7 +13,10 @@ lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 
 """              TEST LEXER
-data = '''never (robot1.position.x + robot_ori_prev1 > 12)'''
+data = '''model turtlebot3_burger:
+    laser_position /odom Odometry.pose.pose
+    own_velocity /cmd_vel Twist.linear.x
+    ;'''
 lexer.input(data)
 while True:
     tok = lexer.token()

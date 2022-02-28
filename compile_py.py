@@ -14,23 +14,26 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
         compile_py(node.args[0], ctx)
     elif node.type == 'declaration':
         msg_type = compile_py(node.args[2], ctx)
-        ctx.add_subscriber(node.args[1], '.'.join(msg_type), ctx.get_library(msg_type[0]), node.args[0] + '_sub')
+        ctx.add_subscriber(node.args[1], msg_type[0], ctx.get_library(msg_type[0]), node.args[0] + '_sub')
+        ctx.add_var(node.args[0], None, node.args[0] + '_sub', '.'.join(msg_type[1:]), None)
     elif node.type == 'model':
         modelargs = compile_py(node.args[1], ctx)
         for dic in modelargs:
             msg_type = dic.get('msgtype')
-            sub_name = node.args[0] + dic.get('topic_name') + '_sub'
-            ctx.add_subscriber(dic.get('topic_name'), '.'.join(msg_type), ctx.get_library(msg_type[0]), sub_name)
-        return None
+            sub_name = dic.get('var') + '_sub'
+            ctx.add_subscriber(dic.get('topic_name'), msg_type[0], ctx.get_library(msg_type[0]), sub_name)
+            ctx.add_var(dic.get('var'), None, sub_name, '.'.join(msg_type[1:]), None)
     elif node.type == 'modelargs':
-        return_dic = [{'func': node.args[0], 'topic_name': node.args[1], 'msgtype': compile_py(node.args[2], ctx)}]
-        if len(node.args > 3):
+        return_dic = [{'var': node.args[0], 'topic_name': node.args[1], 'msgtype': compile_py(node.args[2], ctx)}]
+        if len(node.args) > 3:
             return return_dic + compile_py(node.args[3], ctx)
         return return_dic
     elif node.type == 'msgtype':  # returns a list with msgtype and args
         if len(node.args) > 1:
             return [node.args[0]] + compile_py(node.args[1], ctx)
         return [node.args[0]]
+    elif node.type == 'association':
+        ctx.add_assoc(node.args[0], compile_py(node.args[1]))
     elif node.type == 'property':
         vars_dic = compile_py(node.args[1], ctx)
         ctx.add_property(node.args[0], vars_dic.get('comp_var1'), vars_dic.get('comp_var2'), vars_dic.get('bin_op'))
@@ -44,16 +47,10 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
             #TODO see how to handle this
             pass
         return {'comp1_var1': left, 'comp1_var2': right, 'bin_op1': op}
-    elif node.type == 'opbin':
-        return node.args[0]
     elif node.type == 'expression':
         return compile_py(node.args[0], ctx)
     elif node.type == 'operand':
         return compile_py(node.args[0], ctx)
-    elif node.type == 'number':
-        return node.args[0]
-    elif node.type == 'bool':
-        return node.args[0]
     elif node.type == 'func':
         ctx.add_sim_subscriber()
         func = node.args[1]

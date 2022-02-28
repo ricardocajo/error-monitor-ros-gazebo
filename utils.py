@@ -19,6 +19,7 @@ class CompileContext(object):
         self.subscribers = [] # 'topic','msgtype','library','sub_name'
         self.sim_subscriber = False
         self.vars = [] # 'name','object_name','args','sim'
+        self.assoc = [] # 'assoc_var_name','expr_var_name'
         self.properties = [] # 'property',
 
     def add_subscriber(self, topic, msgtype, library, sub_name):
@@ -31,9 +32,14 @@ class CompileContext(object):
             self.sim_subscriber = True
 
     def add_var(self, name, object_name, sub, arg, arg_extra):
+        ''' object_name only necessary for simulation subs (my functions)'''
         var_data = {'name': name, 'object_name': object_name, 'sub': sub, 'arg': arg, 
                     'arg_extra': arg_extra}
         self.vars.append(var_data)
+
+    def add_assoc(self, assoc_var_name, expr_var_name):
+        assoc_data = {'assoc_var_name': assoc_var_name, 'expr_var_name': expr_var_name}
+        self.assoc.append(assoc_data)
 
     def add_property(self, _property, comp1_var1, comp1_var2, op_bin1, comp2_var1=None, comp2_var2=None):
         property_data = {'property': _property, 'comp1_var1': comp1_var1, 'comp1_var2': comp1_var2, 
@@ -106,7 +112,7 @@ reserved = {
     'or' : 'OR'
 }
 
-literals = ['>','<','(',')','+','-','*','/','{','}','@','=',':',',','.']
+literals = ['>','<','(',')','+','-','*','/','{','}','@','=',':',',','.',';']
 
 tokens = ['NAME','TOPIC_NAME','INTEGER','FLOAT','EQ','DIF','GTE',
          'LEE','FUNC_MAIN'] + list(reserved.values())

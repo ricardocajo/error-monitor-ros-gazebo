@@ -1,0 +1,4 @@
+# Properties global variables
+{% for prop in properties -%}{{ prop.property }}_pattern_var{{ loop.index }} = True
+{% if prop.property == 'after' -%} {{ prop.property }}{{ loop.index }}_control_var {% endif -%}
+{% endfor -%}

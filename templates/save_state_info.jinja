@@ -1,10 +1,10 @@
-# Save relevant info into sim_state[0]{% for var in var_list %}
+# Save relevant info into sim_state[0]
+    {% for var in var_list -%}
     {% if var.sub == 'position' or var.sub == 'velocity' -%}
     {% include "func_generic.jinja" -%}
     {% elif var.sub == 'lacalization_error' -%}
     {% include "func_localization_error.jinja" -%}
     {% else -%}
-    {{ var.name }} = {{ var.sub }}.{{ var.arg }}
-    sim_state[0]['{{ var.name }}'] = {{ var.name }}
+    sim_state[0]['{{ var.name }}'] = {{ var.sub }}.{{ var.arg }}
     {% endif -%}
     {% endfor %}

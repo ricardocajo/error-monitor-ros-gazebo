@@ -77,9 +77,10 @@ always( after( (robot1.distance.stop_sign1 < 2) and (robot1.orientation - stop_s
 # There are a set of topics that can be modeled by robot like "position", "velocity", etc..
 # These will be used by the compiler to call specific functions that need this information
 model robot1:
-    position /odom Odometry.pose.pose.position
+    laser_position /odom Odometry.pose.pose.position
+    ;
 
-never (robot1.localization_error > 0.2)
+never (robot1.laser_position.x > 2)
 ```
 
 #### After a drone is at a certain altitude both rotors always have the same velocity up until the drone decreases to a certain altitude
