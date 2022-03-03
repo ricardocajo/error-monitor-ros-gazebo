@@ -67,24 +67,29 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
         return node
 
 '''
-# always property ...
-    if {{ prop.property }}_pattern_var{{ index }}:
+# always property ...  comparison
+    if pattern_var{{ index }}:
         if not {{ prop.comp1_var1 }} {{ prop.op_bin }} {{ prop.comp1_var2 }}: and/or not x
             print("my_error_message")
-            {{ prop.property }}_pattern_var{{ index }} = False
+            return False
+        return True
+    return False
             
-# always property ...
-    if {{ prop.property }}_pattern_var{{ index }}:
-        do_after()
-        if not global_after_var: and/or not x
+# always property ...   pattern
+    if pattern_var{{ index }}:
+        if not do_after()
             print("my_error_message")
-            {{ prop.property }}_pattern_var{{ index }} = False
+            return False
+        return True
+    return False
 
-# always property ...
-    if {{ prop.property }}_pattern_var{{ index }}:
+# always property ...   var
+    if pattern_var{{ index }}:
         if not given_var: and/or not x
             print("my_error_message")
-            {{ prop.property }}_pattern_var{{ index }} = False
+            return False
+        return True
+    return False
             
             
             

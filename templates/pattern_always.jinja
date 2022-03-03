@@ -1,5 +1,14 @@
-# always property ...
-    if {{ prop.property }}_pattern_var{{ index }}:
-        if not {{ prop.comp1_var1 }} {{ prop.op_bin }} {{ prop.comp1_var2 }}:
+def always_property(global_pattern_var,):
+    if global_pattern_var:
+        if not #TODO change here
             print("my_error_message")
-            {{ prop.property }}_pattern_var{{ index }} = False
+            return False
+        return True
+    return False
+        {% if prop.type == 'comparison' -%}
+
+        {% elif prop.type == 'pattern' -%}
+
+        {% elif prop.type == 'var' -%}
+
+        {% endfor -%}

@@ -2,3 +2,10 @@
 {% for prop in properties -%}{{ prop.property }}_pattern_var{{ loop.index }} = True
 {% if prop.property == 'after' -%} {{ prop.property }}{{ loop.index }}_control_var {% endif -%}
 {% endfor -%}
+
+
+try:
+        print("laser_pos: " + str(laser_position_sub.header.stamp))
+        print("vel_ang: " + str(turtlebot3_burger_vel_ang_sub.header.stamp))
+    except AttributeError:
+        print("rostime: " + str(rospy.get_rostime()))

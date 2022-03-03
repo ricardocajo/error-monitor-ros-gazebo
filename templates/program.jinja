@@ -1,3 +1,4 @@
+{% set ns = namespace() -%}
 {% include "file_beginning.jinja" %}
 {% set callback_args = [] -%}
 {% include "aprox_time_sub.jinja" %}
@@ -5,5 +6,11 @@
 {% include "handle_state.jinja" %}
 
 {% include "verify_properties.jinja" %}
+
+{% if ns.always == true -%} {% include "pattern_always.jinja" %} {% endif %}
+{% if ns.never == true -%} {% include "pattern_never.jinja" %} {% endif %}
+{% if ns.eventually == true -%} {% include "pattern_eventually.jinja" %} {% endif %}
+{% if ns.after == true -%} {% include "pattern_after.jinja" %} {% endif %}
+{% if ns.until == true -%} {% include "pattern_until.jinja" %} {% endif %}
 
 rospy.spin()

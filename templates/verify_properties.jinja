@@ -1,22 +1,28 @@
 def verify_properties():
     global {% for prop in properties -%}
-    {{ prop.property }}_pattern_var{{ loop.index }},{% endfor -%} sim_state
+    pattern_var{{ loop.index }},{% endfor -%} sim_state
+    {% set ns.use_always_func = false -%}
+    {% set ns.use_never_func = false -%}
+    {% set ns.use_eventually_func = false -%}
+    {% set ns.use_after_func = false -%}
+    {% set ns.use_until_func = false -%}
     # Properties verification
     {% for prop in properties %}
     {% set index = loop.index -%}
     {% if prop.property == 'always' -%}
-    {% include "always_patter.jinja" -%}
-    {% endif -%}
-    {% if prop.property == 'never' -%}
-    {% include "never_patter.jinja" -%}
-    {% endif -%}
-    {% if prop.property == 'eventually' -%}
-    {% include "eventually_patter.jinja" -%}
-    {% endif -%}
-    {% if prop.property == 'after' -%}
-    {% include "after_patter.jinja" -%}
-    {% endif -%}
-    {% if prop.property == 'until' -%}
-    {% include "until_patter.jinja" -%}
+    pattern_var{{ index }} = always_property(pattern_var{{ index }},)
+    {% set ns.use_until_func = true -%}
+    {% elif prop.property == 'never' -%}
+    pattern_var{{ index }} = never_property(pattern_var{{ index }},)
+    {% set ns.use_never_func = true -%}
+    {% elif prop.property == 'eventually' -%}
+    pattern_var{{ index }} = eventually_property(pattern_var{{ index }},)
+    {% set ns.use_eventually_func = true -%}
+    {% elif prop.property == 'after' -%}
+    pattern_var{{ index }} = after_property(pattern_var{{ index }},)
+    {% set ns.use_after_func = true -%}
+    {% elif prop.property == 'until' -%}
+    pattern_var{{ index }} = until_property(pattern_var{{ index }},)
+    {% set ns.use_until_func = true -%}
     {% endif -%}
     {% endfor -%}
