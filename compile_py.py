@@ -37,6 +37,7 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
     elif node.type == 'property':
         if len(node.args) < 3:
             _list = compile_py(node.args[1], ctx)
+            print('1: ' + str(node.args[0]) + ' 2: ' + str(_list) + ' 3: ' + str(from_command))
             ctx.add_property(node.args[0], _list, from_command)
             return _list
         elif len(node.args) < 5:
@@ -48,6 +49,13 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
             _list3 = compile_py(node.args[3], ctx)
     elif node.type == 'paargs':
         return compile_py(node.args[0], ctx, from_command=False)
+    elif node.type == 'pattern_multi':
+        left = node.args[0]
+        right = node.args[1]
+        op = node.args[2]
+        if len(node.args > 3):
+            return None
+        return 
     elif node.type == 'comparison':
         left = compile_py(node.args[0], ctx)
         right = compile_py(node.args[2], ctx)
