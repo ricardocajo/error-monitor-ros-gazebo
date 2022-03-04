@@ -28,7 +28,7 @@ class CompileContext(object):
 
     def add_sim_subscriber(self):
         if self.sim_subscriber is False:
-            self.add_subscriber('/gazebo/model_states', 'ModelStates', 'gazebo_msgs', 'model_states_sub')
+            self.add_subscriber('/gazebo/model_states', 'ModelStates', 'gazebo_msgs', 'model_states')
             self.sim_subscriber = True
 
     def add_var(self, name, object_name, sub, arg, arg_extra):
@@ -41,9 +41,8 @@ class CompileContext(object):
         assoc_data = {'assoc_var_name': assoc_var_name, 'expr_var_name': expr_var_name}
         self.assoc.append(assoc_data)
 
-    def add_property(self, _property, comp1_var1, comp1_var2, op_bin1, comp2_var1=None, comp2_var2=None):
-        property_data = {'property': _property, 'comp1_var1': comp1_var1, 'comp1_var2': comp1_var2, 
-                        'op_bin1': op_bin1, 'comp2_var1': comp2_var1, 'comp2_var2': comp2_var2}
+    def add_property(self, _property, _list, is_head):
+        property_data = {'property': _property, 'list': _list, 'comp1_var2': is_head}
         self.properties.append(property_data)
 
     def get_library(self, msg_type):
@@ -68,7 +67,7 @@ def sim_funcs(_object, func, args, ctx):
         args = set(['x', 'linear'] + (args or []))
         var_name = _object + '_twist_' + '_'.join(args) + '_var_sim'
         ctx.add_var(var_name, _object, 'velocity', 'twist', '.'.join(args))
-    return 'sim_state[0].get(\'' + var_name + '\')'
+    return 'save_states[0].get(\'' + var_name + '\')'
 
 ops = {'<':lambda x,y:x+y}
 #ops[op](left,right)

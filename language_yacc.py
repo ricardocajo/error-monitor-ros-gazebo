@@ -3,6 +3,7 @@
 from utils import *
 
 precedence = (
+    ('left','AND','OR'),
     ('nonassoc','GTE','LEE','EQ','DIF','>','<'),
     ('left','+','-'),
     ('left','/','*'),
@@ -67,27 +68,27 @@ def p_expression(p):
                   | operand'''
     p[0] = Node('expression', p[1])
 
-def p_pattern_4(p):
+def p_pattern_1(p):
     '''pattern : ALWAYS '(' paargs ')'
                | NEVER '(' paargs ')'
                | EVENTUALLY '(' paargs ')'
                | NOT '(' paargs ')' '''
     p[0] = Node('property', p[1], p[3])
 
-def p_pattern_6(p):
+def p_pattern_2(p):
     '''pattern : AFTER '(' paargs ',' paargs ')' '''
     p[0] = Node('property', p[1], p[3], p[5])
 
-def p_pattern_7(p):
+def p_pattern_3(p):
     '''pattern : '(' paargs ')' UNTIL '(' paargs ')'
                | '(' paargs ')' IMPLIES '(' paargs ')' '''
-    p[0] = Node('property', p[2], p[4], p[6])
+    p[0] = Node('property', p[4], p[2], p[6])
 
-def p_pattern_10(p):
+def p_pattern_4(p):
     '''pattern : AFTER '(' paargs ',' paargs ')' UNTIL '(' paargs ')' '''
-    p[0] = Node('property', p[1], p[3], p[5], p[7], p[9])
+    p[0] = Node('property', p[1], p[7], p[3], p[5], p[9])
 
-def p_patter_multi(p):
+def p_pattern_multi(p):
     '''pattern : '(' paargs ')' AND '(' paargs ')'
                | '(' paargs ')' OR '(' paargs ')'
                | '(' paargs ')' AND '(' paargs ')' pattsup

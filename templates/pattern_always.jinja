@@ -1,14 +1,17 @@
-def always_property(global_pattern_var,):
-    if global_pattern_var:
-        if not #TODO change here
+{% set expr_args = [] -%}
+{% if prop.list.type == 'comparison' -%}
+    {% do expr_args.append('not' + prop.list.var1 + ' ' + prop.list.op_bin + ' ' + prop.list.var2) -%}
+{% elif prop.list.type == 'pattern' -%}
+    {% do expr_args.append('not' + prop.list.pattern + '_property' + prop.list.index + '()') -%}
+{% elif prop.list.type == 'var' -%}
+    {% do expr_args.append('not' + prop.list.var) -%}
+{% endif -%}
+pattern_var_{{ index }} = False
+def always_property_{{ index }}():
+    global pattern_var_{{ index }}
+    if pattern_var_{{ index }}:
+        if {% for  in  -%}  {% endfor -%}:
             print("my_error_message")
             return False
         return True
     return False
-        {% if prop.type == 'comparison' -%}
-
-        {% elif prop.type == 'pattern' -%}
-
-        {% elif prop.type == 'var' -%}
-
-        {% endfor -%}

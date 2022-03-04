@@ -1,6 +1,6 @@
 from utils import *
 
-def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
+def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_command=None):
     """ Creates the template of a python script capable of running the associated monitor code in ROS """
     if ctx is None:
         ctx = CompileContext(file_prefix, filepath)
@@ -11,16 +11,16 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
         if len(node.args) > 1:
             compile_py(node.args[1], ctx)
     elif node.type == 'command':
-        compile_py(node.args[0], ctx)
+        compile_py(node.args[0], ctx, from_command=True)
     elif node.type == 'declaration':
         msg_type = compile_py(node.args[2], ctx)
-        ctx.add_subscriber(node.args[1], msg_type[0], ctx.get_library(msg_type[0]), node.args[0] + '_sub')
-        ctx.add_var(node.args[0], None, node.args[0] + '_sub', '.'.join(msg_type[1:]), None)
+        ctx.add_subscriber(node.args[1], msg_type[0], ctx.get_library(msg_type[0]), node.args[0])
+        ctx.add_var(node.args[0], None, node.args[0], '.'.join(msg_type[1:]), None)
     elif node.type == 'model':
         modelargs = compile_py(node.args[1], ctx)
         for dic in modelargs:
             msg_type = dic.get('msgtype')
-            sub_name = dic.get('var') + '_sub'
+            sub_name = dic.get('var')
             ctx.add_subscriber(dic.get('topic_name'), msg_type[0], ctx.get_library(msg_type[0]), sub_name)
             ctx.add_var(dic.get('var'), None, sub_name, '.'.join(msg_type[1:]), None)
     elif node.type == 'modelargs':
@@ -35,18 +35,26 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
     elif node.type == 'association':
         ctx.add_assoc(node.args[0], compile_py(node.args[1]))
     elif node.type == 'property':
-        vars_dic = compile_py(node.args[1], ctx)
-        ctx.add_property(node.args[0], vars_dic.get('comp_var1'), vars_dic.get('comp_var2'), vars_dic.get('bin_op'))
+        if len(node.args) < 3:
+            _list = compile_py(node.args[1], ctx)
+            ctx.add_property(node.args[0], _list, from_command)
+            return _list
+        elif len(node.args) < 5:
+            _list1 = compile_py(node.args[1], ctx)
+            _list2 = compile_py(node.args[2], ctx)
+        else:
+            _list1 = compile_py(node.args[1], ctx)
+            _list2 = compile_py(node.args[2], ctx)
+            _list3 = compile_py(node.args[3], ctx)
     elif node.type == 'paargs':
-        return compile_py(node.args[0], ctx)
+        return compile_py(node.args[0], ctx, from_command=False)
     elif node.type == 'comparison':
         left = compile_py(node.args[0], ctx)
         right = compile_py(node.args[2], ctx)
         op = compile_py(node.args[1], ctx)
-        if len(node.args) > 3:  # has error margin
+        #if len(node.args) > 3:  # has error margin
             #TODO see how to handle this
-            pass
-        return {'comp1_var1': left, 'comp1_var2': right, 'bin_op1': op}
+        return {'type': 'comparison', 'var1': left, 'op_bin': op, 'var2': right}
     elif node.type == 'expression':
         return compile_py(node.args[0], ctx)
     elif node.type == 'operand':
@@ -64,7 +72,7 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None):
             return [node.args[0]] + compile_py(node.args[1], ctx)
         return [node.args[0]]
     else:
-        return node
+        return node  # The node itself is the expected value
 
 '''
 # always property ...  comparison
