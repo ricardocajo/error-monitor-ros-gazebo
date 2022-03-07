@@ -1,11 +1,13 @@
 from utils import *
 
-def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_command=None):
+def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_command=None, add=''):
     """ Creates the template of a python script capable of running the associated monitor code in ROS """
     if ctx is None:
         ctx = CompileContext(file_prefix, filepath)
         compile_py(node, ctx)
         return ctx.get_code()
+    elif not type(node) is Node:
+        return node  # The node itself is the expected value
     elif node.type == 'program':
         compile_py(node.args[0], ctx)  # command
         if len(node.args) > 1:
@@ -36,33 +38,45 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
         ctx.add_assoc(node.args[0], compile_py(node.args[1]))
     elif node.type == 'property':
         if len(node.args) < 3:
-            _list = compile_py(node.args[1], ctx)
-            print('1: ' + str(node.args[0]) + ' 2: ' + str(_list) + ' 3: ' + str(from_command))
+            _list = compile_py(node.args[1], ctx, add=add)
             ctx.add_property(node.args[0], _list, from_command)
-            return _list
+            return [{'type': 'pattern', 'pattern': node.args[0], 'add': add}]
         elif len(node.args) < 5:
             _list1 = compile_py(node.args[1], ctx)
             _list2 = compile_py(node.args[2], ctx)
+            # Join both lists?
         else:
             _list1 = compile_py(node.args[1], ctx)
             _list2 = compile_py(node.args[2], ctx)
             _list3 = compile_py(node.args[3], ctx)
     elif node.type == 'paargs':
-        return compile_py(node.args[0], ctx, from_command=False)
+        if add != '':
+            return compile_py(node.args[0], ctx, from_command=False, add=add)
+        else:
+            return compile_py(node.args[0], ctx, from_command=False)
     elif node.type == 'pattern_multi':
-        left = node.args[0]
-        right = node.args[1]
-        op = node.args[2]
-        if len(node.args > 3):
-            return None
-        return 
+        op = compile_py(node.args[2], ctx) + ' '
+        left = compile_py(node.args[0], ctx)
+        if len(node.args) > 3:
+            right = compile_py(node.args[1], ctx, add=op)
+            pattsup = compile_py(node.args[3], ctx)
+            return left + right + pattsup
+        else:
+            right = compile_py(node.args[1], ctx, add=op)
+            return left + right
+    elif node.type == 'pattsup':
+        op = compile_py(node.args[0], ctx) + ' '
+        if len(node.args) > 2:
+            return compile_py(node.args[1], ctx, add=op) + compile_py(node.args[2], ctx)
+        else:
+            return compile_py(node.args[1], ctx, add=op)
     elif node.type == 'comparison':
         left = compile_py(node.args[0], ctx)
         right = compile_py(node.args[2], ctx)
         op = compile_py(node.args[1], ctx)
         #if len(node.args) > 3:  # has error margin
             #TODO see how to handle this
-        return {'type': 'comparison', 'var1': left, 'op_bin': op, 'var2': right}
+        return [{'type': 'comparison', 'var1': left, 'op_bin': op, 'var2': right, 'add': add}]
     elif node.type == 'expression':
         return compile_py(node.args[0], ctx)
     elif node.type == 'operand':
@@ -79,8 +93,6 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
         if len(node.args) > 1:
             return [node.args[0]] + compile_py(node.args[1], ctx)
         return [node.args[0]]
-    else:
-        return node  # The node itself is the expected value
 
 '''
 # always property ...  comparison

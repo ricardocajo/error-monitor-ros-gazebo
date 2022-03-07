@@ -41,8 +41,8 @@ class CompileContext(object):
         assoc_data = {'assoc_var_name': assoc_var_name, 'expr_var_name': expr_var_name}
         self.assoc.append(assoc_data)
 
-    def add_property(self, _property, _list, is_head):
-        property_data = {'property': _property, 'list': _list, 'comp1_var2': is_head}
+    def add_property(self, _property, _list, is_head, add=''):
+        property_data = {'property': _property, 'list': _list, 'is_head': is_head}
         self.properties.append(property_data)
 
     def get_library(self, msg_type):

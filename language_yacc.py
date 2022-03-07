@@ -3,7 +3,8 @@
 from utils import *
 
 precedence = (
-    ('left','AND','OR'),
+    ('left','OR'),
+    ('left','AND'),
     ('nonassoc','GTE','LEE','EQ','DIF','>','<'),
     ('left','+','-'),
     ('left','/','*'),
@@ -94,9 +95,9 @@ def p_pattern_multi(p):
                | '(' paargs ')' AND '(' paargs ')' pattsup
                | '(' paargs ')' OR '(' paargs ')' pattsup'''
     if len(p) > 8:
-        p[0] = Node('pattern_multi', p[2], p[4], p[6], p[8])
+        p[0] = Node('pattern_multi', p[2], p[6], p[4], p[8])
     else:
-        p[0] = Node('pattern_multi', p[2], p[4], p[6])
+        p[0] = Node('pattern_multi', p[2], p[6], p[4])
 
 def p_pattsup(p):
     '''pattsup : AND '(' paargs ')' 

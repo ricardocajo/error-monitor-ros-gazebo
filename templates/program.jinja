@@ -24,7 +24,6 @@ def update_state():
     save_states[0] = fetch_state
 
 {% include "verify_properties.jinja" %}
-
-{# {% include "create_properties_func.jinja" %} #}
+{% include "create_properties_func.jinja" %}
 
 rospy.spin()
