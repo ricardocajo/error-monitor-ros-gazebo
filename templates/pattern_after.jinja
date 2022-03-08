@@ -1,6 +1,30 @@
-# after property ...
-    if {{ prop.property }}_pattern_var{{ index }}:
-        if comp1_var1 opbin comp1_var2:
-            if comp2_var1 opbin comp2_var2:
-                print("my error message after")
-                {{ prop.property }}_pattern_var{{ loop.index }} = False
+{% set expr1_args = [] -%}
+{% for expr in prop.list.list1 -%}
+{% if expr.type == 'comparison' -%}
+    {% do expr1_args.append(expr.add ~ expr.var1 + ' ' ~ expr.op_bin + ' ' ~ expr.var2) -%}
+{% elif expr.type == 'pattern' -%}
+    {% do expr1_args.append(expr.add ~ expr.pattern + '_property' ~ loop.index + '()') -%}
+{% elif expr.type == 'var' -%}
+    {% do expr1_args.append(expr.add ~ expr.var) -%}
+{% endif -%}
+{% endfor -%}
+{% set expr2_args = [] -%}
+{% for expr in prop.list.list2 -%}
+{% if expr.type == 'comparison' -%}
+    {% do expr2_args.append(expr.add ~ expr.var1 + ' ' ~ expr.op_bin + ' ' ~ expr.var2) -%}
+{% elif expr.type == 'pattern' -%}
+    {% do expr2_args.append(expr.add ~ expr.pattern + '_property' ~ loop.index + '()') -%}
+{% elif expr.type == 'var' -%}
+    {% do expr2_args.append(expr.add ~ expr.var) -%}
+{% endif -%}
+{% endfor -%}
+pattern_var_{{ index }} = False
+def after_property_{{ index }}():
+    global pattern_var_{{ index }}
+    if pattern_var_{{ index }}:
+        if {% for expr1 in expr1_args -%} {{ expr1 }} {% endfor -%}:
+            if {% for expr2 in expr2_args -%} {{ expr2 }} {% endfor -%}:
+                print("my_error_message")
+                return False
+        return True
+    return False

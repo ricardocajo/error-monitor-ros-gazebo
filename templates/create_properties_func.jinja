@@ -1,14 +1,14 @@
 {% for prop in properties %}
 {% set index = loop.index -%}
 {% if prop.property == 'always' -%}
-    {% include "pattern_always.jinja" -%}
+    {% include "pattern_always.jinja" %}
 {% elif prop.property == 'never' -%}
-    {% include "pattern_never.jinja" -%}
+    {% include "pattern_never.jinja" %}
 {% elif prop.property == 'eventually' -%}
-    {% include "pattern_eventually.jinja" -%}
+    {% include "pattern_eventually.jinja" %}
 {% elif prop.property == 'after' -%}
-    {% include "pattern_after.jinja" -%}
+    {% include "pattern_after.jinja" %}
 {% elif prop.property == 'until' -%}
-    {% include "pattern_until.jinja" -%}
+    {% include "pattern_until.jinja" %}
 {% endif -%}
 {% endfor -%}

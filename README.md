@@ -4,6 +4,7 @@
 ## Table of content
 * [Installs](#installs)
 * [Language](#language)
+* [Operators] (#operators)
 
 
 ## Installs
@@ -102,4 +103,15 @@ robot_ori_prev2 = @{robot_ori, -2}
 robot_ori_prev3 = @{robot_ori, -3}
 
 never ((robot_ori - robot_ori_prev1 > 12) or (robot_ori - robot_ori_prev2 > 12) or (robot_ori - robot_ori_prev3 > 12))
+```
+
+### Grammar
+```
+program → command
+        | command program
+
+command → declaration
+        | model
+        | pattern
+        | association
 ```

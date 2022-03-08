@@ -1,8 +1,11 @@
 # Subscribers
+{% set callback_args = [] -%}
+{% set timeSync_args = [] -%}
 {% for sub in subscribers -%}
 from {{ sub.library }}.msg import {{ sub.msgtype }}
 {{ sub.sub_name }}_sub = message_filters.Subscriber('{{ sub.topic }}', {{ sub.msgtype }})
 {% do callback_args.append(sub.sub_name + '_msg') -%}
+{% do timeSync_args.append(sub.sub_name + '_sub') -%}
 {% endfor %}
 def fetch_state({{ callback_args | join(',') }}):
     {% if sim_sub -%}
@@ -25,5 +28,5 @@ def fetch_state({{ callback_args | join(',') }}):
     fetch_state['{{ var.name }}'] = {{ var.sub }}_msg.{{ var.arg }}
     {% endif -%}
     {% endfor %}
-time_sync = message_filters.ApproximateTimeSynchronizer([{{ callback_args | join(',') }}], queue_size=1, slop=0.1, allow_headerless=True)
+time_sync = message_filters.ApproximateTimeSynchronizer([{{ timeSync_args | join(',') }}], queue_size=1, slop=0.1, allow_headerless=True)
 time_sync.registerCallback(fetch_state)
