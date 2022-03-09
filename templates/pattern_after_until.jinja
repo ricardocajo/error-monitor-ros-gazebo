@@ -1,0 +1,6 @@
+# after_until property ...
+    if {{ prop.property }}_pattern_var{{ index }}:
+        if comp1_var1 opbin comp1_var2 and not comp2_var1 opbin comp2_var2: and/or x | and/or not x
+            if comp3_var1 opbin comp3_var2: and/or x
+                print("my error message after")
+                {{ prop.property }}_pattern_var{{ loop.index }} = False

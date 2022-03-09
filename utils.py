@@ -60,12 +60,11 @@ class CompileContext(object):
 def sim_funcs(_object, func, args, ctx):
     """ Update the context depending on the function used """
     if func == 'position':
-        args = set(['position'] + (args or []))
-        var_name = _object + '_pose_' + '_'.join(args) + '_var_sim'
+        args = ['position'] + args
+        var_name = _object + '_'.join(args) + '_var_sim'
         ctx.add_var(var_name, _object, 'position', 'pose', '.'.join(args))
     elif func == 'velocity':
-        args = set(['x', 'linear'] + (args or []))
-        var_name = _object + '_twist_' + '_'.join(args) + '_var_sim'
+        var_name = _object + '_'.join(args) + '_var_sim'
         ctx.add_var(var_name, _object, 'velocity', 'twist', '.'.join(args))
     return 'save_states[0].get(\'' + var_name + '\')'
 

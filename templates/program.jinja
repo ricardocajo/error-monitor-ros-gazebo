@@ -7,7 +7,7 @@ import message_filters
 rospy.init_node('{{ file_prefix }}')
 
 # Save state of the simulation
-fetch_state = {}
+state = {}
 save_states = [{},{},{},{},{}]  #TODO the size could be decided somewhere
 
 {% include "aprox_time_sub.jinja" %}
@@ -15,7 +15,7 @@ save_states = [{},{},{},{},{}]  #TODO the size could be decided somewhere
 def update_state():
     for index in range(len(save_states)-1):
         save_states[index+1] = save_states[index]
-    save_states[0] = fetch_state
+    save_states[0] = state
 {% include "create_properties_func.jinja" %}
 {% include "verify_properties.jinja" %}
 

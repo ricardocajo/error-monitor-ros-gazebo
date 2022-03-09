@@ -11,7 +11,7 @@ def fetch_state({{ callback_args | join(',') }}):
     {% if sim_sub -%}
     # Get ModelStates indexes info
     model_states_indexes = {}
-    model_states_names = model_states_sub.name
+    model_states_names = model_states_msg.name
     index_counter = 0
     for name in model_states_names:
         model_states_indexes[name] = index_counter
@@ -21,11 +21,11 @@ def fetch_state({{ callback_args | join(',') }}):
     {% for var in var_list -%}
     {% if var.sub == 'position' or var.sub == 'velocity' -%}
     object_index = model_states_indexes['{{ var.object_name }}']
-    fetch_state['{{ var.name }}'] = model_states_msg.{{ var.arg }}[object_index].{{ var.arg_extra }}
+    state['{{ var.name }}'] = model_states_msg.{{ var.arg }}[object_index].{{ var.arg_extra }}
     {% elif var.sub == 'localization_error' -%}
     #TODO implement localization_error func
     {% else -%}
-    fetch_state['{{ var.name }}'] = {{ var.sub }}_msg.{{ var.arg }}
+    state['{{ var.name }}'] = {{ var.sub }}_msg.{{ var.arg }}
     {% endif -%}
     {% endfor %}
 time_sync = message_filters.ApproximateTimeSynchronizer([{{ timeSync_args | join(',') }}], queue_size=1, slop=0.1, allow_headerless=True)

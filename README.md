@@ -107,11 +107,90 @@ never ((robot_ori - robot_ori_prev1 > 12) or (robot_ori - robot_ori_prev2 > 12) 
 
 ### Grammar
 ```
-program → command
-        | command program
+       program → command
+               | command program
 
-command → declaration
-        | model
-        | pattern
-        | association
+       command → declaration
+               | model
+               | pattern
+               | association
+
+   declaration → **decl name topic_name** msgtype
+               | **decl name name** msgtype
+
+         model → **model name :** modelargs **;**
+
+     modelargs → **name topic_name** msgtype
+               | **name** name msgtype
+               | **name topic_name** msgtype modelargs
+               | **name** name msgtype modelargs
+
+          name → **name**
+               | **func_main**
+
+       msgtype → name
+               | name **.** msgtype
+
+   association → **name =** expression
+
+    expression → operation
+               | comparison
+               | operand
+
+       pattern → **always (** paargs **)**
+               | **never (** paargs **)**
+               | **eventually (** paargs **)**
+               | **not (** paargs **)**
+               | **after (** paargs **,** paargs **)**
+               | **(' paargs **) until (** paargs **)**
+               | **(' paargs **) implies (** paargs **)**
+               | **AFTER (** paargs **,** paargs **) until (** paargs **)**
+               | **(** paargs **) and (** paargs **)**
+               | **(** paargs **) or (** paargs **)**
+               | **(** paargs **) and (** paargs **)** pattsup
+               | **(** paargs **) or (** paargs **)** pattsup
+
+       pattsup → AND **(** paargs **)** 
+               | OR **(** paargs **)**
+               | AND **(** paargs **)** pattsup 
+               | OR **(** paargs **)** pattsup
+
+       paargs → pattern
+              | comparison
+              | **name**
+
+    operation → expression **+** operand
+              | expression **-** operand
+              | expression **/** operand
+              | expression __*__ operand
+
+   comparison → expression opbin expression
+              | expression opbin **{** number **}** expression
+
+        opbin → **<**
+              | **>**
+              | **<=**
+              | **>=**
+              | **==**
+              | **!=**
+
+       number → **float**
+              | **integer**
+
+      operand → func
+              | number
+              | **name**
+              | bool
+              | temporalvalue
+
+         bool → **true**
+              | **false**
+
+         func → **name . func_main**
+              | **name . func_main** funcargs
+
+     funcargs → **.** name
+              | **.** name funcargs
+
+temporalvalue → **@ { name , INTEGER }**
 ```
