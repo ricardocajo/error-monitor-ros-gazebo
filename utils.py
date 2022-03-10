@@ -21,6 +21,7 @@ class CompileContext(object):
         self.vars = [] # 'name','object_name','args','sim'
         self.assoc = [] # 'assoc_var_name','expr_var_name'
         self.properties = [] # 'property',
+        self.property_counter = 0
 
     def add_subscriber(self, topic, msgtype, library, sub_name):
         sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library, 'sub_name': sub_name}
@@ -44,6 +45,10 @@ class CompileContext(object):
     def add_property(self, _property, _list, is_head, add=''):
         property_data = {'property': _property, 'list': _list, 'is_head': is_head}
         self.properties.append(property_data)
+        self.property_counter += 1
+    
+    def get_prop_func(self, pattern):
+        return pattern + '_property_' + str(self.property_counter) + '()'
 
     def get_library(self, msg_type):
         command = f"cd {self.filepath} | rosmsg show {msg_type}"

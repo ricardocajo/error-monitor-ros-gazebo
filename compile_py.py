@@ -40,13 +40,13 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
         if len(node.args) < 3:
             _list = compile_py(node.args[1], ctx, add=add)
             ctx.add_property(node.args[0], _list, from_command)
-            return [{'type': 'pattern', 'pattern': node.args[0], 'add': add}]
+            return [{'type': 'pattern', 'list': ctx.get_prop_func(node.args[0]), 'add': add}]
         elif len(node.args) < 5:
             left = compile_py(node.args[1], ctx, add=add)
             right = compile_py(node.args[2], ctx, add=add)
             _list = {'list1': left, 'list2': right}
             ctx.add_property(node.args[0], _list, from_command)
-            return [{'type': 'pattern', 'pattern': node.args[0], 'add': add}]
+            return [{'type': 'pattern', 'list': ctx.get_prop_func(node.args[0]), 'add': add}]
         else:
             _list1 = compile_py(node.args[1], ctx)
             _list2 = compile_py(node.args[2], ctx)

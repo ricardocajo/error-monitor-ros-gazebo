@@ -19,7 +19,7 @@ def update_state():
 {% include "create_properties_func.jinja" %}
 {% include "verify_properties.jinja" %}
 
-rate = rospy.Rate(200)  #TODO define the rate somewhere
+rate = rospy.Rate(20)  #TODO define the rate somewhere
 while not rospy.is_shutdown():
     update_state()
     verify_properties()

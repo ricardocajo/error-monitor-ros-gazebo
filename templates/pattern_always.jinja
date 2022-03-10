@@ -8,7 +8,7 @@
     {% do expr_args.append(expr.add ~ 'not ' ~ expr.var) -%}
 {% endif -%}
 {% endfor -%}
-pattern_var_{{ index }} = False
+pattern_var_{{ index }} = True
 def always_property_{{ index }}():
     global pattern_var_{{ index }}
     if pattern_var_{{ index }}:

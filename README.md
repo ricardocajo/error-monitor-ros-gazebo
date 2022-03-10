@@ -106,7 +106,7 @@ never ((robot_ori - robot_ori_prev1 > 12) or (robot_ori - robot_ori_prev2 > 12) 
 ```
 
 ### Grammar
-```
+
        program → command
                | command program
 
@@ -193,4 +193,3 @@ never ((robot_ori - robot_ori_prev1 > 12) or (robot_ori - robot_ori_prev2 > 12) 
               | **.** name funcargs
 
 temporalvalue → **@ { name , INTEGER }**
-```

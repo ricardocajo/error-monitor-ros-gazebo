@@ -3,7 +3,7 @@
 {% if expr.type == 'comparison' -%}
     {% do expr1_args.append(expr.add ~ expr.var1 + ' ' ~ expr.op_bin + ' ' ~ expr.var2) -%}
 {% elif expr.type == 'pattern' -%}
-    {% do expr1_args.append(expr.add ~ expr.pattern + '_property' ~ loop.index + '()') -%}
+    {% do expr1_args.append(expr.add ~ expr.list) -%}
 {% elif expr.type == 'var' -%}
     {% do expr1_args.append(expr.add ~ expr.var) -%}
 {% endif -%}
@@ -13,12 +13,12 @@
 {% if expr.type == 'comparison' -%}
     {% do expr2_args.append(expr.add ~ expr.var1 + ' ' ~ expr.op_bin + ' ' ~ expr.var2) -%}
 {% elif expr.type == 'pattern' -%}
-    {% do expr2_args.append(expr.add ~ expr.pattern + '_property' ~ loop.index + '()') -%}
+    {% do expr2_args.append(expr.add ~ expr.list) -%}
 {% elif expr.type == 'var' -%}
     {% do expr2_args.append(expr.add ~ expr.var) -%}
 {% endif -%}
 {% endfor -%}
-pattern_var_{{ index }} = False
+pattern_var_{{ index }} = True
 def after_property_{{ index }}():
     global pattern_var_{{ index }}
     if pattern_var_{{ index }}:
