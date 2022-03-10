@@ -71,7 +71,7 @@ def sim_funcs(_object, func, args, ctx):
     elif func == 'velocity':
         var_name = _object + '_'.join(args) + '_var_sim'
         ctx.add_var(var_name, _object, 'velocity', 'twist', '.'.join(args))
-    return 'save_states[0].get(\'' + var_name + '\')'
+    return 'states[0][\'' + var_name + '\']'
 
 ops = {'<':lambda x,y:x+y}
 #ops[op](left,right)

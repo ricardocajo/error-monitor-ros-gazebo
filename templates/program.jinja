@@ -8,21 +8,21 @@ rospy.init_node('{{ file_prefix }}')
 
 # Save state of the simulation
 state = {}
-save_states = [{},{},{},{},{}]  #TODO the size could be decided somewhere
+save_states = []  #TODO  the size could be decided somewhere
 
 {% include "aprox_time_sub.jinja" %}
 
 def update_state():
-    for index in range(len(save_states)-1):
-        save_states[index+1] = save_states[index]
-    save_states[0] = state
+    global save_states,state
+    save_states.insert(0,state)
+    save_states = save_states[-5:]
 {% include "create_properties_func.jinja" %}
 {% include "verify_properties.jinja" %}
 
-rate = rospy.Rate(20)  #TODO define the rate somewhere
+rate = rospy.Rate(20)  #TODO  the rate could be decided somewhere
 while not rospy.is_shutdown():
     update_state()
-    verify_properties()
+    verify_properties(save_states.copy())
     rate.sleep()
 
 rospy.spin()

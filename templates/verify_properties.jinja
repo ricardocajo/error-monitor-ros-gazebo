@@ -1,16 +1,17 @@
-def verify_properties():
-    {% for prop in properties -%}
-    {% if prop.is_head -%}
-    {% if prop.property == 'always' -%}
-    pattern_var{{ loop.index }} = always_property_{{ loop.index }}()
-    {% elif prop.property == 'never' -%}
-    pattern_var{{ loop.index }} = never_property_{{ loop.index }}()
-    {% elif prop.property == 'eventually' -%}
-    pattern_var{{ loop.index }} = eventually_property_{{ loop.index }}()
-    {% elif prop.property == 'after' -%}
-    pattern_var{{ loop.index }} = after_property_{{ loop.index }}()
-    {% elif prop.property == 'until' -%}
-    pattern_var{{ loop.index }} = until_property_{{ loop.index }}()
-    {% endif -%}
-    {% endif -%}
-    {% endfor -%}
+def verify_properties(states):
+    if states[0]:  # If states is empty fetch_state was not yet called  #TODO this only check 1st dict, what if i do a temporal op and its still not filled?
+        {% for prop in properties -%}
+        {% if prop.is_head -%}
+        {% if prop.property == 'always' -%}
+        pattern_var{{ loop.index }} = always_property_{{ loop.index }}(states)
+        {% elif prop.property == 'never' -%}
+        pattern_var{{ loop.index }} = never_property_{{ loop.index }}(states)
+        {% elif prop.property == 'eventually' -%}
+        pattern_var{{ loop.index }} = eventually_property_{{ loop.index }}(states)
+        {% elif prop.property == 'after' -%}
+        pattern_var{{ loop.index }} = after_property_{{ loop.index }}(states)
+        {% elif prop.property == 'until' -%}
+        pattern_var{{ loop.index }} = until_property_{{ loop.index }}(states)
+        {% endif -%}
+        {% endif -%}
+        {% endfor -%}

@@ -19,7 +19,7 @@
 {% endif -%}
 {% endfor -%}
 pattern_var_{{ index }} = True
-def after_property_{{ index }}():
+def after_property_{{ index }}(states):
     global pattern_var_{{ index }}
     if pattern_var_{{ index }}:
         if {% for expr1 in expr1_args -%} {{ expr1 }} {% endfor -%}:
