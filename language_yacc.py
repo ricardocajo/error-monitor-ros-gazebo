@@ -11,7 +11,7 @@ precedence = (
     ('left','}','TRUE','FALSE','INTEGER','FLOAT','FUNC_MAIN'),
     ('left','NAME','TOPIC_NAME')
 )
-#TODO shift-reduce conflict and non-assoc not working
+#TODO non-assoc not working?
 def p_program(p):
     '''program : command
                | command program'''
@@ -65,29 +65,32 @@ def p_association(p):
 
 def p_expression(p):
     '''expression : operation
-                  | comparison
+                  | '(' comparison ')'
                   | operand'''
-    p[0] = Node('expression', p[1])
+    if len(p) > 2:
+        p[0] = Node('expression', p[2])
+    else:           
+        p[0] = Node('expression', p[1])
 
 def p_pattern_1(p):
     '''pattern : ALWAYS '(' paargs ')'
                | NEVER '(' paargs ')'
                | EVENTUALLY '(' paargs ')'
                | NOT '(' paargs ')' '''
-    p[0] = Node('property', p[1], p[3])
+    p[0] = Node('property', p[1], p.lineno(1), p[3])
 
 def p_pattern_2(p):
     '''pattern : AFTER '(' paargs ',' paargs ')' '''
-    p[0] = Node('property', p[1], p[3], p[5])
+    p[0] = Node('property', p[1], p.lineno(1), p[3], p[5])
 
 def p_pattern_3(p):
     '''pattern : '(' paargs ')' UNTIL '(' paargs ')'
                | '(' paargs ')' IMPLIES '(' paargs ')' '''
-    p[0] = Node('property', p[4], p[2], p[6])
+    p[0] = Node('property', p[1], p.lineno(1), p[2], p[6])
 
 def p_pattern_4(p):
     '''pattern : AFTER '(' paargs ',' paargs ')' UNTIL '(' paargs ')' '''
-    p[0] = Node('property', p[1], p[7], p[3], p[5], p[9])
+    p[0] = Node('property', p[1], p.lineno(1), p[7], p[3], p[5], p[9])
 
 def p_pattern_multi(p):
     '''pattern : '(' paargs ')' AND '(' paargs ')'
@@ -111,15 +114,18 @@ def p_pattsup(p):
 
 def p_paargs(p):
     '''paargs : pattern
-              | comparison
+              | '(' comparison ')'
               | NAME'''
-    p[0] = Node('paargs', p[1])
+    if len(p) > 2:
+        p[0] = Node('paargs', p[2])
+    else:           
+        p[0] = Node('paargs', p[1])
 
 def p_operation(p):
-    '''operation : expression '+' operand
-                 | expression '-' operand
-                 | expression '/' operand
-                 | expression '*' operand'''
+    '''operation : operand '+' expression
+                 | operand '-' expression
+                 | operand '/' expression
+                 | operand '*' expression'''
     p[0] = Node('operation', p[1], p[2], p[3])    
 
 def p_comparison(p):

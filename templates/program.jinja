@@ -15,7 +15,7 @@ save_states = []  #TODO  the size could be decided somewhere
 def update_state():
     global save_states,state
     save_states.insert(0,state)
-    save_states = save_states[-5:]
+    save_states = save_states[:5]
 {% include "create_properties_func.jinja" %}
 {% include "verify_properties.jinja" %}
 

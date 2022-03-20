@@ -1,14 +1,12 @@
 {% for prop in properties %}
-{% set index = loop.index -%}
-{% if prop.property == 'always' -%}
-    {% include "pattern_always.jinja" %}
-{% elif prop.property == 'never' -%}
-    {% include "pattern_never.jinja" %}
-{% elif prop.property == 'eventually' -%}
-    {% include "pattern_eventually.jinja" %}
-{% elif prop.property == 'after' -%}
-    {% include "pattern_after.jinja" %}
-{% elif prop.property == 'until' -%}
-    {% include "pattern_until.jinja" %}
-{% endif -%}
+{{ prop.prop_global_var }} = True
+def property_{{ loop.index }}(states):
+    global {{ prop.prop_global_var }}
+    if {{ prop.prop_global_var }}:
+        {% for comp in prop.comparisons -%}
+        if {{ comp }}:
+            print("my_error_message")
+            {{ prop.prop_global_var }} = False
+    {% endfor -%}
+    return {{ prop.prop_global_var }}
 {% endfor -%}

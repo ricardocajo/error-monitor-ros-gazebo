@@ -1,5 +1,19 @@
-# never property ...
-    if {{ prop.property }}_pattern_var{{ index }}:
-        if {{ prop.comp1_var1 }} {{ prop.op_bin }} {{ prop.comp1_var2 }}:
+{% set expr_args = [] -%}
+{% for expr in prop.list -%}
+{% if expr.type == 'comparison' -%}
+    {% do expr_args.append(expr.add ~ expr.var1 + ' ' ~ expr.op_bin + ' ' ~ expr.var2) -%}
+{% elif expr.type == 'pattern' -%}
+    {% do expr_args.append(expr.add ~ expr.pattern + '_property' ~ loop.index + '()') -%}
+{% elif expr.type == 'var' -%}
+    {% do expr_args.append(expr.add ~ expr.var) -%}
+{% endif -%}
+{% endfor -%}
+pattern_var_{{ index }} = True
+def never_property_{{ index }}(states):
+    global pattern_var_{{ index }}
+    if pattern_var_{{ index }}:
+        if {% for expr in expr_args -%} {{ expr }} {% endfor -%}:
             print("my_error_message")
-            {{ prop.property }}_pattern_var{{ index }} = False
+            return False
+        return True
+    return False

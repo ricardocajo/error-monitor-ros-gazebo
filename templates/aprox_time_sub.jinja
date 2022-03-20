@@ -9,7 +9,7 @@ from {{ sub.library }}.msg import {{ sub.msgtype }}
 {% endfor %}
 def fetch_state({{ callback_args | join(',') }}):
     global state
-    buffer_state = {}
+    state = {}
     {% if sim_sub -%}
     # Get ModelStates indexes info
     model_states_indexes = {}
@@ -18,15 +18,7 @@ def fetch_state({{ callback_args | join(',') }}):
     {% endif -%}
     # Save relevant info
     {% for var in var_list -%}
-    {% if var.sub == 'position' or var.sub == 'velocity' -%}
-    state['{{ var.name }}'] = model_states_msg.{{ var.arg }}[model_states_indexes['{{ var.object_name }}']].{{ var.arg_extra }}
-    {% elif var.sub == 'localization_error' -%}
-    #TODO implement localization_error func
-    {% else -%}
-    state['{{ var.name }}'] = {{ var.sub }}_msg.{{ var.arg }}
-    {% endif -%}
-    {% endfor -%}
-    state = buffer_state
-    
+    state['{{ var.name }}'] = {{ var.extract }}
+    {% endfor %}
 time_sync = message_filters.ApproximateTimeSynchronizer([{{ timeSync_args | join(',') }}], queue_size=1, slop=0.1, allow_headerless=True)
 time_sync.registerCallback(fetch_state)

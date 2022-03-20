@@ -21,7 +21,7 @@ class CompileContext(object):
         self.vars = [] # 'name','object_name','args','sim'
         self.assoc = [] # 'assoc_var_name','expr_var_name'
         self.properties = [] # 'property',
-        self.property_counter = 0
+        self.property_counter = 1
 
     def add_subscriber(self, topic, msgtype, library, sub_name):
         sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library, 'sub_name': sub_name}
@@ -32,23 +32,21 @@ class CompileContext(object):
             self.add_subscriber('/gazebo/model_states', 'ModelStates', 'gazebo_msgs', 'model_states')
             self.sim_subscriber = True
 
-    def add_var(self, name, object_name, sub, arg, arg_extra):
-        ''' object_name only necessary for simulation subs (my functions)'''
-        var_data = {'name': name, 'object_name': object_name, 'sub': sub, 'arg': arg, 
-                    'arg_extra': arg_extra}
+    def add_var(self, name, extract):
+        var_data = {'name': name, 'extract': extract}
         self.vars.append(var_data)
 
     def add_assoc(self, assoc_var_name, expr_var_name):
         assoc_data = {'assoc_var_name': assoc_var_name, 'expr_var_name': expr_var_name}
         self.assoc.append(assoc_data)
 
-    def add_property(self, _property, _list, is_head, add=''):
-        property_data = {'property': _property, 'list': _list, 'is_head': is_head}
+    def add_property(self, prop_global_var, comparisons, line):
+        property_data = {'prop_global_var': prop_global_var, 'comparisons': comparisons, 'line': line}
         self.properties.append(property_data)
-        self.property_counter += 1
+        self.property_counter +=1
     
-    def get_prop_func(self, pattern):
-        return pattern + '_property_' + str(self.property_counter) + '()'
+    def get_prop_counter(self):
+        return self.property_counter
 
     def get_library(self, msg_type):
         command = f"cd {self.filepath} | rosmsg show {msg_type}"
@@ -64,14 +62,23 @@ class CompileContext(object):
 
 def sim_funcs(_object, func, args, ctx):
     """ Update the context depending on the function used """
+    var_name,extract = None,None
     if func == 'position':
         args = ['position'] + args
-        var_name = _object + '_'.join(args) + '_var_sim'
-        ctx.add_var(var_name, _object, 'position', 'pose', '.'.join(args))
+        var_name = _object + '_' + '_'.join(args) + '_var_sim'
+        extract = 'model_states_msg.pose[model_states_indexes[\'' + _object + '\']].' + '.'.join(args)
     elif func == 'velocity':
-        var_name = _object + '_'.join(args) + '_var_sim'
-        ctx.add_var(var_name, _object, 'velocity', 'twist', '.'.join(args))
+        var_name = _object + '_velocity_' + '_'.join(args) + '_var_sim'
+        if args == []:
+            extract = '(model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.x**2 + model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.y**2 + model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.z**2' + ')**(1/2)'
+        else:
+            extract = 'model_states_msg.twist[model_states_indexes[\'' + _object + '\']].' + '.'.join(args)
+    ctx.add_var(var_name, extract)
     return 'states[0][\'' + var_name + '\']'
+
+prefixes = {'always': 'not ', 'after': ''}
+def prop_prefix(_property):
+    return prefixes[_property]
 
 ops = {'<':lambda x,y:x+y}
 #ops[op](left,right)
