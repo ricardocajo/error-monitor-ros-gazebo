@@ -40,8 +40,8 @@ class CompileContext(object):
         assoc_data = {'assoc_var_name': assoc_var_name, 'expr_var_name': expr_var_name}
         self.assoc.append(assoc_data)
 
-    def add_property(self, prop_global_var, comparisons, line):
-        property_data = {'prop_global_var': prop_global_var, 'comparisons': comparisons, 'line': line}
+    def add_property(self, prop_global_var, comparisons, _type, line):
+        property_data = {'prop_global_var': prop_global_var, 'comparisons': comparisons, 'type': _type, 'line': line}
         self.properties.append(property_data)
         self.property_counter +=1
     
@@ -68,7 +68,7 @@ def sim_funcs(_object, func, args, ctx):
         var_name = _object + '_' + '_'.join(args) + '_var_sim'
         extract = 'model_states_msg.pose[model_states_indexes[\'' + _object + '\']].' + '.'.join(args)
     elif func == 'velocity':
-        var_name = _object + '_velocity_' + '_'.join(args) + '_var_sim'
+        var_name = _object + '_velocity' + '_'.join(args) + '_var_sim'
         if args == []:
             extract = '(model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.x**2 + model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.y**2 + model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.z**2' + ')**(1/2)'
         else:

@@ -4,7 +4,6 @@
 ## Table of content
 * [Installs](#installs)
 * [Language](#language)
-* [Operators] (#operators)
 
 
 ## Installs
@@ -25,23 +24,23 @@ To install Gazebo in Ubuntu through the command line follow the link [gazebo_ins
 ## Language
 
 ### Operators
-always(X) (X has to hold on the entire subsequent path)
+always X  (X has to hold on the entire subsequent path)
 
-never(X) (X never holds on the entire subsequent path)
+never X  (X never holds on the entire subsequent path)
 
-eventually(X) (X eventually has to hold, somewhere on the subsequent path)
+eventually X  (X eventually has to hold, somewhere on the subsequent path)
 
-after(X,Y) (after the event X is observed, Y has to hold on the entire subsequent path)
+after X, Y  (after the event X is observed, Y has to hold on the entire subsequent path)
 
-(X)until(Y) (Y holds at the current or future position, and X has to hold until that position. At that position X does not have to hold any more)
+until X, Y  (X holds at the current or future position, and Y has to hold until that position. At that position Y does not have to hold any more)
 
-after(X,Y)until(Z) (after the event X is observed, Y has to hold on the entire subsequent path up until Z happens, at that position X does not have to hold any more)
+after X, Y until Z  (after the event X is observed, Y has to hold on the entire subsequent path up until Z happens, at that position X does not have to hold any more)
 
-(X)implies(Y)
+(X)implies(Y)  ???
 
-not(X)
+not X
 
-(X)and(Y) | (X)or(Y)
+X and Y | X or Y
 
 @{X, -y} (the value of the variable X in the point in time -y)
 
@@ -70,7 +69,7 @@ X.localization_error (The difference between to robot perception of its position
 
 #### A robot always stops at the stop sign:
 ```
-always( after( (robot1.distance.stop_sign1 < 2) and (robot1.orientation - stop_sign1.orientation < 90), eventually(robot1.velocity <= 0)) until ( (robot1.distance.stop_sign1 > 2) or (robot1.orientation - stop_sign1.orientation > 90))
+always after robot1.distance.stop_sign1 < 2 and robot1.orientation - stop_sign1.orientation < 90, eventually robot1.velocity <= 0 until robot1.distance.stop_sign1 > 2 or robot1.orientation - stop_sign1.orientation > 90
 ```
 
 #### The localization error (difference between the robot perception of its location and the simulation actual location) of the robot is never above a certain value:
@@ -81,7 +80,7 @@ model robot1:
     laser_position /odom Odometry.pose.pose.position
     ;
 
-never (robot1.laser_position.x > 2)
+never robot1.laser_position.x > 2
 ```
 
 #### After a drone is at a certain altitude both rotors always have the same velocity up until the drone decreases to a certain altitude
@@ -92,7 +91,7 @@ never (robot1.laser_position.x > 2)
 decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
 decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 
-after (drone.position.z > 5, rotor1_vel =={0.2} rotor2_vel) until (drone.position.z < 5)
+after drone.position.z > 5, rotor1_vel =={0.2} rotor2_vel until drone.position.z < 5
 ```
 
 #### A robot never makes a rotation of more than X degrees in a period of time
@@ -102,7 +101,7 @@ robot_ori_prev1 = @{robot_ori, -1}
 robot_ori_prev2 = @{robot_ori, -2}
 robot_ori_prev3 = @{robot_ori, -3}
 
-never ((robot_ori - robot_ori_prev1 > 12) or (robot_ori - robot_ori_prev2 > 12) or (robot_ori - robot_ori_prev3 > 12))
+never robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or robot_ori - robot_ori_prev3 > 12
 ```
 
 ### Grammar
@@ -110,10 +109,12 @@ never ((robot_ori - robot_ori_prev1 > 12) or (robot_ori - robot_ori_prev2 > 12) 
        <program> → <command>
                  | <command> <program>
 
-       <command> → <declaration>
+       <command> → <association>
+                 | <declaration>
                  | <model>
                  | <pattern>
-                 | <association>
+
+   <association> → name = integer  #TODO check what to do with this
 
    <declaration> → decl name topic_name <msgtype>
                  | decl name name <msgtype>
@@ -131,41 +132,23 @@ never ((robot_ori - robot_ori_prev1 > 12) or (robot_ori - robot_ori_prev2 > 12) 
        <msgtype> → <name>
                  | <name> . <msgtype>
 
-   <association> → name = <expression>
+       <pattern> → always <pattern>
+                 | never <pattern>
+                 | eventually <pattern>
+                 | not <pattern>
+                 | after <pattern> , <pattern>
+                 | until <pattern> , <pattern>
+                 | (' <paargs> ) implies ( <paargs> )   #TODO check what to do with implies
+                 | after <pattern> , <pattern> until <pattern>
+                 | <conjunction>
 
-    <expression> → <operation>
+   <conjunction> → <conjunction> and <comparison>
+                 | <conjunction> or <comparison>
                  | <comparison>
-                 | <operand>
 
-       <pattern> → always ( <paargs> )
-                 | never ( <paargs> )
-                 | eventually ( <paargs> )
-                 | not ( <paargs> )
-                 | after ( <paargs> , <paargs> )
-                 | (' paargs ) until ( <paargs> )
-                 | (' <paargs> ) implies ( <paargs> )
-                 | after ( <paargs> , <paargs> ) until ( <paargs> )
-                 | ( <paargs> ) and ( <paargs> )
-                 | ( <paargs> ) or ( <paargs> )
-                 | ( <paargs> ) and ( <paargs> ) <pattsup>
-                 | ( <paargs> ) or ( <paargs> ) <pattsup>
-
-       <pattsup> → and ( <paargs> ) 
-                 | or ( <paargs> )
-                 | and ( <paargs> ) <pattsup> 
-                 | or ( <paargs> ) <pattsup>
-
-        <paargs> → <pattern>
-                 | <comparison>
-                 | name
-
-     <operation> → <expression> + <operand>
-                 | <expression> - <operand>
-                 | <expression> / <operand>
-                 | <expression> * <operand>
-
-    <comparison> → <expression> <opbin> <expression>
-                 | <expression> <opbin> { <number> } <expression>
+    <comparison> → <multiplication> <opbin> <multiplication>
+                 | <multiplication> <opbin> { <number> } <multiplication>
+                 | <multiplication>
 
          <opbin> → <
                  | >
@@ -174,17 +157,24 @@ never ((robot_ori - robot_ori_prev1 > 12) or (robot_ori - robot_ori_prev2 > 12) 
                  | ==
                  | !=
 
+<multiplication> → <multiplication> * <addition>
+                 | <multiplication> / <addition>
+                 | <addition>
+
+      <addition> → <addition> + <operand>
+                 | <addition> - <operand>
+                 | <operand>
+              
+       <operand> → name
+                 | <number>
+                 | true
+                 | false
+                 | <func>
+                 | <temporalvalue>
+                 | ( <pattern> )
+
         <number> → float
                  | integer
-
-       <operand> → <func>
-                 | <number>
-                 | name
-                 | <bool>
-                 | <temporalvalue>
-
-          <bool> → true
-                 | false
 
           <func> → name . func_main
                  | name . func_main <funcargs>

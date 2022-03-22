@@ -4,8 +4,9 @@ def property_{{ loop.index }}(states):
     global {{ prop.prop_global_var }}
     if {{ prop.prop_global_var }}:
         {% for comp in prop.comparisons -%}
-        if {{ comp }}:
-            print("my_error_message")
+        if {{ comp[0] }}:
+            print(f'{{'{Fore.BLUE}'}}{{ prop.line }} |{{'{Style.RESET_ALL}'}} {{ prop.type }} {{'{Fore.BLUE}'}}..{{'{Style.RESET_ALL}'}} {{ comp[1] }}')
+            print(f'      {{'{Fore.RED}'}}{{ comp[0] }}{{'{Style.RESET_ALL}'}}')
             {{ prop.prop_global_var }} = False
     {% endfor -%}
     return {{ prop.prop_global_var }}

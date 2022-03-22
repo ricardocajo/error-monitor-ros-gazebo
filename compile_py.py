@@ -7,7 +7,7 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
         compile_py(node, ctx)
         return ctx.get_code()
     elif not type(node) is Node:
-        return node  # The node itself is the expected value
+        return node,node  # The node itself is the expected value
     elif node.type == 'program':
         compile_py(node.args[0], ctx)
         if len(node.args) > 1:
@@ -46,51 +46,56 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
         elif len(node.args) < 6:
             paargs_2 = compile_py(node.args[3], ctx, _property=node.args[0])
             if node.args[0] == 'after':
-                comparisons = [paargs_1[0] + ' and ' + paargs_2[0]]
+                comparisons = [(paargs_1[0][0] + ' and ' + paargs_2[0][0], paargs_1[0][1] + ' {Fore.BLUE}..{Style.RESET_ALL} ' + paargs_2[0][1])]
             else:
                 comparisons = paargs_1 + paargs_2
-        else:
+        else: #TODO
             paargs_2 = compile_py(node.args[3], ctx, _property=node.args[0])
             paargs_3 = compile_py(node.args[4], ctx, _property=node.args[0])
             comparisons = paargs_1 + paargs_2 + paargs_3
         if from_command:
-            ctx.add_property('pattern_var_' + str(ctx.get_prop_counter()), comparisons, node.args[1])
+            print(str(comparisons))
+            ctx.add_property('pattern_var_' + str(ctx.get_prop_counter()), comparisons, node.args[0], node.args[1])
         return comparisons
     elif node.type == 'paargs':
         return compile_py(node.args[0], ctx, _property=_property)
     elif node.type == 'pattern_multi':
-        op = compile_py(node.args[2], ctx)
+        op,state_op = compile_py(node.args[2], ctx)
         left = compile_py(node.args[0], ctx, _property=_property)
         right = compile_py(node.args[1], ctx, _property=_property)
         if len(node.args) > 3:
             pattsup = compile_py(node.args[3], ctx, _property=_property)
-            return [left[0] + ' ' + op + ' ' + right[0] + pattsup[0]]
+            return [(left[0][0]+' '+op+' '+right[0][0]+pattsup[0][0], left[0][1]+' '+op+' '+right[0][1]+pattsup[0][1])]
         else:
-            return [left[0] + ' ' + op + ' ' + right[0]]
+            return [(left[0][0]+' '+op+' '+right[0][0], left[0][1]+' '+op+' '+right[0][1])]
     elif node.type == 'pattsup':
-        op = compile_py(node.args[0], ctx)
+        op,state_op = compile_py(node.args[0], ctx)
+        paargs = compile_py(node.args[1], ctx, _property=_property)
         if len(node.args) > 2:
-            return ' ' + op + ' ' + compile_py(node.args[1], ctx, _property=_property)[0] + compile_py(node.args[2], ctx, _property=_property)[0]
+            pattsup = compile_py(node.args[2], ctx, _property=_property)
+            return [(' '+op+' '+paargs[0][0]+pattsup[0][0], paargs[0][1]+pattsup[0][1])]
         else:
-            return [' ' + op + ' ' + compile_py(node.args[1], ctx, _property=_property)[0]]
+            return [(' '+op+' '+paargs[0][0], ' '+op+' '+paargs[0][1])]
     elif node.type == 'comparison':
-        left = compile_py(node.args[0], ctx)
-        right = compile_py(node.args[2], ctx)
-        op = compile_py(node.args[1], ctx)
+        expr_l,state_l = compile_py(node.args[0], ctx)
+        expr_r,state_r = compile_py(node.args[2], ctx)
+        op,state_op = compile_py(node.args[1], ctx)
         #if len(node.args) > 3:  # has error margin
             #TODO see how to handle this
-        return [prop_prefix(_property) + str(left) + str(op) + str(right)]
+        return [(prop_prefix(_property) + str(expr_l) + op + str(expr_r), str(state_l)+' '+state_op+' '+str(state_r))]
     elif node.type == 'expression':
         return compile_py(node.args[0], ctx)
     elif node.type == 'operand':
         return compile_py(node.args[0], ctx)
     elif node.type == 'func':
         ctx.add_sim_subscriber()
+        keep_state = node.args[0] + '.' + node.args[1]
         if len(node.args) > 2:
             args = compile_py(node.args[2], ctx)
+            keep_state += '.' + '.'.join(args)
         else:
             args = []
-        return sim_funcs(node.args[0], node.args[1], args, ctx)
+        return sim_funcs(node.args[0], node.args[1], args, ctx), keep_state
     elif node.type == 'funcargs':
         if len(node.args) > 1:
             return [node.args[0]] + compile_py(node.args[1], ctx)
