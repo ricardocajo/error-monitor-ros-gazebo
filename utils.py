@@ -76,7 +76,7 @@ def sim_funcs(_object, func, args, ctx):
     ctx.add_var(var_name, extract)
     return 'states[0][\'' + var_name + '\']'
 
-prefixes = {'always': 'not ', 'after': ''}
+prefixes = {'': '', 'always': 'not ', 'after': '', 'never': '', 'until': 'not '}
 def prop_prefix(_property):
     return prefixes[_property]
 

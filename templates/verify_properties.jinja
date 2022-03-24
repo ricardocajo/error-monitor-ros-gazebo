@@ -1,5 +1,6 @@
 def verify_properties(states):
     if states[0]:  # If states is empty fetch_state was not yet called  #TODO this only check 1st dict, what if i do a temporal op and its still not filled?
         {% for prop in properties -%}
-        property_{{ loop.index }}(states)
+        if not property_{{ loop.index }}(states):
+            rospy.signal_shutdown('Ending monitor..')
         {% endfor -%}

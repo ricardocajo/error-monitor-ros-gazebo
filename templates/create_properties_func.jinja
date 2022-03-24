@@ -1,13 +1,8 @@
 {% for prop in properties %}
-{{ prop.prop_global_var }} = True
 def property_{{ loop.index }}(states):
-    global {{ prop.prop_global_var }}
-    if {{ prop.prop_global_var }}:
-        {% for comp in prop.comparisons -%}
-        if {{ comp[0] }}:
-            print(f'{{'{Fore.BLUE}'}}{{ prop.line }} |{{'{Style.RESET_ALL}'}} {{ prop.type }} {{'{Fore.BLUE}'}}..{{'{Style.RESET_ALL}'}} {{ comp[1] }}')
-            print(f'      {{'{Fore.RED}'}}{{ comp[0] }}{{'{Style.RESET_ALL}'}}')
-            {{ prop.prop_global_var }} = False
-    {% endfor -%}
-    return {{ prop.prop_global_var }}
+    if {{ prop.comparisons[0] }}:
+        print(f'{{'{Fore.BLUE}'}}Error at line {{ prop.line }}:{{'{Style.RESET_ALL}'}}\n {{ prop.comparisons[1] }}')
+        print('{{'{0}'}}Failing state:{{'{1}'}}\n    {% for var in prop.comparisons[2] -%}{% set index = loop.index+2 -%}}{{var}}: {{'{'}}{{index}}{{'}'}}\n{% endfor -%}'.format(Fore.RED,Style.RESET_ALL{% for var in prop.comparisons[3] -%},{{var}}{% endfor -%}))
+        return False
+    return True
 {% endfor -%}

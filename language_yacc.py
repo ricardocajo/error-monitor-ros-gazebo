@@ -84,11 +84,11 @@ def p_conjunction_0(p):
 
 def p_comparison_1(p):
     '''comparison : multiplication opbin multiplication'''
-    p[0] = Node('comparison', p[1], p[2], p[3])
+    p[0] = Node('comparison', p[2], p[1], p[3])
 
 def p_comparison_2(p):
     '''comparison : multiplication opbin '{' number '}' multiplication'''
-    p[0] = Node('comparison', p[1], p[2], p[6], p[4])
+    p[0] = Node('comparison', p[2], p[1], p[6], p[4])
 
 def p_comparison_0(p):
     '''comparison : multiplication'''
@@ -106,7 +106,7 @@ def p_opbin(p):
 def p_multiplication(p):
     '''multiplication : multiplication '/' addition
                       | multiplication '*' addition'''
-    p[0] = Node('multiplication', p[1], p[2], p[3]) 
+    p[0] = Node('multiplication', p[2], p[1], p[3]) 
 
 def p_multiplication_0(p):
     '''multiplication : addition'''
@@ -115,7 +115,7 @@ def p_multiplication_0(p):
 def p_addition(p):
     '''addition : addition '+' operand
                 | addition '-' operand'''
-    p[0] = Node('addition', p[1], p[2], p[3])
+    p[0] = Node('addition', p[2], p[1], p[3])
 
 def p_addition_0(p):
     '''addition : operand'''
@@ -159,5 +159,5 @@ def p_temporalvalue(p):
     '''temporalvalue : '@' '{' NAME ',' INTEGER '}' '''
     p[0] = Node('temporalvalue', p[3], p[5])
 
-def p_error(p):   #TODO might be a problem where p has no value in some productions
+def p_error(p):
     print("Syntax error at '%s'. Line number '%d'" % (p.value, p.lineno))
