@@ -16,11 +16,11 @@ class CompileContext(object):
     def __init__(self, file_prefix, filepath):
         self.file_prefix = file_prefix
         self.filepath = filepath
-        self.subscribers = [] # 'topic','msgtype','library','sub_name'
+        self.subscribers = []
         self.sim_subscriber = False
-        self.vars = [] # 'name','object_name','args','sim'
-        self.assoc = [] # 'assoc_var_name','expr_var_name'
-        self.properties = [] # 'property',
+        self.vars = []
+        self.assoc = []
+        self.properties = []
         self.property_counter = 1
 
     def add_subscriber(self, topic, msgtype, library, sub_name):
@@ -33,8 +33,9 @@ class CompileContext(object):
             self.sim_subscriber = True
 
     def add_var(self, name, extract):
-        var_data = {'name': name, 'extract': extract}
-        self.vars.append(var_data)
+        if not added_var(name, self.vars):
+            var_data = {'name': name, 'extract': extract}
+            self.vars.append(var_data)
 
     def add_assoc(self, assoc_var_name, expr_var_name):
         assoc_data = {'assoc_var_name': assoc_var_name, 'expr_var_name': expr_var_name}
@@ -60,6 +61,12 @@ class CompileContext(object):
                                subscribers=self.subscribers, var_list=self.vars,
                                properties=self.properties)
 
+def added_var(name, _vars):
+    for entry in _vars:
+        if entry['name'] == name:
+            return True
+    return False
+
 def sim_funcs(_object, func, args, ctx):
     """ Update the context depending on the function used """
     var_name,extract = None,None
@@ -68,7 +75,7 @@ def sim_funcs(_object, func, args, ctx):
         var_name = _object + '_' + '_'.join(args) + '_var_sim'
         extract = 'model_states_msg.pose[model_states_indexes[\'' + _object + '\']].' + '.'.join(args)
     elif func == 'velocity':
-        var_name = _object + '_velocity' + '_'.join(args) + '_var_sim'
+        var_name = _object + '_velocity_' + '_'.join(args) + '_var_sim'
         if args == []:
             extract = '(model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.x**2 + model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.y**2 + model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.z**2' + ')**(1/2)'
         else:
@@ -79,10 +86,6 @@ def sim_funcs(_object, func, args, ctx):
 prefixes = {'': '', 'always': 'not ', 'after': '', 'never': '', 'until': 'not '}
 def prop_prefix(_property):
     return prefixes[_property]
-
-ops = {'<':lambda x,y:x+y}
-#ops[op](left,right)
-#abs(a-b) <= max( rel_tol * max(abs(a), abs(b)), abs_tol)
 
 class Node(object):
     """ The ast of a program """
@@ -116,6 +119,7 @@ reserved = {
     'eventually' : 'EVENTUALLY',
     'after' : 'AFTER',
     'until' : 'UNTIL',
+    'after_until' : 'AFTER_UNTIL',
     'implies' : 'IMPLIES',
     'not' : 'NOT',
     'and' : 'AND',

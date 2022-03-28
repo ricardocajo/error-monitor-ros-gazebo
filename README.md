@@ -114,7 +114,7 @@ never robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or ro
                  | <model>
                  | <pattern>
 
-   <association> → name = integer  #TODO check what to do with this
+   <association> → name = <pattern>
 
    <declaration> → decl name topic_name <msgtype>
                  | decl name name <msgtype>
@@ -138,12 +138,12 @@ never robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or ro
                  | not <pattern>
                  | after <pattern> , <pattern>
                  | until <pattern> , <pattern>
-                 | (' <paargs> ) implies ( <paargs> )   #TODO check what to do with implies
-                 | after <pattern> , <pattern> until <pattern>
+                 | after_until <pattern> , <pattern> , <pattern>
                  | <conjunction>
 
    <conjunction> → <conjunction> and <comparison>
                  | <conjunction> or <comparison>
+                 | <conjunction> implies <comparison>
                  | <comparison>
 
     <comparison> → <multiplication> <opbin> <multiplication>

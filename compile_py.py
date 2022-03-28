@@ -42,39 +42,46 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
     elif node.type == 'property':
         if len(node.args) == 1:
             return compile_py(node.args[0], ctx, _property=_property)
-        arg_1 = compile_py(node.args[2], ctx, _property=node.args[0]) #TODO check if until,after,always are the same
         if len(node.args) == 3:
+            arg_1 = compile_py(node.args[2], ctx, _property=node.args[0])
             comparisons = arg_1[0], node.args[0]+' '+arg_1[1],arg_1[2],arg_1[3]
         if len(node.args) == 4:
-            arg_2 = compile_py(node.args[3], ctx, _property=node.args[0])
-            if node.args[0] == 'after':
-                comparisons = arg_1[0]+' and '+arg_2[0], node.args[0]+' '+arg_1[1]+', '+arg_2[1],arg_2[2],arg_2[3]
-            if node.args[0] == 'until':
-                comparisons = arg_1[0]+' and '+arg_2[0], node.args[0]+' '+arg_1[1]+', '+arg_2[1],arg_2[2],arg_2[3]
-        if len(node.args) == 6:
-            arg_2 = compile_py(node.args[3], ctx)  #_property=node.args[0]
-            arg_3 = compile_py(node.args[4], ctx)  #_property=node.args[0]
+            arg_1 = compile_py(node.args[2], ctx, _property=node.args[0])
+            arg_2 = compile_py(node.args[3], ctx)
+            comparisons = arg_1[0]+' and '+arg_2[0], node.args[0]+' '+arg_1[1]+', '+arg_2[1],arg_1[2]+arg_2[2],arg_1[3]+arg_2[3]
+        if len(node.args) == 5:
+            arg_1 = compile_py(node.args[2], ctx, _property='after')
+            arg_2 = compile_py(node.args[3], ctx)
+            arg_3 = compile_py(node.args[4], ctx, _property='until')
+            comparisons = arg_1[0]+' and '+arg_2[0]+' and '+arg_3[0], node.args[0]+' '+arg_1[1]+', '+arg_2[1]+', '+arg_3[1], arg_1[2]+arg_2[2]+arg_3[2],arg_1[3]+arg_2[3]+arg_3[3]
         if from_command:
-            print(str(comparisons))
             ctx.add_property('pattern_var_' + str(ctx.get_prop_counter()), comparisons,node.args[0], node.args[1])
         return comparisons
     elif node.type == 'conjunction':
         if len(node.args) == 1:
             return compile_py(node.args[0], ctx, _property=_property)
         else:
-            op,*_ = compile_py(node.args[0], ctx)
+            op,op_state,*_ = compile_py(node.args[0], ctx)
             expr_l,state_l,err1_l,err2_l = compile_py(node.args[1], ctx, _property=_property)
             expr_r,state_r,err1_r,err2_r = compile_py(node.args[2], ctx, _property=_property)
-            return str(expr_l) +' '+op+' ' + str(expr_r), str(state_l)+' '+op+' '+str(state_r),err1_l+err1_r,err2_l+err2_r
+            prec = ''
+            if op == 'implies':
+                prec = 'not '
+                op = 'or'
+            return prec + str(expr_l) +' '+op+' ' + str(expr_r), str(state_l)+' '+op_state+' '+str(state_r),err1_l+err1_r,err2_l+err2_r
     elif node.type == 'comparison':
         if len(node.args) == 1:
             return compile_py(node.args[0], ctx)
-        op,*_ = compile_py(node.args[0], ctx)
+        op,op_state,*_ = compile_py(node.args[0], ctx)
         expr_l,state_l,err1_l,err2_l = compile_py(node.args[1], ctx)
         expr_r,state_r,err1_r,err2_r = compile_py(node.args[2], ctx)
-        #if len(node.args) == 4:  # has error margin
-            #TODO see how to handle this
-        return prop_prefix(_property) + str(expr_l) + op + str(expr_r), str(state_l)+' '+op+' '+str(state_r),err1_l+err1_r,err2_l+err2_r
+        if len(node.args) == 4:
+            if op == '==':
+                op = '<='
+            if op == '!=':
+                op = '>='
+            return prop_prefix(_property) + str(expr_r)+'-'+str(node.args[3]) + op + str(expr_l) + op + str(expr_r)+'+'+str(node.args[3]),str(state_l)+' '+op_state+'{{'+str(node.args[3])+'}}'+' '+str(state_r),err1_l+err1_r,err2_l+err2_r
+        return prop_prefix(_property) + str(expr_l) + op + str(expr_r), str(state_l)+' '+op_state+' '+str(state_r),err1_l+err1_r,err2_l+err2_r
     elif node.type == 'multiplication':
         if len(node.args) == 1:
             return compile_py(node.args[0], ctx)
@@ -105,3 +112,8 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
         if len(node.args) > 1:
             return [node.args[0]] + compile_py(node.args[1], ctx)
         return [node.args[0]]
+    elif node.type == 'temporalvalue':
+        var_name, keep_state, *_ = compile_py(node.args[0], ctx)
+        new_var_name = var_name.replace('[0]', '['+str(node.args[1])+']')
+        new_keep_state = '@{' + keep_state + ', ' + str(node.args[1]) + '}'
+        return new_var_name, new_keep_state, [new_keep_state], [new_var_name]

@@ -17,7 +17,7 @@ def p_command(p):
     p[0] = Node('command', p[1])
 
 def p_association(p):
-    '''association : NAME '=' INTEGER'''  #TODO check what to do with this
+    '''association : NAME '=' pattern'''
     p[0] = Node('association', p[1], p[3])
 
 def p_declaration(p):
@@ -52,11 +52,10 @@ def p_name(p):
             | FUNC_MAIN'''
     p[0] = p[1]
 
-def p_pattern_1(p):  #TODO check what to do with implies
+def p_pattern_1(p):
     '''pattern : ALWAYS pattern 
                | NEVER pattern
                | EVENTUALLY pattern
-               | IMPLIES pattern
                | NOT pattern'''
     p[0] = Node('property', p[1], p.lineno(1), p[2])
 
@@ -66,8 +65,8 @@ def p_pattern_2(p):
     p[0] = Node('property', p[1], p.lineno(1), p[2], p[4])
 
 def p_pattern_4(p):
-    '''pattern : AFTER pattern ',' pattern UNTIL pattern'''
-    p[0] = Node('property', p[1], p.lineno(1), p[5], p[2], p[4], p[6])
+    '''pattern : AFTER_UNTIL pattern ',' pattern ',' pattern'''
+    p[0] = Node('property', p[1], p.lineno(1), p[2], p[4], p[6])
 
 def p_pattern_0(p):
     '''pattern : conjunction'''
@@ -75,7 +74,8 @@ def p_pattern_0(p):
 
 def p_conjunction(p):
     '''conjunction : conjunction AND comparison
-                   | conjunction OR comparison'''
+                   | conjunction OR comparison
+                   | conjunction IMPLIES comparison'''
     p[0] = Node('conjunction', p[2], p[1], p[3])
 
 def p_conjunction_0(p):
@@ -156,7 +156,8 @@ def p_funcargs_2(p):
     p[0] = Node('funcargs', p[2])
         
 def p_temporalvalue(p):
-    '''temporalvalue : '@' '{' NAME ',' INTEGER '}' '''
+    '''temporalvalue : '@' '{' NAME ',' INTEGER '}' 
+                     | '@' '{' func ',' INTEGER '}' '''
     p[0] = Node('temporalvalue', p[3], p[5])
 
 def p_error(p):
