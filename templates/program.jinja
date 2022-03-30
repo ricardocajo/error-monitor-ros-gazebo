@@ -1,29 +1,16 @@
-{% set ns = namespace() -%}
 #! /usr/bin/env python
 
 import rospy
 import message_filters
 from colorama import Fore, Style
+{% for sub in subscribers -%}
+from {{ sub.library }}.msg import {{ sub.msgtype }}
+{% endfor -%}
 
-rospy.init_node('{{ file_prefix }}')
-
-# Save state of the simulation
-state = {}
-save_states = []  #TODO  the size could be decided somewhere
-
-{% include "aprox_time_sub.jinja" %}
-
+{% include "fetch_state.jinja" %}
 def update_state():
     global save_states,state
     save_states.insert(0,state)
     save_states = save_states[:5]
-{% include "create_properties_func.jinja" %}
-{% include "verify_properties.jinja" %}
-
-rate = rospy.Rate(20)  #TODO  the rate could be decided somewhere
-while not rospy.is_shutdown():
-    update_state()
-    verify_properties(save_states.copy())
-    rate.sleep()
-
-rospy.spin()
+{% include "properties.jinja" %}
+{% include "main.jinja" -%}

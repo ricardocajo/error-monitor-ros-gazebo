@@ -1,0 +1,21 @@
+if __name__ == '__main__':
+    try:
+        rospy.init_node('{{ file_prefix }}')
+        {% set timeSync_args = [] -%}
+        {% for sub in subscribers -%}
+        {{ sub.sub_name }}_sub = message_filters.Subscriber('{{ sub.topic }}', {{ sub.msgtype }})
+        {% do timeSync_args.append(sub.sub_name + '_sub') -%}
+        {% endfor -%}
+        time_sync = message_filters.ApproximateTimeSynchronizer([{{ timeSync_args | join(',') }}], queue_size=1, slop=0.1, allow_headerless=True)
+        time_sync.registerCallback(fetch_state)
+        state = {}
+        save_states = []  #TODO  the size could be decided somewhere
+        rate = rospy.Rate(20)  #TODO  the rate could be decided somewhere
+        while not rospy.is_shutdown():
+            update_state()
+            verify_properties(save_states.copy())
+        rospy.spin()
+    except rospy.ROSInterruptException as e:
+        print(e)
+    finally:
+        pass

@@ -7,8 +7,10 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
         ctx = CompileContext(file_prefix, filepath)
         compile_py(node, ctx)
         return ctx.get_code()
-    elif not type(node) is Node:
-        return node,node,[],[]  # The node itself is the expected value
+    elif not type(node) is Node:  # The node itself is the expected value
+        if ctx.is_assoc(node):
+            return ctx.assoc_info(node)
+        return node,node,[],[]
     elif node.type == 'program':
         compile_py(node.args[0], ctx)
         if len(node.args) > 1:
@@ -38,7 +40,7 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
             return [node.args[0]] + compile_py(node.args[1], ctx)
         return [node.args[0]]
     elif node.type == 'association':
-        ctx.add_assoc(node.args[0], compile_py(node.args[1]), ctx)
+        ctx.add_assoc(node.args[0], compile_py(node.args[1], ctx))
     elif node.type == 'property':
         if len(node.args) == 1:
             return compile_py(node.args[0], ctx, _property=_property)
@@ -115,5 +117,5 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
     elif node.type == 'temporalvalue':
         var_name, keep_state, *_ = compile_py(node.args[0], ctx)
         new_var_name = var_name.replace('[0]', '['+str(node.args[1])+']')
-        new_keep_state = '@{' + keep_state + ', ' + str(node.args[1]) + '}'
+        new_keep_state = '@{{' + keep_state + ', ' + str(node.args[1]) + '}}'
         return new_var_name, new_keep_state, [new_keep_state], [new_var_name]

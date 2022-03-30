@@ -1,6 +1,0 @@
-{% set if_args = [] -%}
-{% for prop in properties -%}{% do if_args.append('not property_' ~ loop.index ~ '(states)') -%}{% endfor -%}
-def verify_properties(states):
-    if all(dic for dic in states):
-        if {{ if_args | join(' or ') }}:
-            rospy.signal_shutdown('Ending monitor..')

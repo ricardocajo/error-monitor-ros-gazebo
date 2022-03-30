@@ -1,4 +1,4 @@
-""" The language grammar """
+""" The language grammar """ #TODO insert NOT
 from utils import *
 
 def p_program_1(p):
@@ -55,8 +55,7 @@ def p_name(p):
 def p_pattern_1(p):
     '''pattern : ALWAYS pattern 
                | NEVER pattern
-               | EVENTUALLY pattern
-               | NOT pattern'''
+               | EVENTUALLY pattern'''
     p[0] = Node('property', p[1], p.lineno(1), p[2])
 
 def p_pattern_2(p):

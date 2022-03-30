@@ -1,11 +1,6 @@
-# Subscribers
 {% set callback_args = [] -%}
-{% set timeSync_args = [] -%}
 {% for sub in subscribers -%}
-from {{ sub.library }}.msg import {{ sub.msgtype }}
-{{ sub.sub_name }}_sub = message_filters.Subscriber('{{ sub.topic }}', {{ sub.msgtype }})
 {% do callback_args.append(sub.sub_name + '_msg') -%}
-{% do timeSync_args.append(sub.sub_name + '_sub') -%}
 {% endfor %}
 def fetch_state({{ callback_args | join(',') }}):
     global state
@@ -16,9 +11,6 @@ def fetch_state({{ callback_args | join(',') }}):
     for index,name in enumerate(model_states_msg.name):
         model_states_indexes[name] = index
     {% endif -%}
-    # Save relevant info
     {% for var in var_list -%}
     state['{{ var.name }}'] = {{ var.extract }}
     {% endfor %}
-time_sync = message_filters.ApproximateTimeSynchronizer([{{ timeSync_args | join(',') }}], queue_size=1, slop=0.1, allow_headerless=True)
-time_sync.registerCallback(fetch_state)

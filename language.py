@@ -36,7 +36,7 @@ _input = f.read()
 filename = file_prefix + ".py"
 filepath = os.path.join(ros_package_dir_path, filename)
 ast = parser.parse(lexer=lexer, input=_input)
-type_checker(TypeCheckerContext(), ast, ros_package_dir_path)
+type_checker(ast, filepath=ros_package_dir_path)
 code = compile_py(ast, file_prefix=file_prefix, filepath=ros_package_dir_path)
 with open(filepath, "w") as f_out:
     f_out.write(code)

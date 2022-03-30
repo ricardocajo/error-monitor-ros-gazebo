@@ -6,10 +6,14 @@ import subprocess
 class TypeCheckerContext(object):
     """ Save the context of a program (in the paradigm of the type_checker function)"""
     def __init__(self):
-        self.stack = [{}]
+        self.topic_value = []
+        self.assoc = []
 
-    def __str__(self):
-        return "implement"
+    def add_topic_value(self, name):
+        self.topic_value.append(name)
+
+    def add_assoc(self, name):
+        self.assoc.append(name)
 
 class CompileContext(object):
     """ Save the context of a program (in the paradigm of the compile_py function)"""
@@ -37,9 +41,17 @@ class CompileContext(object):
             var_data = {'name': name, 'extract': extract}
             self.vars.append(var_data)
 
-    def add_assoc(self, assoc_var_name, expr_var_name):
-        assoc_data = {'assoc_var_name': assoc_var_name, 'expr_var_name': expr_var_name}
+    def add_assoc(self, name, comparison_state):
+        assoc_data = {'name': name, 'comparison_state': comparison_state}
         self.assoc.append(assoc_data)
+
+    def is_assoc(self, name):
+        return added_var(name, self.assoc)
+
+    def assoc_info(self, name):
+        for entry in self.assoc:
+            if entry['name'] == name:
+                return entry['comparison_state']
 
     def add_property(self, prop_global_var, comparisons, _type, line):
         property_data = {'prop_global_var': prop_global_var, 'comparisons': comparisons, 'type': _type, 'line': line}
@@ -61,8 +73,8 @@ class CompileContext(object):
                                subscribers=self.subscribers, var_list=self.vars,
                                properties=self.properties)
 
-def added_var(name, _vars):
-    for entry in _vars:
+def added_var(name, list_):
+    for entry in list_:
         if entry['name'] == name:
             return True
     return False
@@ -121,7 +133,6 @@ reserved = {
     'until' : 'UNTIL',
     'after_until' : 'AFTER_UNTIL',
     'implies' : 'IMPLIES',
-    'not' : 'NOT',
     'and' : 'AND',
     'or' : 'OR'
 }

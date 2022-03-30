@@ -135,7 +135,6 @@ never robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or ro
        <pattern> → always <pattern>
                  | never <pattern>
                  | eventually <pattern>
-                 | not <pattern>
                  | after <pattern> , <pattern>
                  | until <pattern> , <pattern>
                  | after_until <pattern> , <pattern> , <pattern>

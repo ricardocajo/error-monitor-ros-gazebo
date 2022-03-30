@@ -1,7 +1,0 @@
-{% for prop in properties %}
-def property_{{ loop.index }}(states):
-    if {{ prop.comparisons[0] }}:
-        print('{{'{0}'}}Error at line {{ prop.line }}:{{'{1}'}}\n {{ prop.comparisons[1] }}\n{{'{2}'}}Failing state:{{'{3}'}}\n    {% for var in prop.comparisons[2] -%}{% set index = loop.index+3 -%}{{var}}: {{'{'}}{{index}}{{'}'}}\n    {% endfor -%}'.format(Fore.BLUE,Style.RESET_ALL,Fore.RED,Style.RESET_ALL{% for var in prop.comparisons[3] -%},{{var}}{% endfor -%}))
-        return False
-    return True
-{% endfor -%}
