@@ -30,7 +30,7 @@ def t_FLOAT(t):
     try:
         t.value = float(t.value)
     except ValueError:
-        print("Float value too large %d", t.value)
+        print(f"Float value too large {t.value}")
         t.value = 0
     return t
 
@@ -39,7 +39,7 @@ def t_INTEGER(t):
     try:
         t.value = int(t.value)
     except ValueError:
-        print("Integer value too large %d", t.value)
+        print(f"Integer value too large {t.value}")
         t.value = 0
     return t
     
@@ -48,5 +48,5 @@ def t_newline(t):
     t.lexer.lineno += t.value.count("\n")
 
 def t_error(t):
-    print("Illegal character '%s'" % t.value[0])
+    print(f"Illegal character '{t.value[0]}'")
     t.lexer.skip(1)

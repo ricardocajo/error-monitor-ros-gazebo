@@ -1,0 +1,17 @@
+def property_{{ loop.index }}(states,eventually):
+    if {{ prop.comparisons[0] }}:
+        eventually[var][x] = True
+    {% if prop.type_ == 'until' -%}
+    if {{ prop.comparisons[5][0] }}: {# end until shared by all until->eventually #}
+        raise rospy.exceptions.ROSInterruptException('Error here base until')
+    {% if prop.has_eventually_or -%}  {# i can check the size to see if exists #}
+    elif {{ prop.comparisons[5][1] }}:
+        eventually[var][x] = True
+    if {{ prop.comparisons[5][2] }}:
+        eventually[var][x][y] = False
+    {% endif -%}
+    {% if prop.has_eventually_and -%}
+    if {{ prop.comparisons[5][3] }}:
+        raise rospy.exceptions.ROSInterruptException('Error here and until')
+    {% endif -%}
+    {% endif -%}

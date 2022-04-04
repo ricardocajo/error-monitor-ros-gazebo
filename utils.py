@@ -26,6 +26,10 @@ class CompileContext(object):
         self.assoc = []
         self.properties = []
         self.property_counter = 1
+        self.temporal_size = 1
+        self.rate = 20
+        self.timeout = 100
+        self.eventually = 0
 
     def add_subscriber(self, topic, msgtype, library, sub_name):
         sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library, 'sub_name': sub_name}
@@ -53,17 +57,23 @@ class CompileContext(object):
             if entry['name'] == name:
                 return entry['comparison_state']
 
-    def add_property(self, prop_global_var, comparisons, _type, line):
-        property_data = {'prop_global_var': prop_global_var, 'comparisons': comparisons, 'type': _type, 'line': line}
+    def add_property(self, comparisons, line, type_):
+        property_data = {'comparisons': comparisons, 'line': line, 'type': type_}
         self.properties.append(property_data)
-        self.property_counter +=1
-    
-    def get_prop_counter(self):
-        return self.property_counter
 
     def get_library(self, msg_type):
         command = f"cd {self.filepath} | rosmsg show {msg_type}"
         return subprocess.check_output(command, shell=True).decode("utf-8").split('\n')[0].split('[')[1].split('/')[0]
+
+    def check_temporal_size(self, value):
+        if abs(value)+1 > self.temporal_size:
+            self.temporal_size = abs(value)+1
+
+    def rate_update(self, value):
+        self.rate = value
+
+    def timeout_update(self, value):
+        self.timeout = value
 
     def get_code(self):
         file_loader = FileSystemLoader('templates')
@@ -71,7 +81,8 @@ class CompileContext(object):
         template = env.get_template('program.jinja')
         return template.render(file_prefix=self.file_prefix, sim_sub=self.sim_subscriber, 
                                subscribers=self.subscribers, var_list=self.vars,
-                               properties=self.properties)
+                               properties=self.properties, temp_size=self.temporal_size,
+                               rate=self.rate, timeout=self.timeout, eventually=self.eventually)
 
 def added_var(name, list_):
     for entry in list_:
@@ -79,25 +90,25 @@ def added_var(name, list_):
             return True
     return False
 
-def sim_funcs(_object, func, args, ctx):
+def sim_funcs(object_, func, args, ctx):
     """ Update the context depending on the function used """
     var_name,extract = None,None
     if func == 'position':
         args = ['position'] + args
-        var_name = _object + '_' + '_'.join(args) + '_var_sim'
-        extract = 'model_states_msg.pose[model_states_indexes[\'' + _object + '\']].' + '.'.join(args)
+        var_name = object_ + '_' + '_'.join(args) + '_var_sim'
+        extract = 'model_states_msg.pose[model_states_indexes[\'' + object_ + '\']].' + '.'.join(args)
     elif func == 'velocity':
-        var_name = _object + '_velocity_' + '_'.join(args) + '_var_sim'
+        var_name = object_ + '_velocity_' + '_'.join(args) + '_var_sim'
         if args == []:
-            extract = '(model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.x**2 + model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.y**2 + model_states_msg.twist[model_states_indexes[\'' + _object + '\']].linear.z**2' + ')**(1/2)'
+            extract = '(model_states_msg.twist[model_states_indexes[\'' + object_ + '\']].linear.x**2 + model_states_msg.twist[model_states_indexes[\'' + object_ + '\']].linear.y**2 + model_states_msg.twist[model_states_indexes[\'' + object_ + '\']].linear.z**2' + ')**(1/2)'
         else:
-            extract = 'model_states_msg.twist[model_states_indexes[\'' + _object + '\']].' + '.'.join(args)
+            extract = 'model_states_msg.twist[model_states_indexes[\'' + object_ + '\']].' + '.'.join(args)
     ctx.add_var(var_name, extract)
     return 'states[0][\'' + var_name + '\']'
 
-prefixes = {'': '', 'always': 'not ', 'after': '', 'never': '', 'until': 'not '}
-def prop_prefix(_property):
-    return prefixes[_property]
+prefixes = {'': '', 'always': 'not ', 'after': '', 'never': '', 'until': 'not ', 'eventually': ''}
+def prop_prefix(property_):
+    return prefixes[property_]
 
 class Node(object):
     """ The ast of a program """
@@ -134,7 +145,9 @@ reserved = {
     'after_until' : 'AFTER_UNTIL',
     'implies' : 'IMPLIES',
     'and' : 'AND',
-    'or' : 'OR'
+    'or' : 'OR',
+    '_rate_' : 'RATE',
+    '_timeout_' : 'TIMEOUT'
 }
 
 literals = ['>','<','(',')','+','-','*','/','{','}','@','=',':',',','.',';']

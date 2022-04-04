@@ -1,9 +1,14 @@
 {% for prop in properties %}
+{% if prop.comparisons[4] -%}
+{% include "eventually.jinja" -%}
+{% else -%}
 def property_{{ loop.index }}(states):
     if {{ prop.comparisons[0] }}:
         raise rospy.exceptions.ROSInterruptException('{{'{0}'}}Error at line {{ prop.line }}:{{'{1}'}}\n {{ prop.comparisons[1] }}\n{{'{2}'}}Failing state:{{'{3}'}}\n    {% for var in prop.comparisons[2] -%}{% set index = loop.index+3 -%}{{var}}: {{'{'}}{{index}}{{'}'}}\n    {% endfor -%}'.format(Fore.BLUE,Style.RESET_ALL,Fore.RED,Style.RESET_ALL{% for var in prop.comparisons[3] -%},{{var}}{% endfor -%}))
-
+{% endif -%}
+{% endfor %}
 def verify_properties(states):
     if all(dic for dic in states):
+        {% for prop in properties -%}
         property_{{ loop.index }}(states)
-{% endfor -%}
+        {% endfor -%}

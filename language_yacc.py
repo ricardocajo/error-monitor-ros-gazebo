@@ -1,5 +1,13 @@
-""" The language grammar """ #TODO insert NOT
+""" The language grammar """
 from utils import *
+
+#precedence = (
+#    ('left', 'AND'),
+#    ('left', 'OR'),
+#    ('left', 'IMPLIES'),
+#    ('left', ')', 'NAME', 'INTEGER', 'FLOAT', 'TRUE', 'FALSE', '}', 'FUNC_MAIN'),
+##    ',','@','(','AFTER_UNTIL','UNTIL','AFTER','EVENTUALLY','ALWAYS','NEVER','MODEL','DECL','TIMEOUT','RATE'),
+#)
 
 def p_program_1(p):
     '''program : command'''
@@ -19,6 +27,14 @@ def p_command(p):
 def p_association(p):
     '''association : NAME '=' pattern'''
     p[0] = Node('association', p[1], p[3])
+
+def p_association_rate(p):
+    '''association : RATE '=' INTEGER'''
+    p[0] = Node('rate', p[3])
+
+def p_association_timeout(p):
+    '''association : TIMEOUT '=' number'''
+    p[0] = Node('timeout', p[3])
 
 def p_declaration(p):
     '''declaration : DECL NAME TOPIC_NAME msgtype
@@ -72,9 +88,9 @@ def p_pattern_0(p):
     p[0] = Node('property', p[1])
 
 def p_conjunction(p):
-    '''conjunction : conjunction AND comparison
-                   | conjunction OR comparison
-                   | conjunction IMPLIES comparison'''
+    '''conjunction : conjunction AND pattern
+                   | conjunction OR pattern
+                   | conjunction IMPLIES pattern'''
     p[0] = Node('conjunction', p[2], p[1], p[3])
 
 def p_conjunction_0(p):
@@ -131,7 +147,7 @@ def p_operand(p):
 
 def p_operand_par(p):
     '''operand : '(' pattern ')' '''
-    p[0] = Node('operand', p[2])
+    p[0] = Node('operand_paren', p[2])
 
 def p_number(p):
     '''number : FLOAT
@@ -160,4 +176,4 @@ def p_temporalvalue(p):
     p[0] = Node('temporalvalue', p[3], p[5])
 
 def p_error(p):
-    print("Syntax error at '%s'. Line number '%d'" % (p.value, p.lineno))
+    raise TypeError(f"Syntax error at '{p.value}'. Line number '{p.lineno}'")

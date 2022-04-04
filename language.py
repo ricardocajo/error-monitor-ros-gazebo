@@ -13,10 +13,7 @@ lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 
 """              TEST LEXER
-data = '''model turtlebot3_burger:
-    laser_position /odom Odometry.pose.pose
-    own_velocity /cmd_vel Twist.linear.x
-    ;'''
+data = '''  '''
 lexer.input(data)
 while True:
     tok = lexer.token()
@@ -35,10 +32,13 @@ f = open(filename, 'r')
 _input = f.read()
 filename = file_prefix + ".py"
 filepath = os.path.join(ros_package_dir_path, filename)
-ast = parser.parse(lexer=lexer, input=_input)
-type_checker(ast, filepath=ros_package_dir_path)
-code = compile_py(ast, file_prefix=file_prefix, filepath=ros_package_dir_path)
-with open(filepath, "w") as f_out:
-    f_out.write(code)
-    os.chmod(filepath, stat.S_IRWXU)
+try:
+    ast = parser.parse(lexer=lexer, input=_input)
+    #type_checker(ast, filepath=ros_package_dir_path)
+    code = compile_py(ast, file_prefix=file_prefix, filepath=ros_package_dir_path)
+    with open(filepath, "w") as f_out:
+        f_out.write(code)
+        os.chmod(filepath, stat.S_IRWXU)
+except TypeError as e:
+    print(e)
 #"""

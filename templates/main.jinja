@@ -8,10 +8,20 @@ if __name__ == '__main__':
         {% endfor -%}
         time_sync = message_filters.ApproximateTimeSynchronizer([{{ timeSync_args | join(',') }}], queue_size=1, slop=0.1, allow_headerless=True)
         time_sync.registerCallback(fetch_state)
-        state = {}
-        save_states = []  #TODO  the size could be decided somewhere
-        rate = rospy.Rate(20)  #TODO  the rate could be decided somewhere
+        state, save_states = {}, []
+        {% if eventually > 0 -%}{% set eventually_dic = [] -%}
+        {% for i in range(eventually) -%}{% do eventually_dic.append('\'var_' ~ (i+1) ~ '\': [False,\'*Error message*\']') -%}{% endfor -%}
+        eventually = {{'{'}}{{ eventually_dic | join(',') }}{{'}'}}
+        {% endif -%}
+        rate, timeout = rospy.Rate({{ rate }}), {{ timeout }}
         while not rospy.is_shutdown():
+            if rospy.get_time() > timeout:
+                {% if eventually > 0 -%}
+                for bool_, err in eventually.values():
+                    if not bool_:
+                        raise rospy.exceptions.ROSInterruptException(err)
+                {% endif -%}
+                raise rospy.exceptions.ROSInterruptException('Timeout reached. Simulation ended without breaking any property.')
             update_state()
             verify_properties(save_states.copy())
         rospy.spin()
