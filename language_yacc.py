@@ -5,6 +5,7 @@ from utils import *
 #    ('left', 'AND'),
 #    ('left', 'OR'),
 #    ('left', 'IMPLIES'),
+#    ('left', 'ALWAYS', 'AFTER', 'UNTIL', 'NEVER'),
 #    ('left', ')', 'NAME', 'INTEGER', 'FLOAT', 'TRUE', 'FALSE', '}', 'FUNC_MAIN'),
 ##    ',','@','(','AFTER_UNTIL','UNTIL','AFTER','EVENTUALLY','ALWAYS','NEVER','MODEL','DECL','TIMEOUT','RATE'),
 #)
@@ -137,13 +138,16 @@ def p_addition_0(p):
     p[0] = Node('addition', p[1])
 
 def p_operand(p):
-    '''operand : NAME
-               | number
+    '''operand : number
                | TRUE
                | FALSE
                | func
                | temporalvalue'''
     p[0] = Node('operand', p[1])
+
+def p_operand_name(p):
+    '''operand : NAME'''
+    p[0] = Node('operand_name', p[1])
 
 def p_operand_par(p):
     '''operand : '(' pattern ')' '''

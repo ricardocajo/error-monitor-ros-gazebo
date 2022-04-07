@@ -1,17 +1,28 @@
 def property_{{ loop.index }}(states,eventually):
-    if {{ prop.comparisons[0] }}:
-        eventually[var][x] = True
-    {% if prop.type_ == 'until' -%}
-    if {{ prop.comparisons[5][0] }}: {# end until shared by all until->eventually #}
-        raise rospy.exceptions.ROSInterruptException('Error here base until')
-    {% if prop.has_eventually_or -%}  {# i can check the size to see if exists #}
-    elif {{ prop.comparisons[5][1] }}:
-        eventually[var][x] = True
-    if {{ prop.comparisons[5][2] }}:
-        eventually[var][x][y] = False
+    {% for comparison in prop.comparisons[5][0] -%}
+    if {% if comparison.prec -%}{{ comparison.prec }} and {% endif -%}({{ comparison.comp }}):
+        eventually['{{ comparison.var }}'][0] = True
+    {% endfor -%}
+    {% if not prop.comparisons[5][1] == '' -%}
+    if {{ prop.comparisons[5][1] }}:
+        raise rospy.exceptions.ROSInterruptException('{{'{0}'}}Error at line {{ prop.line }}:{{'{1}'}}\n {{ prop.comparisons[1] }}\n{{'{2}'}}Failing state:{{'{3}'}}\n    {% for var in prop.comparisons[2] -%}{% set index = loop.index+3 -%}{{var}}: {{'{'}}{{index}}{{'}'}}\n    {% endfor -%}'.format(Fore.BLUE,Style.RESET_ALL,Fore.RED,Style.RESET_ALL{% for var in prop.comparisons[3] -%},{{var}}{% endfor -%}))
     {% endif -%}
-    {% if prop.has_eventually_and -%}
-    if {{ prop.comparisons[5][3] }}:
-        raise rospy.exceptions.ROSInterruptException('Error here and until')
+    {% if prop.type == 'until' -%}if not ({{ prop.comparisons[5][0][0].prec }}) {% for comparison in prop.comparisons[5][0] -%} and not eventually['{{ comparison.var }}'][0] {% endfor -%}{% for comparison in prop.comparisons[5][2] -%} and eventually['{{ comparison.var }}'][0] {% endfor -%}:
+        raise rospy.exceptions.ROSInterruptException('{{'{0}'}}Error at line {{ prop.line }}:{{'{1}'}}\n {{ prop.comparisons[1] }}\n{{'{2}'}}Failing state:{{'{3}'}}\n    {% for var in prop.comparisons[2] -%}{% set index = loop.index+3 -%}{{var}}: {{'{'}}{{index}}{{'}'}}\n    {% endfor -%}'.format(Fore.BLUE,Style.RESET_ALL,Fore.RED,Style.RESET_ALL{% for var in prop.comparisons[3] -%},{{var}}{% endfor -%}))
+    elif not ({{ prop.comparisons[5][0][0].prec }}):
+        {% for comparison in prop.comparisons[5][0] -%}
+        eventually['{{ comparison.var }}'][0] = True
+        {% endfor -%}
+        {% for comparison in prop.comparisons[5][2] -%}
+        eventually['{{ comparison.var }}'][0] = True
+    {% endfor -%}
     {% endif -%}
+    {% if prop.comparisons[5][2]|length > 0 -%}
+    {% for comparison in prop.comparisons[5][2] -%}
+    if {{ comparison.prec }} and ({{ comparison.comp }}):
+        eventually['{{ comparison.var }}'][0] = True
+        {% if prop.type == 'after' -%}
+        eventually['{{ comparison.origin_var }}'][0] = True
+    {% endif -%}
+    {% endfor -%}
     {% endif -%}

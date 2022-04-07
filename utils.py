@@ -12,8 +12,21 @@ class TypeCheckerContext(object):
     def add_topic_value(self, name):
         self.topic_value.append(name)
 
-    def add_assoc(self, name):
-        self.assoc.append(name)
+    def add_assoc(self, dic):
+        self.assoc.append(dic)
+
+    def is_topic_value(self, name):
+        for value in self.topic_value:
+            if value == name:
+                return True
+        return False
+
+    def is_assoc(self, name):
+        for dic in self.assoc:
+            if dic['var'] == name:
+                return True, dic['type']
+        return False, None
+        
 
 class CompileContext(object):
     """ Save the context of a program (in the paradigm of the compile_py function)"""
@@ -27,9 +40,11 @@ class CompileContext(object):
         self.properties = []
         self.property_counter = 1
         self.temporal_size = 1
-        self.rate = 20
+        self.rate = 30
         self.timeout = 100
         self.eventually = 0
+        self.eventually_aux = 0
+        self.is_after_or = False
 
     def add_subscriber(self, topic, msgtype, library, sub_name):
         sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library, 'sub_name': sub_name}
@@ -61,6 +76,15 @@ class CompileContext(object):
         property_data = {'comparisons': comparisons, 'line': line, 'type': type_}
         self.properties.append(property_data)
 
+    def add_eventually(self):
+        self.eventually += 1
+        self.eventually_aux = 0
+        return 'var_'+str(self.eventually)
+
+    def add_aux_eventually(self):
+        self.eventually_aux += 1
+        return 'var_'+str(self.eventually)+'aux_'+str(self.eventually_aux), self.eventually_aux
+
     def get_library(self, msg_type):
         command = f"cd {self.filepath} | rosmsg show {msg_type}"
         return subprocess.check_output(command, shell=True).decode("utf-8").split('\n')[0].split('[')[1].split('/')[0]
@@ -68,6 +92,9 @@ class CompileContext(object):
     def check_temporal_size(self, value):
         if abs(value)+1 > self.temporal_size:
             self.temporal_size = abs(value)+1
+
+    def is_after_or_true(self):
+        self.is_after_or = True
 
     def rate_update(self, value):
         self.rate = value
@@ -82,7 +109,8 @@ class CompileContext(object):
         return template.render(file_prefix=self.file_prefix, sim_sub=self.sim_subscriber, 
                                subscribers=self.subscribers, var_list=self.vars,
                                properties=self.properties, temp_size=self.temporal_size,
-                               rate=self.rate, timeout=self.timeout, eventually=self.eventually)
+                               rate=self.rate, timeout=self.timeout, eventually=self.eventually,
+                               is_after_or=self.is_after_or)
 
 def added_var(name, list_):
     for entry in list_:

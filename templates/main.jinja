@@ -9,21 +9,33 @@ if __name__ == '__main__':
         time_sync = message_filters.ApproximateTimeSynchronizer([{{ timeSync_args | join(',') }}], queue_size=1, slop=0.1, allow_headerless=True)
         time_sync.registerCallback(fetch_state)
         state, save_states = {}, []
-        {% if eventually > 0 -%}{% set eventually_dic = [] -%}
-        {% for i in range(eventually) -%}{% do eventually_dic.append('\'var_' ~ (i+1) ~ '\': [False,\'*Error message*\']') -%}{% endfor -%}
-        eventually = {{'{'}}{{ eventually_dic | join(',') }}{{'}'}}
-        {% endif -%}
         rate, timeout = rospy.Rate({{ rate }}), {{ timeout }}
+        {% if eventually > 0 -%}
+        eventually = {{'{'}}{% for prop in properties -%}{% if not loop.index == 1 -%},{% endif -%}{% for event in prop.comparisons[5][0] -%}{% if not loop.index == 1 -%},{% endif -%}'{{ event.var }}': [False,'{{'{0}'}}Error at line {{ prop.line }}:{{'{1}'}}\n {{ prop.comparisons[1] }}\n{{'{2}'}}Failing state:{{'{3}'}}\n    {% for var in prop.comparisons[2] -%}{% set index = loop.index+3 -%}{{var}}: {{'{'}}{{index}}{{'}'}}\n    {% endfor -%}'.format(Fore.BLUE,Style.RESET_ALL,Fore.RED,Style.RESET_ALL{% for var in prop.comparisons[3] -%},''{% endfor -%})]{% endfor -%}{% for event in prop.comparisons[5][2] -%},'{{ event.var }}': [False,{{ event.err }}]{% endfor -%}{% endfor -%}{{'}'}}
+        {% endif -%}
         while not rospy.is_shutdown():
             if rospy.get_time() > timeout:
+                {% if is_after_or -%}
+                for key, value in eventually.items():
+                    if 'after' in key:
+                        temp = [value[0]]
+                        for key2, value2 in eventually.items():
+                            if key in key2:
+                                temp.append(not value2[0])
+                        eventually[key][0] = any(temp) 
+                {% endif -%}
                 {% if eventually > 0 -%}
-                for bool_, err in eventually.values():
-                    if not bool_:
+                for key, (bool_, err) in eventually.items():
+                    if not 'aux' in key and not bool_:
                         raise rospy.exceptions.ROSInterruptException(err)
                 {% endif -%}
                 raise rospy.exceptions.ROSInterruptException('Timeout reached. Simulation ended without breaking any property.')
             update_state()
+            {% if eventually > 0 -%}
+            verify_properties(save_states.copy(),eventually)
+        {% else -%}
             verify_properties(save_states.copy())
+        {% endif -%}
         rospy.spin()
     except rospy.ROSInterruptException as e:
         print(e)
