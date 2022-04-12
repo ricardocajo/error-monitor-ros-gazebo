@@ -34,7 +34,7 @@ after X, Y  (after the event X is observed, Y has to hold on the entire subseque
 
 until X, Y  (X holds at the current or future position, and Y has to hold until that position. At that position Y does not have to hold any more)
 
-after X, Y until Z  (after the event X is observed, Y has to hold on the entire subsequent path up until Z happens, at that position X does not have to hold any more)
+after X, Y until Z  (after the event X is observed, Y has to hold on the entire subsequent path up until Z happens, at that position X does not have to hold anymore)
 
 (X)implies(Y)  ???
 
@@ -63,7 +63,7 @@ X.orientation (The orientation of a object in the simulation)
 
 X.velocity (The velocity of a object in the simulation)
 
-X.localization_error (The difference between to robot perception of its position and the actual position in the simulation)
+X.localization_error (The difference between the robot perception of its position and the actual position in the simulation)
 
 ### Examples
 
@@ -123,13 +123,19 @@ never robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or ro
 
          <model> → model name : <modelargs> ;
 
-     <modelargs> → name topic_name <msgtype>
-                 | name <name> <msgtype>
-                 | name topic_name <msgtype> <modelargs>
-                 | name <name> <msgtype> <modelargs>
+     <modelargs> → <name> topic_name <msgtype>
+                 | <name> <name> <msgtype>
+                 | <name> topic_name <msgtype> <modelargs>
+                 | <name> <name> <msgtype> <modelargs>
 
           <name> → name
-                 | func_main
+                 | <func_main>
+
+     <func_main> → position
+                 | velocity
+                 | distance
+                 | localization_error
+                 | orientation
 
        <msgtype> → <name>
                  | <name> . <msgtype>
@@ -177,8 +183,8 @@ never robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or ro
         <number> → float
                  | integer
 
-          <func> → name . func_main
-                 | name . func_main <funcargs>
+          <func> → name . <func_main>
+                 | name . <func_main> <funcargs>
 
       <funcargs> → . <name>
                  | . <name> <funcargs>

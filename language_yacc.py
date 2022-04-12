@@ -47,13 +47,13 @@ def p_model(p):
     p[0] = Node('model', p[2], p[4])
 
 def p_modelargs_1(p):
-    '''modelargs : NAME TOPIC_NAME msgtype
-                 | NAME name msgtype'''
+    '''modelargs : name TOPIC_NAME msgtype
+                 | name name msgtype'''
     p[0] = Node('modelargs', p[1], p[2], p[3])
 
 def p_modelargs_2(p):
-    '''modelargs : NAME TOPIC_NAME msgtype modelargs
-                 | NAME name msgtype modelargs'''
+    '''modelargs : name TOPIC_NAME msgtype modelargs
+                 | name name msgtype modelargs'''
     p[0] = Node('modelargs', p[1], p[2], p[3], p[4])
 
 def p_msgtype_1(p):
@@ -66,7 +66,15 @@ def p_msgtype_2(p):
         
 def p_name(p):
     '''name : NAME
-            | FUNC_MAIN'''
+            | func_main'''
+    p[0] = p[1]
+
+def p_func_main(p):
+    '''func_main : POSITION
+                 | VELOCITY
+                 | DISTANCE
+                 | LOCALIZATION_ERROR
+                 | ORIENTATION'''
     p[0] = p[1]
 
 def p_pattern_1(p):
@@ -159,11 +167,11 @@ def p_number(p):
     p[0] = p[1]
 
 def p_func_1(p):
-    '''func : NAME '.' FUNC_MAIN funcargs'''
+    '''func : NAME '.' func_main funcargs'''
     p[0] = Node('func', p[1], p[3], p[4])
 
 def p_func_2(p):
-    '''func : NAME '.' FUNC_MAIN'''
+    '''func : NAME '.' func_main'''
     p[0] = Node('func', p[1], p[3])
         
 def p_funcargs_1(p):
@@ -180,4 +188,7 @@ def p_temporalvalue(p):
     p[0] = Node('temporalvalue', p[3], p[5])
 
 def p_error(p):
-    raise TypeError(f"Syntax error at '{p.value}'. Line number '{p.lineno}'")
+    if p:
+        raise TypeError(f"Syntax error at '{p.value}'. Line number '{p.lineno}'")
+    else:
+        raise TypeError("File is empty")

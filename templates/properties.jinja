@@ -7,9 +7,7 @@ def property_{{ loop.index }}(states):
         raise rospy.exceptions.ROSInterruptException('{{'{0}'}}Error at line {{ prop.line }}:{{'{1}'}}\n {{ prop.comparisons[1] }}\n{{'{2}'}}Failing state:{{'{3}'}}\n    {% for var in prop.comparisons[2] -%}{% set index = loop.index+3 -%}{{var}}: {{'{'}}{{index}}{{'}'}}\n    {% endfor -%}'.format(Fore.BLUE,Style.RESET_ALL,Fore.RED,Style.RESET_ALL{% for var in prop.comparisons[3] -%},{{var}}{% endfor -%}))
 {% endif -%}
 {% endfor %}
-{% if eventually > 0 -%}
-def verify_properties(states,eventually):
-    {% endif -%}
+def verify_properties(states{% if eventually > 0 -%},eventually{% endif -%}):
     if all(dic for dic in states):
         {% for prop in properties -%}
         {% if prop.comparisons[4] -%}

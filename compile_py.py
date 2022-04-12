@@ -1,7 +1,7 @@
 from utils import *
 import re
 
-def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_command=False, property_='', line=None):
+def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_command=False, property_='', line=None, object_=None):
     """ Creates the template of a python script capable of running the associated monitor code in ROS """
     if ctx is None:
         ctx = CompileContext(file_prefix, filepath)
@@ -23,7 +23,8 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
         extract = node.args[0] + '_msg.' + '.'.join(msg_type[1:])
         ctx.add_var(node.args[0], extract)
     elif node.type == 'model':
-        modelargs = compile_py(node.args[1], ctx)
+        print('model')
+        modelargs = compile_py(node.args[1], ctx, object_=node.args[0])
         for dic in modelargs:
             msg_type = dic.get('msgtype')
             sub_name = dic.get('var')
@@ -31,9 +32,15 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
             extract = sub_name + '_msg.' + '.'.join(msg_type[1:])
             ctx.add_var(dic.get('var'), extract)
     elif node.type == 'modelargs':
-        return_dic = [{'var': node.args[0], 'topic_name': node.args[1], 'msgtype': compile_py(node.args[2], ctx)}]
+        return_dic = []
+        msg_type = compile_py(node.args[2], ctx)
+        if node.args[0] in funcs:
+            ctx.add_subscriber(node.args[1], msg_type[0], ctx.get_library(msg_type[0]), object_+'_'+node.args[0])
+            ctx.add_model(object_, node.args[0], msg_type)
+        else:
+            return_dic = [{'var': node.args[0], 'topic_name': node.args[1], 'msgtype': msg_type}]
         if len(node.args) > 3:
-            return return_dic + compile_py(node.args[3], ctx)
+            return return_dic + compile_py(node.args[3], ctx, object_=object_)
         return return_dic
     elif node.type == 'msgtype':
         if len(node.args) > 1:
@@ -46,6 +53,7 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
     elif node.type == 'timeout':
         ctx.timeout_update(node.args[0])
     elif node.type == 'property':
+        print('property')
         if len(node.args) == 1:
             return compile_py(node.args[0], ctx, property_=property_, line=line)
         if len(node.args) == 3:

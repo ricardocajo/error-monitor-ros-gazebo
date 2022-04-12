@@ -1,7 +1,7 @@
 from utils import *
 import os, subprocess
 
-def type_checker(node: Node, ctx=None, filepath=None, property_=None, line=None, from_command=False):
+def type_checker(node: Node, ctx=None, filepath=None, property_=None, line=None, from_command=False, object_=None):
     """ Verifies the syntax of the language"""
     if ctx is None:
         ctx = TypeCheckerContext()
@@ -17,18 +17,22 @@ def type_checker(node: Node, ctx=None, filepath=None, property_=None, line=None,
     elif node.type == 'declaration':
         ctx.add_topic_value(node.args[0])
     elif node.type == 'model':
-        type_checker(node.args[1], ctx)
+        #print('model')
+        type_checker(node.args[1], ctx, object_=node.args[0])
     elif node.type == 'modelargs':
+        if node.args[0] == 'localization_error' or node.args[0] == 'distance':
+            raise TypeError(f"'{node.args[0]}' is not a valid object attribute")
+        if node.args[0] in funcs:
+            ctx.add_model(object_, node.args[0])
+        else:
+            ctx.add_topic_value(node.args[0])
         if len(node.args) > 3:
-            type_checker(node.args[3], ctx)
-        ctx.add_topic_value(node.args[0])
+            type_checker(node.args[3], ctx, object_=object_)
     elif node.type == 'association':
-        print('testttttt')
         type_, state, is_event = type_checker(node.args[1], ctx)
-        print('node.args[0]: '+str(node.args[0]))
-        print('type: '+str(type_))
         ctx.add_assoc({'var': node.args[0], 'type': type_})
     elif node.type == 'property':
+        #print('property')
         if len(node.args) == 1:
             return type_checker(node.args[0], ctx, property_=property_, line=line)
         if from_command:
@@ -120,6 +124,9 @@ def type_checker(node: Node, ctx=None, filepath=None, property_=None, line=None,
     elif node.type == 'operand_paren':
         return type_checker(node.args[0], ctx, property_=property_, line=line)
     elif node.type == 'func':
+        if node.args[1] == 'localization_error':
+            if not ctx.is_model(node.args[0], 'position'):
+                raise TypeError(f"'localization_error' function used but object '{node.args[0]}' has no model for 'position'")
         state = node.args[0] + '.' + node.args[1]
         if len(node.args) > 2:
             args = type_checker(node.args[2], ctx)

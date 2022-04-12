@@ -8,12 +8,19 @@ class TypeCheckerContext(object):
     def __init__(self):
         self.topic_value = []
         self.assoc = []
+        self.model = []
 
     def add_topic_value(self, name):
         self.topic_value.append(name)
 
     def add_assoc(self, dic):
         self.assoc.append(dic)
+
+    def add_model(self, object_, func):
+        self.model.append({'object': object_, 'func': func})
+
+    def is_model(self, object_, func):
+        return any(item['object'] == object_ and item['func'] == func for item in self.model)
 
     def is_topic_value(self, name):
         for value in self.topic_value:
@@ -27,7 +34,6 @@ class TypeCheckerContext(object):
                 return True, dic['type']
         return False, None
         
-
 class CompileContext(object):
     """ Save the context of a program (in the paradigm of the compile_py function)"""
     def __init__(self, file_prefix, filepath):
@@ -45,6 +51,7 @@ class CompileContext(object):
         self.eventually = 0
         self.eventually_aux = 0
         self.is_after_or = False
+        self.model = []
 
     def add_subscriber(self, topic, msgtype, library, sub_name):
         sub_data = {'topic': topic, 'msgtype': msgtype, 'library': library, 'sub_name': sub_name}
@@ -96,6 +103,12 @@ class CompileContext(object):
     def is_after_or_true(self):
         self.is_after_or = True
 
+    def add_model(self, object_, func, msg_type):
+        self.model.append({'object': object_, 'func': func, 'msg_type': msg_type})
+
+    def model_msgtype(self, object_, func):
+        return '.'.join(next(item for item in self.model if item['object'] == object_ and item['func'] == func)['msg_type'][1:])
+
     def rate_update(self, value):
         self.rate = value
 
@@ -131,6 +144,10 @@ def sim_funcs(object_, func, args, ctx):
             extract = '(model_states_msg.twist[model_states_indexes[\'' + object_ + '\']].linear.x**2 + model_states_msg.twist[model_states_indexes[\'' + object_ + '\']].linear.y**2 + model_states_msg.twist[model_states_indexes[\'' + object_ + '\']].linear.z**2' + ')**(1/2)'
         else:
             extract = 'model_states_msg.twist[model_states_indexes[\'' + object_ + '\']].' + '.'.join(args)
+    elif func == 'localization_error':
+        var_name = object_ + '_localization_error'
+        args = ctx.model_msgtype(object_,'position')
+        extract = '((model_states_msg.pose[model_states_indexes[\'' + object_ + '\']].position.x - '+ object_+'_position_msg.'+ args +'.x)**2 + (model_states_msg.pose[model_states_indexes[\'' + object_ + '\']].position.y - '+ object_+'_position_msg.' + args + '.y)**2 + (model_states_msg.pose[model_states_indexes[\'' + object_ + '\']].position.z - '+ object_+'_position_msg.' + args + '.z)**2)**(1/2)'
     ctx.add_var(var_name, extract)
     return 'states[0][\'' + var_name + '\']'
 
@@ -150,14 +167,8 @@ class Node(object):
         return s
 
 # The default functions of the language
-func_main = {
-    'position' : '1',
-    'velocity' : '1',
-    'distance' : '2',
-    'localization_error' : '1',
-    'orientation' : '1'
-}
-func_main_list = list(func_main.keys())
+
+funcs = ['position','velocity','distance','localization_error','orientation']
 
 """ The tokens of the language """
 reserved = {
@@ -175,10 +186,14 @@ reserved = {
     'and' : 'AND',
     'or' : 'OR',
     '_rate_' : 'RATE',
-    '_timeout_' : 'TIMEOUT'
+    '_timeout_' : 'TIMEOUT',
+    'position' : 'POSITION',
+    'velocity' : 'VELOCITY',
+    'distance' : 'DISTANCE',
+    'localization_error' : 'LOCALIZATION_ERROR',
+    'orientation' : 'ORIENTATION'
 }
 
 literals = ['>','<','(',')','+','-','*','/','{','}','@','=',':',',','.',';']
 
-tokens = ['NAME','TOPIC_NAME','INTEGER','FLOAT','EQ','DIF','GTE',
-         'LEE','FUNC_MAIN'] + list(reserved.values())
+tokens = ['NAME','TOPIC_NAME','INTEGER','FLOAT','EQ','DIF','GTE','LEE'] + list(reserved.values())

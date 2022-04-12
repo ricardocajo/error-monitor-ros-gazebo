@@ -13,7 +13,9 @@ lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 
 """              TEST LEXER
-data = '''  '''
+data = ''' model turtlebot3_burger:
+    positiona /odom Odometry.pose.pose.position
+   ; '''
 lexer.input(data)
 while True:
     tok = lexer.token()
