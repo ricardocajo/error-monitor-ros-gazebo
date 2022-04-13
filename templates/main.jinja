@@ -18,11 +18,9 @@ if __name__ == '__main__':
                 {% if is_after_or -%}
                 for key, value in eventually.items():
                     if 'after' in key:
-                        temp = [value[0]]
                         for key2, value2 in eventually.items():
-                            if key in key2:
-                                temp.append(not value2[0])
-                        eventually[key][0] = any(temp) 
+                                if key2 in key and not 'aux' in key2:
+                                    eventually[key2][0] = not value[0] or value2[0]
                 {% endif -%}
                 {% if eventually > 0 -%}
                 for key, (bool_, err) in eventually.items():

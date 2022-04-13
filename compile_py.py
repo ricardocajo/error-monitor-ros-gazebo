@@ -23,7 +23,6 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
         extract = node.args[0] + '_msg.' + '.'.join(msg_type[1:])
         ctx.add_var(node.args[0], extract)
     elif node.type == 'model':
-        print('model')
         modelargs = compile_py(node.args[1], ctx, object_=node.args[0])
         for dic in modelargs:
             msg_type = dic.get('msgtype')
@@ -53,7 +52,6 @@ def compile_py(node: Node, ctx=None, file_prefix=None, filepath=None, from_comma
     elif node.type == 'timeout':
         ctx.timeout_update(node.args[0])
     elif node.type == 'property':
-        print('property')
         if len(node.args) == 1:
             return compile_py(node.args[0], ctx, property_=property_, line=line)
         if len(node.args) == 3:

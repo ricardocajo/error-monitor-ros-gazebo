@@ -9,15 +9,14 @@ def type_checker(node: Node, ctx=None, filepath=None, property_=None, line=None,
     elif not type(node) is Node:
         return '', str(node), False
     elif node.type == 'program':
+        type_checker(node.args[0], ctx)
         if len(node.args) > 1:
             type_checker(node.args[1], ctx)
-        type_checker(node.args[0], ctx)
     elif node.type == 'command':
         type_checker(node.args[0], ctx, from_command=True)
     elif node.type == 'declaration':
         ctx.add_topic_value(node.args[0])
     elif node.type == 'model':
-        #print('model')
         type_checker(node.args[1], ctx, object_=node.args[0])
     elif node.type == 'modelargs':
         if node.args[0] == 'localization_error' or node.args[0] == 'distance':
@@ -32,7 +31,6 @@ def type_checker(node: Node, ctx=None, filepath=None, property_=None, line=None,
         type_, state, is_event = type_checker(node.args[1], ctx)
         ctx.add_assoc({'var': node.args[0], 'type': type_})
     elif node.type == 'property':
-        #print('property')
         if len(node.args) == 1:
             return type_checker(node.args[0], ctx, property_=property_, line=line)
         if from_command:
@@ -70,11 +68,7 @@ def type_checker(node: Node, ctx=None, filepath=None, property_=None, line=None,
             return type_checker(node.args[0], ctx, property_=property_, line=line)
         _,op,_ = type_checker(node.args[0], ctx)
         type_l, state_l, is_event_l = type_checker(node.args[1], ctx, property_=property_, line=line)
-        #if not type_l == 'property' and not type_l == 'comparison' and not type_l == 'conjunction':
-        #    raise TypeError(f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_l}' should be fiting for conjunction")
         type_r, state_r, is_event_r = type_checker(node.args[2], ctx, property_=property_, line=line)
-        #if not type_l == 'property' and not type_r == 'comparison':
-        #    raise TypeError(f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_r}' should be fiting for conjunction")
         return 'conjunction', state_l+' '+op+' '+state_r, is_event_l or is_event_r
     elif node.type == 'comparison':
         if len(node.args) == 1:
@@ -113,20 +107,19 @@ def type_checker(node: Node, ctx=None, filepath=None, property_=None, line=None,
         _, state, is_event = type_checker(node.args[0], ctx, property_=property_, line=line)
         return 'operand', state, is_event
     elif node.type == 'operand_name':
-        print('i entered operand_name')
         _, state, is_event = type_checker(node.args[0], ctx, property_=property_, line=line)
         is_var, type_ = ctx.is_assoc(node.args[0])
         if is_var:
             return type_, state, is_event
         if not ctx.is_topic_value(node.args[0]):
-            raise TypeError(f"Syntactic error in '{property_}' property at line {str(line)}:\n    'variable {node.args[0]} referenced before assignment")
+            raise TypeError(f"Syntactic error in '{property_}' property at line {str(line)}:\n    variable '{node.args[0]}' referenced before assignment")
         return 'operand', state, is_event
     elif node.type == 'operand_paren':
         return type_checker(node.args[0], ctx, property_=property_, line=line)
     elif node.type == 'func':
         if node.args[1] == 'localization_error':
             if not ctx.is_model(node.args[0], 'position'):
-                raise TypeError(f"'localization_error' function used but object '{node.args[0]}' has no model for 'position'")
+                raise TypeError(f"Syntactic error in '{property_}' property at line {str(line)}:\n    'localization_error' function used but object '{node.args[0]}' has no model for 'position'")
         state = node.args[0] + '.' + node.args[1]
         if len(node.args) > 2:
             args = type_checker(node.args[2], ctx)
@@ -137,6 +130,6 @@ def type_checker(node: Node, ctx=None, filepath=None, property_=None, line=None,
             return [node.args[0]] + type_checker(node.args[1], ctx)
         return [node.args[0]]
     elif node.type == 'temporalvalue':
-        _,state = type_checker(node.args[0], ctx)
+        _,state,_ = type_checker(node.args[0], ctx)
         new_state = '@{{' + state + ', ' + str(node.args[1]) + '}}'
         return 'operand', new_state, False

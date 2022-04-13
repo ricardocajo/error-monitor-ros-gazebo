@@ -21,8 +21,5 @@ def property_{{ loop.index }}(states,eventually):
     {% for comparison in prop.comparisons[5][2] -%}
     if {{ comparison.prec }} and ({{ comparison.comp }}):
         eventually['{{ comparison.var }}'][0] = True
-        {% if prop.type == 'after' -%}
-        eventually['{{ comparison.origin_var }}'][0] = True
-    {% endif -%}
     {% endfor -%}
     {% endif -%}

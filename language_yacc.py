@@ -97,9 +97,9 @@ def p_pattern_0(p):
     p[0] = Node('property', p[1])
 
 def p_conjunction(p):
-    '''conjunction : conjunction AND pattern
-                   | conjunction OR pattern
-                   | conjunction IMPLIES pattern'''
+    '''conjunction : conjunction AND comparison
+                   | conjunction OR comparison
+                   | conjunction IMPLIES comparison'''
     p[0] = Node('conjunction', p[2], p[1], p[3])
 
 def p_conjunction_0(p):
