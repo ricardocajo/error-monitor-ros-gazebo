@@ -85,7 +85,7 @@ never robot1.laser_position.x > 2
 
 #### After a drone is at a certain altitude both rotors always have the same velocity up until the drone decreases to a certain altitude
 ```
-# The language can't inherently have a way to interact with specific components of a robot 
+# The language can't inherently have a way to interact with specific components of a robot
 # like the rotors, because it doesn't know which topic to get information from. The user
 # needs to declare these specific topics to be able to interact with them.
 decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
@@ -172,7 +172,7 @@ never robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or ro
       <addition> → <addition> + <operand>
                  | <addition> - <operand>
                  | <operand>
-              
+
        <operand> → name
                  | <number>
                  | true

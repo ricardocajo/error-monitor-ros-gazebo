@@ -1,10 +1,13 @@
 """ A set of usefull classes and structures for the whole compiler """
+from __future__ import annotations
 
-from jinja2 import FileSystemLoader, Environment
 import subprocess
 
+from jinja2 import Environment
+from jinja2 import FileSystemLoader
 
-class TypeCheckerContext(object):
+
+class TypeCheckerContext:
     """Save the context of a program (in the paradigm of the type_checker function)"""
 
     def __init__(self):
@@ -46,7 +49,7 @@ class TypeCheckerContext(object):
         return self.default_margin
 
 
-class CompileContext(object):
+class CompileContext:
     """Save the context of a program (in the paradigm of the compile_py function)"""
 
     def __init__(self, file_prefix, filepath):
@@ -79,7 +82,10 @@ class CompileContext(object):
     def add_sim_subscriber(self):
         if self.sim_subscriber is False:
             self.add_subscriber(
-                "/gazebo/model_states", "ModelStates", "gazebo_msgs", "model_states"
+                "/gazebo/model_states",
+                "ModelStates",
+                "gazebo_msgs",
+                "model_states",
             )
             self.sim_subscriber = True
 
@@ -142,7 +148,7 @@ class CompileContext(object):
                 item
                 for item in self.model
                 if item["object"] == object_ and item["func"] == func
-            )["msg_type"][1:]
+            )["msg_type"][1:],
         )
 
     def rate_update(self, value):
@@ -256,7 +262,7 @@ def prop_prefix(property_):
     return prefixes[property_]
 
 
-class Node(object):
+class Node:
     """The ast of a program"""
 
     def __init__(self, t, *args):
@@ -273,7 +279,7 @@ class Node(object):
 
 funcs = ["position", "velocity", "distance", "localization_error", "orientation"]
 
-""" The tokens of the language """
+# The tokens of the language
 reserved = {
     "true": "TRUE",
     "false": "FALSE",
@@ -318,5 +324,5 @@ literals = [
 ]
 
 tokens = ["NAME", "TOPIC_NAME", "INTEGER", "FLOAT", "EQ", "DIF", "GTE", "LEE"] + list(
-    reserved.values()
+    reserved.values(),
 )

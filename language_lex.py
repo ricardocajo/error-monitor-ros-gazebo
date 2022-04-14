@@ -1,7 +1,9 @@
 """ The lex tokenizer to split the language tokens """
+from __future__ import annotations
+
+from ply.lex import TOKEN
 
 from utils import *
-from ply.lex import TOKEN
 
 t_EQ = r"=="
 t_DIF = r"!="

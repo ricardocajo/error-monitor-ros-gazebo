@@ -1,5 +1,8 @@
-from utils import *
+from __future__ import annotations
+
 import re
+
+from utils import *
 
 
 def compile_py(
@@ -30,7 +33,10 @@ def compile_py(
     elif node.type == "declaration":
         msg_type = compile_py(node.args[2], ctx)
         ctx.add_subscriber(
-            node.args[1], msg_type[0], ctx.get_library(msg_type[0]), node.args[0]
+            node.args[1],
+            msg_type[0],
+            ctx.get_library(msg_type[0]),
+            node.args[0],
         )
         extract = node.args[0] + "_msg." + ".".join(msg_type[1:])
         ctx.add_var(node.args[0], extract)
@@ -60,7 +66,7 @@ def compile_py(
             ctx.add_model(object_, node.args[0], msg_type)
         else:
             return_dic = [
-                {"var": node.args[0], "topic_name": node.args[1], "msgtype": msg_type}
+                {"var": node.args[0], "topic_name": node.args[1], "msgtype": msg_type},
             ]
         if len(node.args) > 3:
             return return_dic + compile_py(node.args[3], ctx, object_=object_)
@@ -85,7 +91,10 @@ def compile_py(
             var = ""
             event = []
             arg_1 = compile_py(
-                node.args[2], ctx, property_=node.args[0], line=node.args[1]
+                node.args[2],
+                ctx,
+                property_=node.args[0],
+                line=node.args[1],
             )
             if node.args[0] == "eventually":
                 eventually_check = True
@@ -101,7 +110,10 @@ def compile_py(
             )
         if len(node.args) == 4:
             arg_1 = compile_py(
-                node.args[2], ctx, property_=node.args[0], line=node.args[1]
+                node.args[2],
+                ctx,
+                property_=node.args[0],
+                line=node.args[1],
             )
             arg_2 = compile_py(node.args[3], ctx, line=node.args[1])
             u_e_and = arg_1[5][1]
@@ -158,10 +170,14 @@ def compile_py(
         else:
             op, op_state, *_ = compile_py(node.args[0], ctx)
             expr_l, state_l, err1_l, err2_l, event_bool_l, event_l = compile_py(
-                node.args[1], ctx, property_=property_
+                node.args[1],
+                ctx,
+                property_=property_,
             )
             expr_r, state_r, err1_r, err2_r, event_bool_r, event_r = compile_py(
-                node.args[2], ctx, property_=property_
+                node.args[2],
+                ctx,
+                property_=property_,
             )
             prec = ""
             event_or = []
@@ -190,7 +206,7 @@ def compile_py(
                             + "\\n    '.format(Fore.BLUE,Style.RESET_ALL,Fore.RED,Style.RESET_ALL,"
                             + "''"
                             + ")",
-                        }
+                        },
                     ]  #','.join(err2_r).replace('states','save_states')
                 if event_bool_r and not event_bool_l:
                     var, index = ctx.add_aux_eventually()
@@ -212,7 +228,7 @@ def compile_py(
                             + "\\n    '.format(Fore.BLUE,Style.RESET_ALL,Fore.RED,Style.RESET_ALL,"
                             + "''"
                             + ")",
-                        }
+                        },
                     ]  #','.join(err2_l).replace('states','save_states')
             if op == "and":
                 if event_bool_l:
@@ -236,10 +252,12 @@ def compile_py(
             return compile_py(node.args[0], ctx)
         op, op_state, *_ = compile_py(node.args[0], ctx)
         expr_l, state_l, err1_l, err2_l, event_bool_l, event_l = compile_py(
-            node.args[1], ctx
+            node.args[1],
+            ctx,
         )
         expr_r, state_r, err1_r, err2_r, event_bool_r, event_r = compile_py(
-            node.args[2], ctx
+            node.args[2],
+            ctx,
         )
         if len(node.args) == 4:
             if op == "==" or op == "!=":
@@ -370,10 +388,12 @@ def compile_py(
             return compile_py(node.args[0], ctx)
         op, *_ = compile_py(node.args[0], ctx)
         expr_l, state_l, err1_l, err2_l, event_bool_l, event_l = compile_py(
-            node.args[1], ctx
+            node.args[1],
+            ctx,
         )
         expr_r, state_r, err1_r, err2_r, event_bool_r, event_r = compile_py(
-            node.args[2], ctx
+            node.args[2],
+            ctx,
         )
         return (
             str(expr_l) + op + str(expr_r),
@@ -388,10 +408,12 @@ def compile_py(
             return compile_py(node.args[0], ctx)
         op, *_ = compile_py(node.args[0], ctx)
         expr_l, state_l, err1_l, err2_l, event_bool_l, event_l = compile_py(
-            node.args[1], ctx
+            node.args[1],
+            ctx,
         )
         expr_r, state_r, err1_r, err2_r, event_bool_r, event_r = compile_py(
-            node.args[2], ctx
+            node.args[2],
+            ctx,
         )
         return (
             str(expr_l) + op + str(expr_r),

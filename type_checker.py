@@ -1,5 +1,9 @@
+from __future__ import annotations
+
+import os
+import subprocess
+
 from utils import *
-import os, subprocess
 
 
 def type_checker(
@@ -48,7 +52,10 @@ def type_checker(
             property_ = node.args[0]
             line = node.args[1]
         type_1, state_1, is_event_1 = type_checker(
-            node.args[2], ctx, property_=node.args[0], line=node.args[1]
+            node.args[2],
+            ctx,
+            property_=node.args[0],
+            line=node.args[1],
         )
         if (
             not type_1 == "conjunction"
@@ -56,7 +63,7 @@ def type_checker(
             and not type_1 == "property"
         ):
             raise TypeError(
-                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_1}' should be fiting for a property"
+                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_1}' should be fiting for a property",
             )
         if len(node.args) == 3:
             eventually_check = False
@@ -65,7 +72,10 @@ def type_checker(
             return "property", node.args[0] + " " + state_1, eventually_check
         if len(node.args) == 4:
             type_2, state_2, is_event_2 = type_checker(
-                node.args[3], ctx, property_=node.args[0], line=node.args[1]
+                node.args[3],
+                ctx,
+                property_=node.args[0],
+                line=node.args[1],
             )
             if (
                 not type_2 == "conjunction"
@@ -73,11 +83,11 @@ def type_checker(
                 and not type_2 == "property"
             ):
                 raise TypeError(
-                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_2}' should be fiting for a property"
+                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_2}' should be fiting for a property",
                 )
             if is_event_1:
                 raise TypeError(
-                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_1}' (first argument) can't have an 'eventually' property"
+                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_1}' (first argument) can't have an 'eventually' property",
                 )
             return (
                 "property",
@@ -86,7 +96,10 @@ def type_checker(
             )
         if len(node.args) == 5:
             type_2, state_2, is_event_2 = type_checker(
-                node.args[3], ctx, property_=node.args[0], line=node.args[1]
+                node.args[3],
+                ctx,
+                property_=node.args[0],
+                line=node.args[1],
             )
             if (
                 not type_2 == "conjunction"
@@ -94,10 +107,13 @@ def type_checker(
                 and not type_2 == "property"
             ):
                 raise TypeError(
-                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_2}' should be fiting for a property"
+                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_2}' should be fiting for a property",
                 )
             type_3, state_3, is_event_3 = type_checker(
-                node.args[4], ctx, property_=node.args[0], line=node.args[1]
+                node.args[4],
+                ctx,
+                property_=node.args[0],
+                line=node.args[1],
             )
             if (
                 not type_3 == "conjunction"
@@ -105,15 +121,15 @@ def type_checker(
                 and not type_3 == "property"
             ):
                 raise TypeError(
-                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_3}' should be fiting for a property"
+                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_3}' should be fiting for a property",
                 )
             if is_event_1:
                 raise TypeError(
-                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_1}' (first argument) can't have an 'eventually' property"
+                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_1}' (first argument) can't have an 'eventually' property",
                 )
             if is_event_2:
                 raise TypeError(
-                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_2}' (second argument) can't have an 'eventually' property"
+                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_2}' (second argument) can't have an 'eventually' property",
                 )
             return (
                 "property",
@@ -125,10 +141,16 @@ def type_checker(
             return type_checker(node.args[0], ctx, property_=property_, line=line)
         _, op, _ = type_checker(node.args[0], ctx)
         type_l, state_l, is_event_l = type_checker(
-            node.args[1], ctx, property_=property_, line=line
+            node.args[1],
+            ctx,
+            property_=property_,
+            line=line,
         )
         type_r, state_r, is_event_r = type_checker(
-            node.args[2], ctx, property_=property_, line=line
+            node.args[2],
+            ctx,
+            property_=property_,
+            line=line,
         )
         return (
             "conjunction",
@@ -140,7 +162,10 @@ def type_checker(
             return type_checker(node.args[0], ctx, property_=property_, line=line)
         _, op, _ = type_checker(node.args[0], ctx)
         type_l, state_l, is_event_l = type_checker(
-            node.args[1], ctx, property_=property_, line=line
+            node.args[1],
+            ctx,
+            property_=property_,
+            line=line,
         )
         if (
             not type_l == "multiplication"
@@ -148,10 +173,13 @@ def type_checker(
             and not type_l == "operand"
         ):
             raise TypeError(
-                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_l}' should be fiting for comparison"
+                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_l}' should be fiting for comparison",
             )
         type_r, state_r, is_event_r = type_checker(
-            node.args[2], ctx, property_=property_, line=line
+            node.args[2],
+            ctx,
+            property_=property_,
+            line=line,
         )
         if (
             not type_r == "multiplication"
@@ -159,7 +187,7 @@ def type_checker(
             and not type_r == "operand"
         ):
             raise TypeError(
-                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_r}' should be fiting for comparison"
+                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_r}' should be fiting for comparison",
             )
         if (
             (op == "==" or op == "!=")
@@ -167,7 +195,7 @@ def type_checker(
             and not ctx.has_default_margin()
         ):
             raise TypeError(
-                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '_default_margin_' not set for comparisons"
+                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '_default_margin_' not set for comparisons",
             )
         return (
             "comparison",
@@ -179,7 +207,10 @@ def type_checker(
             return type_checker(node.args[0], ctx, property_=property_, line=line)
         _, op, _ = type_checker(node.args[0], ctx)
         type_l, state_l, is_event_l = type_checker(
-            node.args[1], ctx, property_=property_, line=line
+            node.args[1],
+            ctx,
+            property_=property_,
+            line=line,
         )
         if (
             not type_l == "multiplication"
@@ -187,14 +218,17 @@ def type_checker(
             and not type_l == "operand"
         ):
             raise TypeError(
-                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_l}' should be fiting for multiplication"
+                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_l}' should be fiting for multiplication",
             )
         type_r, state_r, is_event_r = type_checker(
-            node.args[2], ctx, property_=property_, line=line
+            node.args[2],
+            ctx,
+            property_=property_,
+            line=line,
         )
         if not type_r == "addition" and not type_r == "operand":
             raise TypeError(
-                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_r}' should be fiting for multiplication"
+                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_r}' should be fiting for multiplication",
             )
         return (
             "multiplication",
@@ -206,35 +240,47 @@ def type_checker(
             return type_checker(node.args[0], ctx, property_=property_, line=line)
         _, op, _ = type_checker(node.args[0], ctx)
         type_l, state_l, is_event_l = type_checker(
-            node.args[1], ctx, property_=property_, line=line
+            node.args[1],
+            ctx,
+            property_=property_,
+            line=line,
         )
         if not type_l == "addition" and not type_l == "operand":
             raise TypeError(
-                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_l}' should be fiting for addition"
+                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_l}' should be fiting for addition",
             )
         type_r, state_r, is_event_r = type_checker(
-            node.args[2], ctx, property_=property_, line=line
+            node.args[2],
+            ctx,
+            property_=property_,
+            line=line,
         )
         if not type_r == "operand":
             raise TypeError(
-                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_r}' should be fiting for addition"
+                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '{state_r}' should be fiting for addition",
             )
         return "addition", state_l + " " + op + " " + state_r, is_event_l or is_event_r
     elif node.type == "operand":
         _, state, is_event = type_checker(
-            node.args[0], ctx, property_=property_, line=line
+            node.args[0],
+            ctx,
+            property_=property_,
+            line=line,
         )
         return "operand", state, is_event
     elif node.type == "operand_name":
         _, state, is_event = type_checker(
-            node.args[0], ctx, property_=property_, line=line
+            node.args[0],
+            ctx,
+            property_=property_,
+            line=line,
         )
         is_var, type_ = ctx.is_assoc(node.args[0])
         if is_var:
             return type_, state, is_event
         if not ctx.is_topic_value(node.args[0]):
             raise TypeError(
-                f"Syntactic error in '{property_}' property at line {str(line)}:\n    variable '{node.args[0]}' referenced before assignment"
+                f"Syntactic error in '{property_}' property at line {str(line)}:\n    variable '{node.args[0]}' referenced before assignment",
             )
         return "operand", state, is_event
     elif node.type == "operand_paren":
@@ -243,7 +289,7 @@ def type_checker(
         if node.args[1] == "localization_error":
             if not ctx.is_model(node.args[0], "position"):
                 raise TypeError(
-                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    'localization_error' function used but object '{node.args[0]}' has no model for 'position'"
+                    f"Syntactic error in '{property_}' property at line {str(line)}:\n    'localization_error' function used but object '{node.args[0]}' has no model for 'position'",
                 )
         state = node.args[0] + "." + node.args[1]
         if len(node.args) > 2:

@@ -1,4 +1,6 @@
 """ The language grammar """
+from __future__ import annotations
+
 from utils import *
 
 # precedence = (
