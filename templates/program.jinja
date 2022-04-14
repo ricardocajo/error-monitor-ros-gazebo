@@ -8,6 +8,7 @@ from {{ sub.library }}.msg import {{ sub.msgtype }}
 {% endfor -%}
 
 {% include "fetch_state.jinja" %}
+
 def update_state():
     global save_states,state
     save_states.insert(0,state)

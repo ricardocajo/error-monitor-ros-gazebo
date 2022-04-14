@@ -12,6 +12,6 @@ def fetch_state({{ callback_args | join(',') }}):
         model_states_indexes[name] = index
     {% endif -%}
     {% for var in var_list -%}
-    state['{{ var.name }}'] = {{ var.extract }}
-    {% endfor %}
+    temp_state['{{ var.name }}'] = {{ var.extract }}
+    {% endfor -%}
     state = temp_state

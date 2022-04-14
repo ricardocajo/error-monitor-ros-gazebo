@@ -141,20 +141,19 @@ def compile_py(
             arg_2 = compile_py(node.args[3], ctx, property_="until", line=node.args[1])
             arg_3 = compile_py(node.args[4], ctx, line=node.args[1])
             # TODO
-            u_e_and = arg_1[5][1]
-            for entry in arg_2[5][0]:
-                entry["prec"] = arg_1[0]
-            if not arg_2[5][1] == "":
-                u_e_and = arg_1[0] + arg_2[5][1]
-                for entry in arg_2[5][2]:
-                    entry["prec"] = arg_1[0]
-                    if node.args[0] == "after":
-                        ctx.is_after_or_true()
-                        entry["var"] += "_after"
-                        entry["origin_var"] = entry["var"].split("aux")[0]
+            u_e_and = arg_1[5][1] + arg_2[5][1]
+            for entry in arg_3[5][0]:
+                entry["prec"] = arg_2[0] + " and " + arg_1[0]
+            if not arg_3[5][1] == "":
+                u_e_and = arg_1[0] + arg_2[0] + arg_3[5][1]
+                for entry in arg_3[5][2]:
+                    entry["prec"] = arg_1[0] + arg_2[0]
+                    ctx.is_after_or_true()
+                    entry["var"] += "_after"
+                    entry["origin_var"] = entry["var"].split("aux")[0]
             # TODO
             comparisons = (
-                arg_1[0] + " and " + arg_2[0] + " and " + arg_3[0],
+                arg_1[0] + " and " + arg_2[0] + " and (" + arg_3[0] + ")",
                 node.args[0] + " " + arg_1[1] + ", " + arg_2[1] + ", " + arg_3[1],
                 arg_1[2] + arg_2[2] + arg_3[2],
                 arg_1[3] + arg_2[3] + arg_3[3],
