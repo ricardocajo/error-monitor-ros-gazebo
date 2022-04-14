@@ -115,8 +115,9 @@ never robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or ro
                  | <pattern>
 
    <association> → name = <pattern>
-                 | rate = integer
-                 | timeout = number
+                 | _rate_ = integer
+                 | _timeout_ = number
+                 | _default_margin_ = number
 
    <declaration> → decl name topic_name <msgtype>
                  | decl name name <msgtype>

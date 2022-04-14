@@ -7,7 +7,8 @@ from type_checker import *
 from compile_py import *
 from pathlib import Path
 import os, stat, sys
-#run - python language.py test.txt /home/rcordeiro/ros_workspace/src/test_pkg/src
+
+# run - python language.py test.txt /home/rcordeiro/ros_workspace/src/test_pkg/src
 
 lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
@@ -30,7 +31,7 @@ ros_package_dir_path = sys.argv[2]
 if not Path(ros_package_dir_path).is_dir():
     print("The given directory for a ROS package doesn't exist.")
     sys.exit()
-f = open(filename, 'r')
+f = open(filename, "r")
 _input = f.read()
 filename = file_prefix + ".py"
 filepath = os.path.join(ros_package_dir_path, filename)
@@ -43,4 +44,4 @@ try:
         os.chmod(filepath, stat.S_IRWXU)
 except TypeError as e:
     print(e)
-#"""
+# """

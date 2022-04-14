@@ -4,7 +4,7 @@
 {% endfor %}
 def fetch_state({{ callback_args | join(',') }}):
     global state
-    state = {}
+    temp_state = {}
     {% if sim_sub -%}
     # Get ModelStates indexes info
     model_states_indexes = {}
@@ -14,3 +14,4 @@ def fetch_state({{ callback_args | join(',') }}):
     {% for var in var_list -%}
     state['{{ var.name }}'] = {{ var.extract }}
     {% endfor %}
+    state = temp_state

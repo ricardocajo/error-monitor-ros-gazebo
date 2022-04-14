@@ -3,26 +3,29 @@
 from utils import *
 from ply.lex import TOKEN
 
-t_EQ = r'=='
-t_DIF = r'!='
-t_GTE = r'>='
-t_LEE = r'<='
+t_EQ = r"=="
+t_DIF = r"!="
+t_GTE = r">="
+t_LEE = r"<="
 
-t_ignore = ' \t'
-t_ignore_COMMENT = r'\#.*'
+t_ignore = " \t"
+t_ignore_COMMENT = r"\#.*"
+
 
 def t_NAME(t):
-    r'[a-zA-Z_][a-zA-Z0-9_]*'
-    t.type = reserved.get(t.value,'NAME')
+    r"[a-zA-Z_][a-zA-Z0-9_]*"
+    t.type = reserved.get(t.value, "NAME")
     return t
 
+
 def t_TOPIC_NAME(t):
-    r'[a-zA-Z~/][a-zA-Z0-9_/]*'
-    t.type = reserved.get(t.value,'TOPIC_NAME')
+    r"[a-zA-Z~/][a-zA-Z0-9_/]*"
+    t.type = reserved.get(t.value, "TOPIC_NAME")
     return t
-    
+
+
 def t_FLOAT(t):
-    r'[-]?[0-9]*[.][0-9]+'
+    r"[-]?[0-9]*[.][0-9]+"
     try:
         t.value = float(t.value)
     except ValueError:
@@ -30,18 +33,21 @@ def t_FLOAT(t):
         t.value = 0
     return t
 
+
 def t_INTEGER(t):
-    r'[-]?[0-9][0-9_]*(?<!_)'
+    r"[-]?[0-9][0-9_]*(?<!_)"
     try:
         t.value = int(t.value)
     except ValueError:
         print(f"Integer value too large {t.value}")
         t.value = 0
     return t
-    
+
+
 def t_newline(t):
-    r'\n+'
+    r"\n+"
     t.lexer.lineno += t.value.count("\n")
+
 
 def t_error(t):
     print(f"Illegal character '{t.value[0]}'")
