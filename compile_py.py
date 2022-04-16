@@ -20,7 +20,7 @@ def compile_py(
         ctx = CompileContext(file_prefix, filepath)
         compile_py(node, ctx)
         return ctx.get_code()
-    elif not type(node) is Node:  # The node itself is the expected value
+    elif not type(node) is Node:
         if ctx.is_assoc(node):
             return ctx.assoc_info(node)
         return node, node, [], [], False, [[], "", []]
@@ -206,7 +206,7 @@ def compile_py(
                             + "''"
                             + ")",
                         },
-                    ]  #','.join(err2_r).replace('states','save_states')
+                    ]
                 if event_bool_r and not event_bool_l:
                     var, index = ctx.add_aux_eventually()
                     err1_output = ""
@@ -228,7 +228,7 @@ def compile_py(
                             + "''"
                             + ")",
                         },
-                    ]  #','.join(err2_l).replace('states','save_states')
+                    ]
             if op == "and":
                 if event_bool_l:
                     event_and = " and " + expr_r

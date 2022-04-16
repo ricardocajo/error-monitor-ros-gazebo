@@ -1,21 +1,25 @@
 # Simulation Monitor Compiler
- This repository provides a convenient DSL (Domain Specific Language) for specifying robots expected behaviour, as well as the respective compiler to monitor these behaviours while in a simulation.
+  This repository provides a convenient DSL (Domain Specific Language) for specifying robots' expected behavior, as well as the respective compiler to monitor these behaviors while in a simulation.
 
-## Table of content
+## Table of contents
 * [Installs](#installs)
 * [Language](#language)
+    * [Operators](#operators)
+    * [ProtectedVariables](#protected variables)
+    * [UsefullPredicates](#usefull predicates)
+    * [Examples](#examples)
 
 
 ## Installs
-This project was made using Ubuntu 20.04 in a virtual environment. For this reason specific versions of the following software were installed. You might want to adjust it to your operating system, versions or preferences.
+This project was made using Ubuntu 20.04 in a virtual environment. For this reason, specific versions of the following software were installed. You might want to adjust it to your operating system, versions, or preferences.
 
-In this project Gazebo was chosen as the simulation software, while it is possible to use some other simulation software, it might still need some type of implementation to be used within this project.
+In this project Gazebo was chosen as the simulation software, if you want to use some other simulator be aware that you will need to declare all the topics to use, the default functions like 'position' or 'velocity' are based on the Gazebo simulator.
 
 ### ROS
 To install ROS follow the link [ros_install](http://wiki.ros.org/ROS/Installation) and have in mind your own specifications. While making this project ROS noetic was used.
 
 
-To create a ROS workspace in your computer to be able to run ROS projects follow the link [ros_workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
+To create a ROS workspace on your computer to be able to run ROS projects follow the link [ros_workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
 
 ### Gazebo
 To install Gazebo in Ubuntu through the command line follow the link [gazebo_install](http://gazebosim.org/tutorials?tut=install_ubuntu). For any other method of installation follow the documentation on the official site [Gazebo](http://gazebosim.org/)
@@ -24,33 +28,34 @@ To install Gazebo in Ubuntu through the command line follow the link [gazebo_ins
 ## Language
 
 ### Operators
-always X  (X has to hold on the entire subsequent path)
+always X - X has to hold on the entire subsequent path
 
-never X  (X never holds on the entire subsequent path)
+never X - X never holds on the entire subsequent path
 
-eventually X  (X eventually has to hold, somewhere on the subsequent path)
+eventually X - X eventually has to hold, somewhere on the subsequent path
 
-after X, Y  (after the event X is observed, Y has to hold on the entire subsequent path)
+after X, Y - after the event X is observed, Y has to hold on the entire subsequent path
 
-until X, Y  (X holds at the current or future position, and Y has to hold until that position. At that position Y does not have to hold any more)
+until X, Y - X holds at the current or future position, and Y has to hold until that position. At that position Y does not have to hold any more
 
-after X, Y until Z  (after the event X is observed, Y has to hold on the entire subsequent path up until Z happens, at that position X does not have to hold anymore)
+after X, Y until Z - after the event X is observed, Y has to hold on the entire subsequent path up until Z happens, at that position X does not have to hold anymore
 
-(X)implies(Y)  ???
+@{X, -Y} - the value of the variable X in the point in time -Y
 
-not X
+X = Y
 
-X and Y | X or Y
+X implies Y    X and Y    X or Y
 
-@{X, -y} (the value of the variable X in the point in time -y)
+X + Y    X - Y    X * Y    X / Y
 
-X = y
+X == Y    X != Y    X > Y    X >= Y    X < Y    X <= Y
 
-X + Y | X - Y | X * Y | X / Y
+For any comparison operator X: X{y} - the values being compared will have an error margin of y (Example: X =={0.05} Y)
 
-X == Y | X != Y | X > Y | X >= Y | X < Y | X <= Y
-
-For any comparison operator X: X{y} (the values being compared will have an error margin of y)
+### Protected Variables
+\_rate_ - Set the frame rate which properties are checked (By default the rate is 30hz)
+\_timeout_ - Set the timeout for how long the verification will last (By default the timeout is 100 seconds)
+\_margin_ - Set the error margin for comparisons
 
 ### Usefull Predicates
 X.position (The position of the robot in the simulation)

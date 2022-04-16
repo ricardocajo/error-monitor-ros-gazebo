@@ -3,15 +3,6 @@ from __future__ import annotations
 
 from utils import *
 
-# precedence = (
-#    ('left', 'AND'),
-#    ('left', 'OR'),
-#    ('left', 'IMPLIES'),
-#    ('left', 'ALWAYS', 'AFTER', 'UNTIL', 'NEVER'),
-#    ('left', ')', 'NAME', 'INTEGER', 'FLOAT', 'TRUE', 'FALSE', '}', 'FUNC_MAIN'),
-##    ',','@','(','AFTER_UNTIL','UNTIL','AFTER','EVENTUALLY','ALWAYS','NEVER','MODEL','DECL','TIMEOUT','RATE'),
-# )
-
 
 def p_program_1(p):
     """program : command"""
@@ -47,7 +38,7 @@ def p_association_timeout(p):
 
 
 def p_association_default_margin(p):
-    """association : DEFAULT_MARGIN '=' number"""
+    """association : MARGIN '=' number"""
     p[0] = Node("default_margin", p[3])
 
 

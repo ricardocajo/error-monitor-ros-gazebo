@@ -182,6 +182,7 @@ class CompileContext:
 
 
 def added_var(name, list_):
+    """Checks if a dictionary "name" key is equal to name"""
     for entry in list_:
         if entry["name"] == name:
             return True
@@ -189,7 +190,7 @@ def added_var(name, list_):
 
 
 def sim_funcs(object_, func, args, ctx):
-    """Update the context depending on the function used"""
+    """Add var to the context and return var name for the output file (Considering the function used)"""
     var_name, extract = None, None
     if func == "position":
         args = ["position"] + args
@@ -259,11 +260,12 @@ prefixes = {
 
 
 def prop_prefix(property_):
+    """The prefixes for the output file comparisons depending on the property being used"""
     return prefixes[property_]
 
 
 class Node:
-    """The ast of a program"""
+    """To save the ast of a program"""
 
     def __init__(self, t, *args):
         self.type = t
@@ -276,10 +278,10 @@ class Node:
 
 
 # The default functions of the language
-
 funcs = ["position", "velocity", "distance", "localization_error", "orientation"]
 
 # The tokens of the language
+
 reserved = {
     "true": "TRUE",
     "false": "FALSE",
@@ -296,7 +298,7 @@ reserved = {
     "or": "OR",
     "_rate_": "RATE",
     "_timeout_": "TIMEOUT",
-    "_default_margin_": "DEFAULT_MARGIN",
+    "_margin_": "MARGIN",
     "position": "POSITION",
     "velocity": "VELOCITY",
     "distance": "DISTANCE",

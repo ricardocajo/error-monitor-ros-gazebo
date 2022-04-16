@@ -15,7 +15,7 @@ def type_checker(
     from_command=False,
     object_=None,
 ):
-    """Verifies the syntax of the language"""
+    """Checks for syntactic errors in an ast of a program"""
     if ctx is None:
         ctx = TypeCheckerContext()
         type_checker(node, ctx)
