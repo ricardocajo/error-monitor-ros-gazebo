@@ -10,7 +10,7 @@ from {{ sub.library }}.msg import {{ sub.msgtype }}
 {% include "fetch_state.jinja" %}
 
 def update_state():
-    global save_states,state
+    global state,save_states
     save_states.insert(0,state)
     save_states = save_states[:{{ temp_size }}]
 {% include "properties.jinja" %}

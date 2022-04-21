@@ -91,9 +91,9 @@ decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 after drone.position.z > 5, rotor1_vel =={0.2} rotor2_vel until drone.position.z < 5
 ```
 
-#### The localization error (difference between the robot perception of its location and the simulation actual location) of the robot is never above a certain value:
+#### The localization error (difference between the robot perception of its location and the simulation actual location) of the robot's is never above a certain value:
 ```
-# There are a set of specific topics that can be modeled by robot like "position", "velocity", etc..
+# There are a set of specific topics that can be modeled by robot-like "position", "velocity", etc...
 # These will be used by the compiler to call specific functions that need this information
 model robot1:
     position /odom Odometry.pose.pose.position

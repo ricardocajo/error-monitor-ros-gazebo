@@ -11,7 +11,11 @@ def fetch_state({{ callback_args | join(',') }}):
     for index,name in enumerate(model_states_msg.name):
         model_states_indexes[name] = index
     {% endif -%}
-    {% for var in var_list -%}
-    temp_state['{{ var.name }}'] = {{ var.extract }}
-    {% endfor -%}
+    try:
+        {% for var in var_list -%}
+        temp_state['{{ var.name }}'] = {{ var.extract }}
+        {% endfor -%}
+        temp_state['var_control'] = True
+    except KeyError:
+        temp_state['var_control'] = False
     state = temp_state

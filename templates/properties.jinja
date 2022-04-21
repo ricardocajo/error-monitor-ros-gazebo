@@ -8,7 +8,7 @@ def property_{{ loop.index }}(states):
 {% endif -%}
 {% endfor %}
 def verify_properties(states{% if eventually > 0 -%},eventually{% endif -%}):
-    if all(dic for dic in states):
+    if all(dic for dic in states) and all(dic['var_control'] for dic in states):
         {% for prop in properties -%}
         {% if prop.comparisons[4] -%}
         property_{{ loop.index }}(states,eventually)
