@@ -31,7 +31,8 @@ parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 #    print(tok)
 
 filename = sys.argv[1]
-file_prefix = filename[:-4]
+file_prefix = filename.split("/")[-1]
+file_prefix = file_prefix[:-4]
 ros_package_dir_path = sys.argv[2]
 if not Path(ros_package_dir_path).is_dir():
     print("The given directory for a ROS package doesn't exist.")
