@@ -12,7 +12,7 @@ from subprocess import STDOUT
 import requests
 from distutils.dir_util import copy_tree
 
-# This is a percentage
+# This is a percentage (%)
 warning_treshold = 15
 
 # (["command", ...], "rosbag_name", "lauch_file")
@@ -27,7 +27,12 @@ tests = [
         "rosbag2.bag",
         "stop.launch",
     ),
-]  # never turtlebot3_burger.position.x < -1
+    (
+        ["_timeout_ = 60", "never turtlebot3_burger.position.x < -1"],
+        "rosbag1.bag",
+        "stop.launch",
+    ),
+]
 ros_workspace_dir = "/home/rcordeiro/ros_workspace"
 ros_workspace_tests_dir = "/home/rcordeiro/ros_workspace/src/test_pkg/src"
 
@@ -81,7 +86,7 @@ for test in tests:
 
     output = (
         "\n".join(stdout_test.replace(b"\x1b", b"").decode("utf-8").split("\n")[1:])
-        .replace("\n", "")
+        .replace("\n", "\t\t")
         .replace("[34m", "")
         .replace("[0m", "")
         .replace("[31m", "")
@@ -97,7 +102,7 @@ for test in tests:
     p_bagfile.wait()
     p_main.wait()
 
-test_error_value = 100 * error_counter / loop_counter
+test_error_value = round(100 * error_counter / loop_counter, 2)
 test_error_result = (
     ":warning:" if test_error_value > warning_treshold else ":white_check_mark:"
 )
@@ -109,5 +114,5 @@ results.append(
 requests.post(
     "https://chat.lasige.di.fc.ul.pt/hooks/xnzswnyyn3nt7mn3jwucezqzby",
     headers={"Content-Type": "application/json"},
-    data=json.dumps({"username": "Robutler", "text": "\n".join(results)}),
+    data=json.dumps({"text": "\n".join(results)}),
 )

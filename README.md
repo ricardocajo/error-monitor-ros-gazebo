@@ -9,6 +9,7 @@
     * [UsefullPredicates](#usefullpredicates)
     * [Examples](#examples)
     * [Grammar](#grammar)
+* [Assessment](#assessment)
 
 
 ## Installs
@@ -205,3 +206,21 @@ always after robot1.distance.stop_sign1 < 2 and robot1.orientation - stop_sign1.
 
  <temporalvalue> → @ { name , integer }
 ```
+
+## Assessment
+
+Questions for Afsoon:
+
+*Give a brief introduction to my work with some examples (with visuals of some properties writing)*
+
+#### Q1. What type of errors are commonly found at a late stage when developing a robot?
+
+#### Q2. Could these errors be described by a property of the robot in relation to its environment? Is there any exception? (Give a property example if needed)
+
+#### Q3. Do you think the DSL covers all these possible properties? Is there any exception?
+
+#### Q4. What's your opinion on the intuitiveness of the DSL?
+
+#### Q5. Would this DSL or an improvement be useful in your current work? If yes, do you think the learning/maintenance would be worth the hassle?
+
+#### Q6. What's your opinion on the helpfulness of some type of integration between the DSL and Gzscenic?
