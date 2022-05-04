@@ -15,7 +15,6 @@ from type_checker import *
 from utils import *
 
 # run - python language.py test.txt /home/rcordeiro/ros_workspace/src/test_pkg/src
-
 lexer = lex.lex(module=language_lex)
 parser = yacc.yacc(module=language_yacc, outputdir="parse_files")
 

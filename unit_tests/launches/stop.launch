@@ -5,7 +5,7 @@
   <arg name="z_pos" default="0.0"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
-    <arg name="world_name" value="$(find test_pkg)/stop_sign/workspace.world"/>
+    <arg name="world_name" value="$(find test_pkg)/launches/workspace.world"/>
     <arg name="gui" value="false"/>
   </include>
 
