@@ -11,42 +11,20 @@ from subprocess import STDOUT
 
 import requests
 from distutils.dir_util import copy_tree
+from tests import *
 
 # This is a percentage (%)
 warning_treshold = 15
 
-# (["command", ...], "rosbag_name", "lauch_file")
-tests = [
-    (
-        ["_timeout_ = 60", "always turtlebot3_burger.position.x >= -1"],
-        "rosbag1.bag",
-        "stop.launch",
-    ),
-    (
-        ["_timeout_ = 60", "always turtlebot3_burger.position.x >= -1"],
-        "rosbag2.bag",
-        "stop.launch",
-    ),
-    (
-        ["_timeout_ = 60", "never turtlebot3_burger.position.x < -1"],
-        "rosbag1.bag",
-        "stop.launch",
-    ),
-    (
-        ["_timeout_ = 60", "never turtlebot3_burger.velocity > 0"],
-        "rosbag1.bag",
-        "stop.launch",
-    ),
-]
-ros_workspace_dir = "/root/catkin_ws"
-ros_workspace_tests_dir = "/root/catkin_ws/src/test_pkg/src"
+ros_workspace_dir = "/ros_ws"
+ros_workspace_tests_dir = "/ros_ws/src/test_pkg/src"
 
 copy_tree(
-    "/unit_tests/rosbags",
+    "/sim_monitor_compiler/unit_tests/rosbags",
     f"{ros_workspace_tests_dir}/bagfiles",
 )
 copy_tree(
-    "/unit_tests/launches",
+    "/sim_monitor_compiler/unit_tests/launches",
     f"{ros_workspace_tests_dir}/launches",
 )
 results = [
@@ -56,10 +34,10 @@ results = [
 ]
 loop_counter, error_counter = 0, 0
 for test in tests:
-    with open("/unit_tests/test_.txt", "w") as f_out:
+    with open("/sim_monitor_compiler/unit_tests/test_.txt", "w") as f_out:
         f_out.write("\n".join(test[0]))
     os.system(
-        f"cd ../../.. && python3 language.py unit_tests/test_.txt {ros_workspace_tests_dir}",
+        f"cd sim_monitor_compiler && python3.8 language.py unit_tests/test_.txt {ros_workspace_tests_dir}",
     )
     p_test = subprocess.Popen(
         f"cd {ros_workspace_dir} && rosrun test_pkg test_.py",
@@ -101,7 +79,7 @@ for test in tests:
     error_counter += 1 if emote == ":exclamation:" else 0
     results.append(f"| Test {loop_counter} | {output}| {emote} |")
 
-    os.remove("/unit_tests/test_.txt")
+    os.remove("sim_monitor_compiler/unit_tests/test_.txt")
     os.remove(f"{ros_workspace_tests_dir}/test_.py")
 
     p_bagfile.wait()

@@ -31,9 +31,9 @@ if __name__ == '__main__':
                 raise rospy.exceptions.ROSInterruptException('Timeout reached. Simulation ended without breaking any property.')
             update_state()
             {% if eventually > 0 -%}
-            verify_properties(save_states.copy(),eventually)
+            verify_properties(save_states[:],eventually)
         {% else -%}
-            verify_properties(save_states.copy())
+            verify_properties(save_states[:])
         {% endif -%}
         rospy.spin()
     except rospy.ROSInterruptException as e:
