@@ -16,7 +16,7 @@ if __name__ == '__main__':
         while not rospy.is_shutdown():
             passed_time = rospy.get_time() - start_time
             if passed_time > timeout:
-                {% if is_after_or -%}
+                {% if is_after -%}
                 for key, value in eventually.items():
                     if 'after' in key:
                         for key2, value2 in eventually.items():

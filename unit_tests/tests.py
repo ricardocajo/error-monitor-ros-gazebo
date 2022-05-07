@@ -24,12 +24,12 @@ tests = [
         "stop.launch",
     ),
     (
-        ["_timeout_ = 60", "never turtlebot3_burger.velocity > 0"],
+        ["_timeout_ = 60", "never turtlebot3_burger.velocity > 0.9"],
         "rosbag1.bag",
         "stop.launch",
     ),
     (
-        ["_timeout_ = 60", "never turtlebot3_burger.velocity > 0"],
+        ["_timeout_ = 60", "never turtlebot3_burger.velocity > 0.9"],
         "rosbag2.bag",
         "stop.launch",
     ),

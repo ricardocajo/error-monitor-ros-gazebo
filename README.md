@@ -2,6 +2,7 @@
   This repository provides a convenient DSL (Domain Specific Language) for specifying robots' expected behavior, as well as the respective compiler to monitor these behaviors while in a simulation.
 
 ## Table of contents
+* [Introduction](#introduction)
 * [Installs](#installs)
 * [Language](#language)
     * [Operators](#operators)
@@ -11,6 +12,10 @@
     * [Grammar](#grammar)
 * [Assessment](#assessment)
 
+## Introduction
+
+The development came from the idea of aliviating the burden of human interaction when testing a robotic system.
+*EXEMPLE OF THE STOP SIGN*
 
 ## Installs
 This project was made using Ubuntu 20.04 in a virtual environment. For this reason, specific versions of the following software were installed. You might want to adjust it to your operating system, versions, or preferences.
@@ -40,7 +45,7 @@ after X, Y - after the event X is observed, Y has to hold on the entire subseque
 
 until X, Y - X holds at the current or future position, and Y has to hold until that position. At that position Y does not have to hold any more
 
-after X, Y until Z - after the event X is observed, Y has to hold on the entire subsequent path up until Z happens, at that position X does not have to hold anymore
+after_until X, Y, Z - after the event X is observed, Z has to hold on the entire subsequent path up until Y happens, at that position Z does not have to hold anymore
 
 @{X, -Y} - the value of the variable X in the point in time -Y
 
@@ -213,7 +218,7 @@ always after robot1.distance.stop_sign1 < 2 and robot1.orientation - stop_sign1.
 
 #### Q2. Do you think these errors could be somewhat described by a property of the robot in relation to its environment? Is there any exception? (Give a property example if needed)
 
-*Give a brief introduction to my work with some examples (with visuals of some properties writing)*
+*Give a brief introduction of the work (follow readme introduction)*
 
 #### Q3. Do you think the DSL covers all before mentioned possible properties? Is there any exception?
 

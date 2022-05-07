@@ -195,7 +195,7 @@ def type_checker(
             and not ctx.has_default_margin()
         ):
             raise TypeError(
-                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '_default_margin_' not set for comparisons",
+                f"Syntactic error in '{property_}' property at line {str(line)}:\n    '_margin_' not set for comparisons",
             )
         return (
             "comparison",

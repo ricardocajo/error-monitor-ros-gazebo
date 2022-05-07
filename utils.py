@@ -66,7 +66,7 @@ class CompileContext:
         self.timeout = 100
         self.eventually = 0
         self.eventually_aux = 0
-        self.is_after_or = False
+        self.is_after = False
         self.model = []
         self.default_margin = None
 
@@ -115,6 +115,9 @@ class CompileContext:
         self.eventually_aux = 0
         return "var_" + str(self.eventually)
 
+    def get_eventually_var(self):
+        return self.eventually
+
     def add_aux_eventually(self):
         self.eventually_aux += 1
         return (
@@ -136,8 +139,8 @@ class CompileContext:
         if abs(value) + 1 > self.temporal_size:
             self.temporal_size = abs(value) + 1
 
-    def is_after_or_true(self):
-        self.is_after_or = True
+    def is_after_true(self):
+        self.is_after = True
 
     def add_model(self, object_, func, msg_type):
         self.model.append({"object": object_, "func": func, "msg_type": msg_type})
@@ -177,7 +180,7 @@ class CompileContext:
             rate=self.rate,
             timeout=self.timeout,
             eventually=self.eventually,
-            is_after_or=self.is_after_or,
+            is_after=self.is_after,
         )
 
 
