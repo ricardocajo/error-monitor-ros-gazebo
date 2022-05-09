@@ -17,7 +17,14 @@
 The development came from the idea of aliviating the burden of human interaction when testing a robotic system.
 *EXAMPLE OF THE STOP SIGN*
 
-https://user-images.githubusercontent.com/82663158/167411416-633afeb7-2cfd-4f95-b5da-e4069575dcd8.mp4
+![no_stop](https://user-images.githubusercontent.com/82663158/167421559-9acebddb-9370-40ff-8912-058f7edb3b79.gif)
+
+![err](https://user-images.githubusercontent.com/82663158/167425264-b1395455-b6f9-4f04-aba0-1aebefcd3ec7.png)
+
+
+![stop](https://user-images.githubusercontent.com/82663158/167421668-622e7ca9-ee6d-434e-baf9-44b7d33d0fe1.gif)
+
+![tout](https://user-images.githubusercontent.com/82663158/167425226-f86592de-c532-4c79-bf0d-342150872dff.png)
 
 ## Installs
 This project was made using Ubuntu 20.04 in a virtual environment. For this reason, specific versions of the following software were installed. You might want to adjust it to your operating system, versions, or preferences.
