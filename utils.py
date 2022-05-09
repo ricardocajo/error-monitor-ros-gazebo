@@ -248,6 +248,40 @@ def sim_funcs(object_, func, args, ctx):
             + args
             + ".z)**2)**(1/2)"
         )
+    elif func == "distanceZ":
+        object2 = args[0]
+        var_name = object_ + "_" + object2 + "_distanceZ"
+        extract = (
+            "((model_states_msg.pose[model_states_indexes['"
+            + object_
+            + "']].position.x - model_states_msg.pose[model_states_indexes['"
+            + object2
+            + "']].position.x)**2 + (model_states_msg.pose[model_states_indexes['"
+            + object_
+            + "']].position.y -"
+            + "model_states_msg.pose[model_states_indexes['"
+            + object2
+            + "']].position.y)**2 + (model_states_msg.pose[model_states_indexes['"
+            + object_
+            + "']].position.z - model_states_msg.pose[model_states_indexes['"
+            + object2
+            + "']].position.z)**2)**(1/2)"
+        )
+    elif func == "distance":
+        object2 = args[0]
+        var_name = object_ + "_" + object2 + "_distance"
+        extract = (
+            "((model_states_msg.pose[model_states_indexes['"
+            + object_
+            + "']].position.x - model_states_msg.pose[model_states_indexes['"
+            + object2
+            + "']].position.x)**2 + (model_states_msg.pose[model_states_indexes['"
+            + object_
+            + "']].position.y -"
+            + "model_states_msg.pose[model_states_indexes['"
+            + object2
+            + "']].position.y)**2)**(1/2)"
+        )
     ctx.add_var(var_name, extract)
     return "states[0]['" + var_name + "']"
 
@@ -305,6 +339,7 @@ reserved = {
     "position": "POSITION",
     "velocity": "VELOCITY",
     "distance": "DISTANCE",
+    "distanceZ": "DISTANCEZ",
     "localization_error": "LOCALIZATION_ERROR",
     "orientation": "ORIENTATION",
 }
