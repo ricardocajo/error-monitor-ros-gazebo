@@ -315,7 +315,7 @@ class Node:
 
 
 # The default functions of the language
-funcs = ["position", "velocity", "distance", "localization_error", "orientation"]
+funcs = ["position", "velocity", "distance", "localization_error"]
 
 # The tokens of the language
 
@@ -341,7 +341,6 @@ reserved = {
     "distance": "DISTANCE",
     "distanceZ": "DISTANCEZ",
     "localization_error": "LOCALIZATION_ERROR",
-    "orientation": "ORIENTATION",
 }
 
 literals = [

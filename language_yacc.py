@@ -86,8 +86,7 @@ def p_func_main(p):
     | VELOCITY
     | DISTANCE
     | DISTANCEZ
-    | LOCALIZATION_ERROR
-    | ORIENTATION"""
+    | LOCALIZATION_ERROR"""
     p[0] = p[1]
 
 

@@ -69,15 +69,27 @@ For any comparison operator X: X{y} - the values being compared will have an err
 ### UsefullPredicates
 X.position - The position of the robot in the simulation
 
-X.position.y - The position in the y axis of the robot in the simulation
+X.position.y - The position in the y axis of the robot in the simulation (also works for x and z)
 
-X.distance.Y - The absolute distance between two objects in the simulation
+X.distance.Y - The absolute distance between two objects in the simulation (x and y axis)
 
-X.orientation - The orientation of a object in the simulation
+X.distanceZ.Y - The absolute distance between two objects in the simulation (x, y and z axis)
 
-X.velocity - The velocity of a object in the simulation
+X.velocity - The velocity of an object in the simulation (this refers to linear velocity)
+
+X.velocity.x - The velocity in the x axis of an object in the simulation (this refers to linear velocity)
 
 X.localization_error - The difference between the robot perception of its position and the actual position in the simulation
+
+*Yet to implement:*
+
+X.orientation - The orientation of an object in the simulation
+
+X.orientation_between.Y - The orientation difference between two objects in the simulation
+
+X.velocity_error - The difference between the robot perception of its velocity and the actual velocity in the simulation (this refers to linear velocity)
+
+X.velocity_angular - The angular velocity of an object in the simulation
 
 ### Examples
 
@@ -218,7 +230,7 @@ always after robot1.distance.stop_sign1 < 2 and robot1.orientation - stop_sign1.
 
 #### Q2. Do you think these errors could be somewhat described by a property of the robot in relation to its environment? Is there any exception? (Give a property example if needed)
 
-*Give a brief introduction of the work (follow readme introduction)*
+*Give a brief introduction of the work (follow script from introduction(#introduction))*
 
 #### Q3. Do you think the DSL covers all before mentioned possible properties? Is there any exception?
 
