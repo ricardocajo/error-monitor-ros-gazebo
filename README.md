@@ -15,7 +15,9 @@
 ## Introduction
 
 The development came from the idea of aliviating the burden of human interaction when testing a robotic system.
-*EXEMPLE OF THE STOP SIGN*
+*EXAMPLE OF THE STOP SIGN*
+
+https://user-images.githubusercontent.com/82663158/167411416-633afeb7-2cfd-4f95-b5da-e4069575dcd8.mp4
 
 ## Installs
 This project was made using Ubuntu 20.04 in a virtual environment. For this reason, specific versions of the following software were installed. You might want to adjust it to your operating system, versions, or preferences.
