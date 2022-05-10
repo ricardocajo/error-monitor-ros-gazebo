@@ -1,29 +1,43 @@
-# Simulation Monitor Compiler
-  This repository provides a convenient DSL (Domain Specific Language) for specifying robots' expected behavior, as well as the respective compiler to monitor these behaviors while in a simulation.
+# Error Monitor using ros + gazebo
+  The project contemplates a DSL (Domain Specific Language) for specifying robots' expected behavior, as well as the respective compiler that generates code to monitor these behaviors while in a gazebo simulation.
 
 ## Table of contents
 * [Introduction](#introduction)
 * [Installs](#installs)
 * [Language](#language)
     * [Operators](#operators)
-    * [ProtectedVariables](#protectedvariables)
-    * [UsefullPredicates](#usefullpredicates)
+    * [Protected-Variables](#protected-variables)
+    * [Usefull-Predicates](#usefull-predicates)
     * [Examples](#examples)
     * [Grammar](#grammar)
 * [Assessment](#assessment)
 
 ## Introduction
 
-The development came from the idea of aliviating the burden of human interaction when testing a robotic system.
-*EXAMPLE OF THE STOP SIGN*
+The project came primarily from the idea of alleviating the burden of human interaction when testing a robotic system, as well as allowing non-specialized people to declare the system tests.
 
+Imagine your company is developing software for a self-driving car.
+While your engineers work on the actual software, some other stakeholders could be modeling the robots' expected properties.
+
+For instance, they'll always want the robot to stop at a stop sign. In this case, using the DSL they would write something like:
+```
+_margin_ = 0.01
+after_until turtlebot3_burger.distance.stop_sign2 < 1, turtlebot3_burger.distance.stop_sign2 > 1, eventually turtlebot3_burger.velocity == 0
+```
+Translating to a more human language we are saying that, after the turtlebot3 distance to the stop-sign2 is below the value of 1 in the simulator, up until the distance is again above 1, the turtlebot3 velocity will eventually be equal to 0.
+
+When compiling the above property a python file capable of monitoring said property will be generated.
+
+Now when the robot runs in a simulator we can monitor the described property.
+
+The robot doesn't stop at the stop sign:
 ![no_stop](https://user-images.githubusercontent.com/82663158/167421559-9acebddb-9370-40ff-8912-058f7edb3b79.gif)
-
+Output when the robot exceeds a distance of 1 to the sign:
 ![err](https://user-images.githubusercontent.com/82663158/167425264-b1395455-b6f9-4f04-aba0-1aebefcd3ec7.png)
 
-
+The robot stops at the stop sign:
 ![stop](https://user-images.githubusercontent.com/82663158/167421668-622e7ca9-ee6d-434e-baf9-44b7d33d0fe1.gif)
-
+Output when the simulation ends:
 ![tout](https://user-images.githubusercontent.com/82663158/167425226-f86592de-c532-4c79-bf0d-342150872dff.png)
 
 ## Installs
@@ -34,29 +48,27 @@ In this project Gazebo was chosen as the simulation software, if you want to use
 ### ROS
 To install ROS follow the link [ros_install](http://wiki.ros.org/ROS/Installation) and have in mind your own specifications. While making this project ROS noetic was used.
 
-
 To create a ROS workspace on your computer to be able to run ROS projects follow the link [ros_workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
 
 ### Gazebo
 To install Gazebo in Ubuntu through the command line follow the link [gazebo_install](http://gazebosim.org/tutorials?tut=install_ubuntu). For any other method of installation follow the documentation on the official site [Gazebo](http://gazebosim.org/)
 
-
 ## Language
 
 ### Operators
-always X - X has to hold on the entire subsequent path
+`always X` - X has to hold on the entire subsequent path
 
-never X - X never holds on the entire subsequent path
+`never X` - X never holds on the entire subsequent path
 
-eventually X - X eventually has to hold, somewhere on the subsequent path
+`eventually X` - X eventually has to hold, somewhere on the subsequent path
 
-after X, Y - after the event X is observed, Y has to hold on the entire subsequent path
+`after X, Y` - after the event X is observed, Y has to hold on the entire subsequent path
 
-until X, Y - X holds at the current or future position, and Y has to hold until that position. At that position Y does not have to hold any more
+`until X, Y` - X holds at the current or future position, and Y has to hold until that position. At that position Y does not have to hold any more
 
-after_until X, Y, Z - after the event X is observed, Z has to hold on the entire subsequent path up until Y happens, at that position Z does not have to hold anymore
+`after_until X, Y, Z` - after the event X is observed, Z has to hold on the entire subsequent path up until Y happens, at that position Z does not have to hold anymore
 
-@{X, -Y} - the value of the variable X in the point in time -Y
+`@{X, -Y}` - the value of the variable X in the point in time -Y
 
 X = Y
 
@@ -66,29 +78,29 @@ X + Y | X - Y | X * Y | X / Y
 
 X == Y | X != Y | X > Y | X >= Y | X < Y | X <= Y
 
-For any comparison operator X: X{y} - the values being compared will have an error margin of y (Example: X =={0.05} Y)
+For any comparison operator X: `X{y}` - the values being compared will have an error margin of y (Example: X =={0.05} Y)
 
-### ProtectedVariables
-\_rate_ - Set the frame rate which properties are checked (By default the rate is 30hz)
+### Protected-Variables
+`\_rate_` - Set the frame rate which properties are checked (By default the rate is 30hz)
 
-\_timeout_ - Set the timeout for how long the verification will last (By default the timeout is 100 seconds)
+`\_timeout_` - Set the timeout for how long the verification will last (By default the timeout is 100 seconds)
 
-\_margin_ - Set the error margin for comparisons
+`\_margin_` - Set the error margin for comparisons
 
-### UsefullPredicates
-X.position - The position of the robot in the simulation
+### Usefull-Predicates
+`X.position` - The position of the robot in the simulation
 
-X.position.y - The position in the y axis of the robot in the simulation (also works for x and z)
+`X.position.y` - The position in the y axis of the robot in the simulation (also works for x and z)
 
-X.distance.Y - The absolute distance between two objects in the simulation (x and y axis)
+`X.distance.Y` - The absolute distance between two objects in the simulation (x and y axis)
 
-X.distanceZ.Y - The absolute distance between two objects in the simulation (x, y and z axis)
+`X.distanceZ.Y` - The absolute distance between two objects in the simulation (x, y and z axis)
 
-X.velocity - The velocity of an object in the simulation (this refers to linear velocity)
+`X.velocity` - The velocity of an object in the simulation (this refers to linear velocity)
 
-X.velocity.x - The velocity in the x axis of an object in the simulation (this refers to linear velocity)
+`X.velocity.x` - The velocity in the x axis of an object in the simulation (this refers to linear velocity)
 
-X.localization_error - The difference between the robot perception of its position and the actual position in the simulation
+`X.localization_error` - The difference between the robot perception of its position and the actual position in the simulation
 
 *Yet to implement:*
 
@@ -115,7 +127,7 @@ eventually robot1.velocity > 2.0
 decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
 decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 
-after drone.position.z > 5, rotor1_vel =={0.2} rotor2_vel until drone.position.z < 5
+after_until drone.position.z > 5, drone.position.z < 5, rotor1_vel =={0.2} rotor2_vel
 ```
 
 #### The localization error (difference between the robot perception of its location and the simulation actual location) of the robot's is never above a certain value:
@@ -139,9 +151,19 @@ robot_ori_prev3 = @{robot_ori, -3}
 never robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or robot_ori - robot_ori_prev3 > 12
 ```
 
-#### A robot always stops at the stop sign:
+#### The car always stops at the stop sign:
 ```
-always after robot1.distance.stop_sign1 < 2 and robot1.orientation - stop_sign1.orientation < 90, eventually robot1.velocity <= 0 until robot1.distance.stop_sign1 > 2 or robot1.orientation - stop_sign1.orientation > 90
+always after_until car1.distance.stop_sign2 < 1, car1.distance.stop_sign2 > 1, eventually car1.velocity =={0.01} 0
+```
+
+#### A car is never at less than X distance from another car
+```
+always car1.distance.car > 0.35
+```
+
+#### Car1 being above 1 velocity implies that car2 is at least at 0.8 distance from car1. Up until they reach a certain location.
+```
+until (car1.position.x > 45 and car1.position.y > 45), always (car1.velocity > 1 implies car2.distance.car1 > 0.8)
 ```
 
 ### Grammar
@@ -239,7 +261,7 @@ always after robot1.distance.stop_sign1 < 2 and robot1.orientation - stop_sign1.
 
 #### Q2. Do you think these errors could be somewhat described by a property of the robot in relation to its environment? Is there any exception? (Give a property example if needed)
 
-*Give a brief introduction of the work (follow script from introduction(#introduction))*
+*Give a brief introduction of the work (follow script from [introduction](#introduction))*
 
 #### Q3. Do you think the DSL covers all before mentioned possible properties? Is there any exception?
 
