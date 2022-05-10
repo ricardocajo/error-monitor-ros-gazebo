@@ -31,13 +31,19 @@ When compiling the above property a python file capable of monitoring said prope
 Now when the robot runs in a simulator we can monitor the described property.
 
 The robot doesn't stop at the stop sign:
+
 ![no_stop](https://user-images.githubusercontent.com/82663158/167421559-9acebddb-9370-40ff-8912-058f7edb3b79.gif)
+
 Output when the robot exceeds a distance of 1 to the sign:
+
 ![err](https://user-images.githubusercontent.com/82663158/167425264-b1395455-b6f9-4f04-aba0-1aebefcd3ec7.png)
 
 The robot stops at the stop sign:
+
 ![stop](https://user-images.githubusercontent.com/82663158/167421668-622e7ca9-ee6d-434e-baf9-44b7d33d0fe1.gif)
+
 Output when the simulation ends:
+
 ![tout](https://user-images.githubusercontent.com/82663158/167425226-f86592de-c532-4c79-bf0d-342150872dff.png)
 
 ## Installs
@@ -70,22 +76,22 @@ To install Gazebo in Ubuntu through the command line follow the link [gazebo_ins
 
 `@{X, -Y}` - the value of the variable X in the point in time -Y
 
-X = Y
+`X = Y`
 
-X implies Y    X and Y    X or Y
+`X implies Y`    `X and Y`    `X or Y`
 
-X + Y | X - Y | X * Y | X / Y
+`X + Y`    `X - Y`    `X * Y`    `X / Y`
 
-X == Y | X != Y | X > Y | X >= Y | X < Y | X <= Y
+`X == Y`    `X != Y`    `X > Y`    `X >= Y`    `X < Y`    `X <= Y`
 
 For any comparison operator X: `X{y}` - the values being compared will have an error margin of y (Example: X =={0.05} Y)
 
 ### Protected-Variables
-`\_rate_` - Set the frame rate which properties are checked (By default the rate is 30hz)
+`_rate_` - Set the frame rate which properties are checked (By default the rate is 30hz)
 
-`\_timeout_` - Set the timeout for how long the verification will last (By default the timeout is 100 seconds)
+`_timeout_` - Set the timeout for how long the verification will last (By default the timeout is 100 seconds)
 
-`\_margin_` - Set the error margin for comparisons
+`_margin_` - Set the error margin for comparisons
 
 ### Usefull-Predicates
 `X.position` - The position of the robot in the simulation
@@ -104,13 +110,13 @@ For any comparison operator X: `X{y}` - the values being compared will have an e
 
 *Yet to implement:*
 
-X.orientation - The orientation of an object in the simulation
+`X.orientation` - The orientation of an object in the simulation
 
-X.orientation_between.Y - The orientation difference between two objects in the simulation
+`X.orientation_between.Y` - The orientation difference between two objects in the simulation
 
-X.velocity_error - The difference between the robot perception of its velocity and the actual velocity in the simulation (this refers to linear velocity)
+`X.velocity_error` - The difference between the robot perception of its velocity and the actual velocity in the simulation (this refers to linear velocity)
 
-X.velocity_angular - The angular velocity of an object in the simulation
+`X.velocity_angular` - The angular velocity of an object in the simulation
 
 ### Examples
 
