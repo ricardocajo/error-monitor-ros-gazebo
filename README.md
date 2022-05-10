@@ -154,7 +154,7 @@ robot_ori_prev1 = @{robot_ori, -1}
 robot_ori_prev2 = @{robot_ori, -2}
 robot_ori_prev3 = @{robot_ori, -3}
 
-never robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or robot_ori - robot_ori_prev3 > 12
+never (robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or robot_ori - robot_ori_prev3 > 12)
 ```
 
 #### The car always stops at the stop sign:
@@ -263,16 +263,18 @@ until (car1.position.x > 45 and car1.position.y > 45), always (car1.velocity > 1
 
 ## Assessment
 
+[Google Form](https://docs.google.com/forms/d/e/1FAIpQLSe9FAW0o-U1JwjH5vFV_AedoVMDs6if2MxSOvHW1SzA15ZmWg/viewform?usp=sf_link)
+
 #### Q1. What kind of errors do you often found when developing a robot?
 
 #### Q2. Do you think these errors could be somewhat described by a property of the robot in relation to its environment? Is there any exception? (Give a property example if needed)
 
 *Give a brief introduction of the work (follow script from [introduction](#introduction))*
 
-#### Q3. Do you think the DSL covers all before mentioned possible properties? Is there any exception?
+#### Q3. Do you think the DSL covers all before thought possible properties? Is there any exception?
 
 #### Q4. What's your opinion on the intuitiveness of the DSL?
 
 #### Q5. Would this DSL or an improvement be useful in your current work? If yes, do you think the learning/maintenance would be worth the hassle?
 
-#### Q6. What's your opinion on the helpfulness of some type of integration between the DSL and Gzscenic? (Only for Afsoon)
+#### Q6. What's your opinion on the helpfulness of some type of integration between the DSL and Gzscenic? (Question for Afsoon)
