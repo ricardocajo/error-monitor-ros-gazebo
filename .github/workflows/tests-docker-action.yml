@@ -4,7 +4,6 @@ jobs:
   tests-docker:
     runs-on: ubuntu-20.04
     steps:
-      - run: cd /rcordeiro/sim_monitor_compiler
-      - run: git pull
+      - run: echo "Test"
       - run: docker build -t test .
       - run: docker run test python3.8 unit_tests/unit_test.py
