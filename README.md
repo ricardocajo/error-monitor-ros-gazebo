@@ -278,3 +278,8 @@ until (car1.position.x > 45 and car1.position.y > 45), always (car1.velocity > 1
 #### Q5. Would this DSL or an improvement be useful in your current work? If yes, do you think the learning/maintenance would be worth the hassle?
 
 #### Q6. What's your opinion on the helpfulness of some type of integration between the DSL and Gzscenic? (Question for Afsoon)
+
+## Dockerfile
+```
+docker build --build-arg robot=ROBOT_NAME -t IMAGE_NAME .
+```

@@ -1,11 +1,26 @@
-FROM therobotcooperative/turtlebot3
+ARG robot
 
-WORKDIR /
+FROM therobotcooperative/${robot}
 
-COPY . /sim_monitor_compiler
+#Copy the repo to the image
+COPY . /error-monitor-ros-gazebo
 
-#Install python3.8
+#Install dependencies to run teleop
 RUN apt-get update \
+    && apt-get install -y --allow-unauthenticated ros-${ROS_DISTRO}-gazebo-ros-pkgs ros-${ROS_DISTRO}-gazebo-ros-control
+#TODO remove after pull request accepted
+
+#create test_pkg
+RUN cd /ros_ws/src \
+    && catkin_create_pkg test_pkg std_msgs rospy \
+    && cd .. \
+    && . /opt/ros/${ROS_DISTRO}/setup.sh \
+    && eval "catkin_make -DCMAKE_EXPORT_COMPILE_COMMANDS=1"
+#TODO build method is dependent on robots ${BUILD_COMMAND}
+
+#install python 3.8
+RUN cd .. \
+    && apt-get update \
     && wget https://www.python.org/ftp/python/3.8.0/Python-3.8.0.tgz \
     && tar -xf Python-3.8.0.tgz \
     && cd Python-3.8.0 \
@@ -20,13 +35,3 @@ RUN apt-get update \
     requests \
     ply \
     && python -m pip install colorama
-
-WORKDIR /ros_ws/src
-
-#Create ros package to run tests
-RUN catkin_create_pkg test_pkg std_msgs rospy \
-    && cd .. \
-    && . /opt/ros/${ROS_DISTRO}/setup.sh \
-    && eval "catkin_make -DCMAKE_EXPORT_COMPILE_COMMANDS=1"
-
-WORKDIR /

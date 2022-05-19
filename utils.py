@@ -62,7 +62,7 @@ class CompileContext:
         self.properties = []
         self.property_counter = 1
         self.temporal_size = 1
-        self.rate = 30
+        self.rate = 1000
         self.timeout = 100
         self.eventually = 0
         self.eventually_aux = 0
@@ -208,14 +208,14 @@ def sim_funcs(object_, func, args, ctx):
         var_name = object_ + "_velocity_" + "_".join(args) + "_var_sim"
         if args == []:
             extract = (
-                "(model_states_msg.twist[model_states_indexes['"
+                "((model_states_msg.twist[model_states_indexes['"
                 + object_
-                + "']].linear.x**2 + model_states_msg.twist[model_states_indexes['"
+                + "']].linear.x)**2 + (model_states_msg.twist[model_states_indexes['"
                 + object_
-                + "']].linear.y**2 + model_states_msg.twist[model_states_indexes['"
+                + "']].linear.y)**2 + (model_states_msg.twist[model_states_indexes['"
                 + object_
-                + "']].linear.z**2"
-                + ")**(1/2)"
+                + "']].linear.z)**2"
+                + ")**(0.5)"
             )
         else:
             extract = (
@@ -246,7 +246,7 @@ def sim_funcs(object_, func, args, ctx):
             + object_
             + "_position_msg."
             + args
-            + ".z)**2)**(1/2)"
+            + ".z)**2)**(0.5)"
         )
     elif func == "distanceZ":
         object2 = args[0]
@@ -265,7 +265,7 @@ def sim_funcs(object_, func, args, ctx):
             + object_
             + "']].position.z - model_states_msg.pose[model_states_indexes['"
             + object2
-            + "']].position.z)**2)**(1/2)"
+            + "']].position.z)**2)**(0.5)"
         )
     elif func == "distance":
         object2 = args[0]
@@ -280,7 +280,7 @@ def sim_funcs(object_, func, args, ctx):
             + "']].position.y -"
             + "model_states_msg.pose[model_states_indexes['"
             + object2
-            + "']].position.y)**2)**(1/2)"
+            + "']].position.y)**2)**(0.5)"
         )
     ctx.add_var(var_name, extract)
     return "states[0]['" + var_name + "']"
