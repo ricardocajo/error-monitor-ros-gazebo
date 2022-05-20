@@ -1,15 +1,18 @@
 # Error Monitor using ros + gazebo
   The project contemplates a DSL (Domain Specific Language) for specifying robots' expected behavior, as well as the respective compiler that generates code to monitor these behaviors while in a gazebo simulation.
+  (if you want to use some other simulator be aware that you will need to declare all the topics to use, the default functions like 'position' or 'velocity' are based on the Gazebo simulator)
 
 ## Table of contents
 * [Introduction](#introduction)
-* [Installs](#installs)
 * [Language](#language)
     * [Operators](#operators)
     * [Protected-Variables](#protected-variables)
     * [Usefull-Predicates](#usefull-predicates)
     * [Examples](#examples)
     * [Grammar](#grammar)
+* [Testing](#testing)
+    * [Docker](#docker)
+    * [Local](#local)
 * [Assessment](#assessment)
 
 ## Introduction
@@ -45,19 +48,6 @@ The robot stops at the stop sign:
 Output when the simulation ends:
 
 ![tout](https://user-images.githubusercontent.com/82663158/167425226-f86592de-c532-4c79-bf0d-342150872dff.png)
-
-## Installs
-This project was made using Ubuntu 20.04 in a virtual environment. For this reason, specific versions of the following software were installed. You might want to adjust it to your operating system, versions, or preferences.
-
-In this project Gazebo was chosen as the simulation software, if you want to use some other simulator be aware that you will need to declare all the topics to use, the default functions like 'position' or 'velocity' are based on the Gazebo simulator.
-
-### ROS
-To install ROS follow the link [ros_install](http://wiki.ros.org/ROS/Installation) and have in mind your own specifications. While making this project ROS noetic was used.
-
-To create a ROS workspace on your computer to be able to run ROS projects follow the link [ros_workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
-
-### Gazebo
-To install Gazebo in Ubuntu through the command line follow the link [gazebo_install](http://gazebosim.org/tutorials?tut=install_ubuntu). For any other method of installation follow the documentation on the official site [Gazebo](http://gazebosim.org/)
 
 ## Language
 
@@ -261,25 +251,65 @@ until (car1.position.x > 45 and car1.position.y > 45), always (car1.velocity > 1
  <temporalvalue> → @ { name , integer }
 ```
 
+## Testing
+
+### Docker
+You can test the monitor running alongside Gazebo and ROS without installing anything more than docker and a vnc viewer.
+In this methodology we take advantage of the [TheRobotCooperative](https://github.com/TheRobotCooperative/TheRobotCooperative) repository to build the docker image, every robot present in the repository can be tested.
+You can install TigerVNC in Ubuntu with the command:
+```
+$ apt-get install tigervnc-viewer
+```
+
+Start by cloning the [TheRobotCooperative](https://github.com/TheRobotCooperative/TheRobotCooperative) repository, change to the ros1 directory, and create the docker image for a specific robot:
+```
+$ git clone https://github.com/TheRobotCooperative/TheRobotCooperative.git
+TheRobotCooperative/ros1$ make turtlebot3
+```
+
+Build the image of the previous robot with all the project dependencies
+```
+error-monitor-ros-gazebo$ docker build --build-arg robot=turtlebot3 -t turtlebot3_image_name .
+```
+
+Run the docker image and [start the vnc viewer](https://github.com/TheRobotCooperative/TheRobotCooperative#using-vnc-to-provide-visualisation):
+```
+$ docker run --rm -it turtlebot3_image_name
+```
+
+Inside the vnc viewer create a file with the properties to monitor. Then open a terminal and compile it to generate the monitor file: (make sure to use the python3.8 version for it is necessary for the compilation)
+```
+error-monitor-ros-gazebo$ python3.8 language.py test.txt /ros_ws/src/test_pkg/src
+```
+
+Run the Gazebo simulator (the 1st time might take a while), the monitor node, and the teleop node to command the robot: (in separate terminals)
+```
+$ export TURTLEBOT3_MODEL="burger"
+$ roslaunch turtlebot3_gazebo turtlebot3_house.launch
+```
+```
+$ rosrun test_pkg test.py
+```
+```
+$ export TURTLEBOT3_MODEL="burger"
+$ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
+```
+
+### Local
+You will need to adjust versions of the below software depending on your operating system.
+Some Robots only have support up until some version of the below software.
+
+#### ROS
+To install ROS follow the link [ros_install](http://wiki.ros.org/ROS/Installation) and have in mind your operating system.
+
+To create a ROS workspace on your computer to be able to run ROS projects follow the link [ros_workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
+
+#### Gazebo
+To install Gazebo in Ubuntu through the command line follow the link [gazebo_install](http://gazebosim.org/tutorials?tut=install_ubuntu). For any other method of installation follow the documentation on the official site [Gazebo](http://gazebosim.org/).
+
+#### Robots
+TODO
+
 ## Assessment
 
 [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSe9FAW0o-U1JwjH5vFV_AedoVMDs6if2MxSOvHW1SzA15ZmWg/viewform?usp=sf_link)
-
-#### Q1. What kind of errors do you often found when developing a robot?
-
-#### Q2. Do you think these errors could be somewhat described by a property of the robot in relation to its environment? Is there any exception? (Give a property example if needed)
-
-*Give a brief introduction of the work (follow script from [introduction](#introduction))*
-
-#### Q3. Do you think the DSL covers all before thought possible properties? Is there any exception?
-
-#### Q4. What's your opinion on the intuitiveness of the DSL?
-
-#### Q5. Would this DSL or an improvement be useful in your current work? If yes, do you think the learning/maintenance would be worth the hassle?
-
-#### Q6. What's your opinion on the helpfulness of some type of integration between the DSL and Gzscenic? (Question for Afsoon)
-
-## Dockerfile
-```
-docker build --build-arg robot=ROBOT_NAME -t IMAGE_NAME .
-```
