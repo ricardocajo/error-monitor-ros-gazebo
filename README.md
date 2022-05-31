@@ -1,57 +1,38 @@
 # Error Monitor using ros + gazebo
   The project contemplates a DSL (Domain Specific Language) for specifying robots' expected behavior, as well as the respective compiler that generates code to monitor these behaviors while in a gazebo simulation.
-  (if you want to use some other simulator be aware that you will need to declare all the topics to use, the default functions like 'position' or 'velocity' are based on the Gazebo simulator)
 
 ## Table of contents
-* [Introduction](#introduction)
+* [Abstract](#abstract)
 * [Language](#language)
     * [Operators](#operators)
-    * [Protected-Variables](#protected-variables)
     * [Usefull-Predicates](#usefull-predicates)
-    * [Examples](#examples)
+    * [Protected-Variables](#protected-variables)
     * [Grammar](#grammar)
+* [Examples](#examples)
+    * [Stop-Sign](#stop-sign)
+    * [Miscellaneous](#miscellaneous)
 * [Testing](#testing)
     * [Docker](#docker)
     * [Local](#local)
 * [Assessment](#assessment)
 
-## Introduction
+## Abstract
 
-The project came primarily from the idea of alleviating the burden of human interaction when testing a robotic system, as well as allowing non-specialized people to declare the system tests.
+Robotics has a big influence in today's society, so much that a potential failure in a robot may have extraordinary costs, not only financial, but can also cost lives.
 
-Imagine your company is developing software for a self-driving car.
-While your engineers work on the actual software, some other stakeholders could be modeling the robots' expected properties.
+Current practices in robot testing are vast and involve such methods as simulations, log checking, or field tests. The frequent common denominator between these practices is the need for human visualization to determine the correctness of a given behavior.
 
-For instance, they'll always want the robot to stop at a stop sign. In this case, using the DSL they would write something like:
-```
-_margin_ = 0.01
-after_until turtlebot3_burger.distance.stop_sign2 < 1, turtlebot3_burger.distance.stop_sign2 > 1, eventually turtlebot3_burger.velocity == 0
-```
-Translating to a more human language we are saying that, after the turtlebot3 distance to the stop-sign2 is below the value of 1 in the simulator, up until the distance is again above 1, the turtlebot3 velocity will eventually be equal to 0.
+Automating this analysis could not only relieve this burden from a high-skilled engineer, but also allow for massive parallel executions of tests, that could potentially detect behavioral faults in the robots that would otherwise not be found due to human error or lack of time.
 
-When compiling the above property a python file capable of monitoring said property will be generated.
+We have developed a domain-specific language to specify properties of robotic systems in ROS. Specifications written by developers in this language can be compiled to a monitor ROS module, that will detect violations of those properties. We have used this language to express the temporal and positional properties of robots, and we have automated the monitoring of some behavioral violations of robots in relation to their state or events during a simulation.
 
-Now when the robot runs in a simulator we can monitor the described property.
-
-The robot doesn't stop at the stop sign:
-
-![no_stop](https://user-images.githubusercontent.com/82663158/167421559-9acebddb-9370-40ff-8912-058f7edb3b79.gif)
-
-Output when the robot exceeds a distance of 1 to the sign:
-
-![err](https://user-images.githubusercontent.com/82663158/167425264-b1395455-b6f9-4f04-aba0-1aebefcd3ec7.png)
-
-The robot stops at the stop sign:
-
-![stop](https://user-images.githubusercontent.com/82663158/167421668-622e7ca9-ee6d-434e-baf9-44b7d33d0fe1.gif)
-
-Output when the simulation ends:
-
-![tout](https://user-images.githubusercontent.com/82663158/167425226-f86592de-c532-4c79-bf0d-342150872dff.png)
 
 ## Language
 
 ### Operators
+
+The DSL relies on specific operators to express temporal relations between simulation objects
+
 `always X` - X has to hold on the entire subsequent path
 
 `never X` - X never holds on the entire subsequent path
@@ -76,14 +57,10 @@ Output when the simulation ends:
 
 For any comparison operator X: `X{y}` - the values being compared will have an error margin of y (Example: X =={0.05} Y)
 
-### Protected-Variables
-`_rate_` - Set the frame rate which properties are checked (By default the rate is 30hz)
-
-`_timeout_` - Set the timeout for how long the verification will last (By default the timeout is 100 seconds)
-
-`_margin_` - Set the error margin for comparisons
-
 ### Usefull-Predicates
+
+The DSL also has shortcuts to express the absolute values of certain concepts of objects in a simulation
+
 `X.position` - The position of the robot in the simulation
 
 `X.position.y` - The position in the y axis of the robot in the simulation (also works for x and z)
@@ -108,59 +85,15 @@ For any comparison operator X: `X{y}` - the values being compared will have an e
 
 `X.velocity_angular` - The angular velocity of an object in the simulation
 
-### Examples
+### Protected-Variables
 
-#### The robot velocity will be above 2 sometime in the duration of the simulation:
-```
-eventually robot1.velocity > 2.0
-```
+Variable names restricted to set determined monitoring parameters
 
-#### After a drone is at a certain altitude both rotors always have the same velocity up until the drone decreases to a certain altitude
-```
-# The language can't inherently have a way to interact with specific components of a robot
-# like the rotors, because it doesn't know which topic to get information from. The user
-# needs to declare these specific topics to be able to interact with them.
-decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
-decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
+`_rate_` - Set the frame rate which properties are checked (By default the rate is 30hz)
 
-after_until drone.position.z > 5, drone.position.z < 5, rotor1_vel =={0.2} rotor2_vel
-```
+`_timeout_` - Set the timeout for how long the verification will last (By default the timeout is 100 seconds)
 
-#### The localization error (difference between the robot perception of its location and the simulation actual location) of the robot's is never above a certain value:
-```
-# There are a set of specific topics that can be modeled by robot-like "position", "velocity", etc...
-# These will be used by the compiler to call specific functions that need this information
-model robot1:
-    position /odom Odometry.pose.pose.position
-    ;
-
-never robot1.localization error > 0.002
-```
-
-#### A robot never makes a rotation of more than X degrees in a period of time
-```
-robot_ori = robot.orientation
-robot_ori_prev1 = @{robot_ori, -1}
-robot_ori_prev2 = @{robot_ori, -2}
-robot_ori_prev3 = @{robot_ori, -3}
-
-never (robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or robot_ori - robot_ori_prev3 > 12)
-```
-
-#### The car always stops at the stop sign:
-```
-always after_until car1.distance.stop_sign2 < 1, car1.distance.stop_sign2 > 1, eventually car1.velocity =={0.01} 0
-```
-
-#### A car is never at less than X distance from another car
-```
-always car1.distance.car > 0.35
-```
-
-#### Car1 being above 1 velocity implies that car2 is at least at 0.8 distance from car1. Up until they reach a certain location.
-```
-until (car1.position.x > 45 and car1.position.y > 45), always (car1.velocity > 1 implies car2.distance.car1 > 0.8)
-```
+`_margin_` - Set the error margin for comparisons
 
 ### Grammar
 ```
@@ -251,6 +184,85 @@ until (car1.position.x > 45 and car1.position.y > 45), always (car1.velocity > 1
  <temporalvalue> → @ { name , integer }
 ```
 
+## Examples
+
+### Stop-sign
+
+For instance, if we wanted to express that a robot always needs to stop when coming near a stop sign, we could write something like:
+```
+_margin_ = 0.01
+after_until turtlebot3_burger.distance.stop_sign2 < 1, turtlebot3_burger.distance.stop_sign2 > 1, eventually turtlebot3_burger.velocity == 0
+```
+Translating to a more human language we are saying that, after the turtlebot3 distance to the stop-sign2 is below the value of 1 in the simulator, up until the distance is again above 1, the turtlebot3 velocity will eventually be equal to 0.
+
+After compiling the above property a python file capable of monitoring said property will be generated.
+
+#### The robot doesn't stop at the stop sign:
+
+![no_stop](https://user-images.githubusercontent.com/82663158/167421559-9acebddb-9370-40ff-8912-058f7edb3b79.gif)
+
+![err](https://user-images.githubusercontent.com/82663158/167425264-b1395455-b6f9-4f04-aba0-1aebefcd3ec7.png)
+
+#### The robot stops at the stop sign:
+
+![stop](https://user-images.githubusercontent.com/82663158/167421668-622e7ca9-ee6d-434e-baf9-44b7d33d0fe1.gif)
+
+![tout](https://user-images.githubusercontent.com/82663158/167425226-f86592de-c532-4c79-bf0d-342150872dff.png)
+
+### Miscalleneous
+
+#### The robot velocity will be above 2 sometime in the duration of the simulation:
+```
+eventually robot1.velocity > 2.0
+```
+
+#### After a drone is at a certain altitude both rotors always have the same velocity up until the drone decreases to a certain altitude
+```
+# The language can't inherently have a way to interact with specific components of a robot
+# like the rotors, because it doesn't know which topic to get information from. The user
+# needs to declare these specific topics to be able to interact with them.
+decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
+decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
+
+after_until drone.position.z > 5, drone.position.z < 5, rotor1_vel =={0.2} rotor2_vel
+```
+
+#### The localization error (difference between the robot perception of its location and the simulation actual location) of the robot's is never above a certain value:
+```
+# There are a set of specific topics that can be modeled by robot-like "position", "velocity", etc...
+# These will be used by the compiler to call specific functions that need this information
+model robot1:
+    position /odom Odometry.pose.pose.position
+    ;
+
+never robot1.localization error > 0.002
+```
+
+#### A robot never makes a rotation of more than X degrees in a period of time
+```
+robot_ori = robot.orientation
+robot_ori_prev1 = @{robot_ori, -1}
+robot_ori_prev2 = @{robot_ori, -2}
+robot_ori_prev3 = @{robot_ori, -3}
+
+never (robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or robot_ori - robot_ori_prev3 > 12)
+```
+
+#### The car always stops at the stop sign:
+```
+always after_until car1.distance.stop_sign2 < 1, car1.distance.stop_sign2 > 1, eventually car1.velocity =={0.01} 0
+```
+
+#### A car is never at less than X distance from another car
+```
+always car1.distance.car > 0.35
+```
+
+#### Car1 being above 1 velocity implies that car2 is at least at 0.8 distance from car1. Up until they reach a certain location.
+```
+until (car1.position.x > 45 and car1.position.y > 45), always (car1.velocity > 1 implies car2.distance.car1 > 0.8)
+```
+
 ## Testing
 
 ### Docker
@@ -296,19 +308,16 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 ```
 
 ### Local
-You will need to adjust versions of the below software depending on your operating system.
-Some Robots only have support up until some version of the below software.
+You will need to adjust versions of the below software depending on your operating system
+Some Robots only have support up until some version of the below software
 
 #### ROS
-To install ROS follow the link [ros_install](http://wiki.ros.org/ROS/Installation) and have in mind your operating system.
+To install ROS follow the link [ros_install](http://wiki.ros.org/ROS/Installation) and have in mind your operating system
 
 To create a ROS workspace on your computer to be able to run ROS projects follow the link [ros_workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
 
 #### Gazebo
-To install Gazebo in Ubuntu through the command line follow the link [gazebo_install](http://gazebosim.org/tutorials?tut=install_ubuntu). For any other method of installation follow the documentation on the official site [Gazebo](http://gazebosim.org/).
-
-#### Robots
-TODO
+To install Gazebo in Ubuntu through the command line follow the link [gazebo_install](http://gazebosim.org/tutorials?tut=install_ubuntu). For any other method of installation follow the documentation on the official site [Gazebo](http://gazebosim.org/)
 
 ## Assessment
 

@@ -11,7 +11,7 @@ if __name__ == '__main__':
         state, save_states = {}, []
         rate, timeout, start_time = rospy.Rate({{ rate }}), {{ timeout }}, rospy.get_time()
         {% if eventually > 0 -%}
-        eventually = {{'{'}}{% for prop in properties -%}{% if not loop.index == 1 -%},{% endif -%}{% for event in prop.comparisons[5][0] -%}{% if not loop.index == 1 -%},{% endif -%}'{{ event.var }}': [False,'{{'{0}'}}Error at line {{ prop.line }}:{{'{1}'}}\n {{ prop.comparisons[1] }}\n{{'{2}'}}Failing state:{{'{3}'}}\n    {% for var in prop.comparisons[2] -%}{% set index = loop.index+3 -%}{{var}}: {{'{'}}{{index}}{{'}'}}\n    {% endfor -%}'.format(Fore.BLUE,Style.RESET_ALL,Fore.RED,Style.RESET_ALL{% for var in prop.comparisons[3] -%},''{% endfor -%})]{% endfor -%}{% for event in prop.comparisons[5][2] -%},'{{ event.var }}': [False,{{ event.err }}]{% endfor -%}{% endfor -%}{{'}'}}
+        eventually = {{'{'}}{% for prop in properties -%}{% if prop.comparisons[4] %}{% if not loop.index == 1 -%},{% endif -%}{% for event in prop.comparisons[5][0] -%}{% if not loop.index == 1 -%},{% endif -%}'{{ event.var }}': [False,'{{'{0}'}}Error at line {{ prop.line }}:{{'{1}'}}\n {{ prop.comparisons[1] }}\n{{'{2}'}}Failing state:{{'{3}'}}\n    {% for var in prop.comparisons[2] -%}{% set index = loop.index+3 -%}{{var}}: {{'{'}}{{index}}{{'}'}}\n    {% endfor -%}'.format(Fore.BLUE,Style.RESET_ALL,Fore.RED,Style.RESET_ALL{% for var in prop.comparisons[3] -%},''{% endfor -%})]{% endfor -%}{% for event in prop.comparisons[5][2] -%},'{{ event.var }}': [False,{{ event.err }}]{% endfor -%}{% endif -%}{% endfor -%}{{'}'}}
         {% endif -%}
         while not rospy.is_shutdown():
             passed_time = rospy.get_time() - start_time
