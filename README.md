@@ -24,7 +24,7 @@ Current practices in robot testing are vast and involve such methods as simulati
 
 Automating this analysis could not only relieve this burden from a high-skilled engineer, but also allow for massive parallel executions of tests, that could potentially detect behavioral faults in the robots that would otherwise not be found due to human error or lack of time.
 
-We have developed a domain-specific language to specify properties of robotic systems in ROS. Specifications written by developers in this language can be compiled to a monitor ROS module, that will detect violations of those properties. We have used this language to express the temporal and positional properties of robots, and we have automated the monitoring of some behavioral violations of robots in relation to their state or events during a simulation.
+We have developed a domain-specific language to specify the properties of robotic systems in ROS. Specifications written by developers in this language can be compiled to a monitor ROS module, that will detect violations of those properties. We have used this language to express the temporal and positional properties of robots, and we have automated the monitoring of some behavioral violations of robots in relation to their state or events during a simulation.
 
 
 ## Language
@@ -41,7 +41,7 @@ The DSL relies on specific operators to express temporal relations between simul
 
 `after X, Y` - after the event X is observed, Y has to hold on the entire subsequent path
 
-`until X, Y` - X holds at the current or future position, and Y has to hold until that position. At that position Y does not have to hold any more
+`until X, Y` - X holds at the current or future position, and Y has to hold until that position. At that position, Y does not have to hold anymore
 
 `after_until X, Y, Z` - after the event X is observed, Z has to hold on the entire subsequent path up until Y happens, at that position Z does not have to hold anymore
 
@@ -57,9 +57,9 @@ The DSL relies on specific operators to express temporal relations between simul
 
 For any comparison operator X: `X{y}` - the values being compared will have an error margin of y (Example: X =={0.05} Y)
 
-### Usefull-Predicates
+### Useful-Predicates
 
-The DSL also has shortcuts to express the absolute values of certain concepts of objects in a simulation
+The DSL also has shortcuts to express the absolute values of certain useful concepts of objects in a simulation
 
 `X.position` - The position of the robot in the simulation
 
@@ -67,13 +67,13 @@ The DSL also has shortcuts to express the absolute values of certain concepts of
 
 `X.distance.Y` - The absolute distance between two objects in the simulation (x and y axis)
 
-`X.distanceZ.Y` - The absolute distance between two objects in the simulation (x, y and z axis)
+`X.distanceZ.Y` - The absolute distance between two objects in the simulation (x, y, and z axis)
 
 `X.velocity` - The velocity of an object in the simulation (this refers to linear velocity)
 
 `X.velocity.x` - The velocity in the x axis of an object in the simulation (this refers to linear velocity)
 
-`X.localization_error` - The difference between the robot perception of its position and the actual position in the simulation
+`X.localization_error` - The difference between the robot's perception of its position and the actual position in the simulation
 
 *Yet to implement:*
 
@@ -81,7 +81,7 @@ The DSL also has shortcuts to express the absolute values of certain concepts of
 
 `X.orientation_between.Y` - The orientation difference between two objects in the simulation
 
-`X.velocity_error` - The difference between the robot perception of its velocity and the actual velocity in the simulation (this refers to linear velocity)
+`X.velocity_error` - The difference between the robot's perception of its velocity and the actual velocity in the simulation (this refers to linear velocity)
 
 `X.velocity_angular` - The angular velocity of an object in the simulation
 
@@ -227,7 +227,7 @@ decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 after_until drone.position.z > 5, drone.position.z < 5, rotor1_vel =={0.2} rotor2_vel
 ```
 
-#### The localization error (difference between the robot perception of its location and the simulation actual location) of the robot's is never above a certain value:
+#### The localization error (difference between the robot's perception of its location and the simulation actual location) of the robot is never above a certain value:
 ```
 # There are a set of specific topics that can be modeled by robot-like "position", "velocity", etc...
 # These will be used by the compiler to call specific functions that need this information
