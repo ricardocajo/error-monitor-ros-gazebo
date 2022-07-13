@@ -1,5 +1,5 @@
-# Error Monitor using ros + gazebo
-  The project contemplates a DSL (Domain Specific Language) for specifying robots' expected behavior, as well as the respective compiler that generates code to monitor these behaviors while in a gazebo simulation.
+# Error Monitor using ROS + Gazebo
+  The project contemplates a Domain Specific Language (DSL) for specifying robots' expected behavior and the respective compiler that generates code to monitor these behaviors while in a Gazebo simulation.
 
 ## Table of contents
 * [Abstract](#abstract)
@@ -18,32 +18,32 @@
 
 ## Abstract
 
-Robotics has a big influence in today's society, so much that a potential failure in a robot may have extraordinary costs, not only financial, but can also cost lives.
+Robotics has a significant influence in today's society, so much that a potential failure in a robot may have extraordinary costs, not only financial but can also cost lives.
 
 Current practices in robot testing are vast and involve such methods as simulations, log checking, or field tests. The frequent common denominator between these practices is the need for human visualization to determine the correctness of a given behavior.
 
-Automating this analysis could not only relieve this burden from a high-skilled engineer, but also allow for massive parallel executions of tests, that could potentially detect behavioral faults in the robots that would otherwise not be found due to human error or lack of time.
+Automating this analysis can not only relieve the burden from a high-skilled engineer but also allow for massive parallel executions of tests that can detect behavioral faults in the robots. These faults could otherwise not be found due to human error or a lack of time.
 
-We have developed a domain-specific language to specify the properties of robotic systems in ROS. Specifications written by developers in this language can be compiled to a monitor ROS module, that will detect violations of those properties. We have used this language to express the temporal and positional properties of robots, and we have automated the monitoring of some behavioral violations of robots in relation to their state or events during a simulation.
+We have developed a domain-specific language to specify the properties of robotic systems in ROS. Developer written specifications in this language compile to a monitor ROS module that detects violations of those properties in runtime. We have used this language to express the temporal and positional properties of robots, and we have automated the monitoring of some behavioral violations of robots in relation to their state or events during a simulation.
 
 
 ## Language
 
 ### Operators
 
-The DSL relies on specific operators to express temporal relations between simulation objects
+The DSL relies on specific operators to express temporal relations between simulation objects.
 
-`always X` - X has to hold on the entire subsequent path
+`always X` - X has to hold on the entire subsequent path.
 
-`never X` - X never holds on the entire subsequent path
+`never X` - X never holds on the entire subsequent path.
 
-`eventually X` - X eventually has to hold, somewhere on the subsequent path
+`eventually X` - X eventually has to hold somewhere on the subsequent path.
 
-`after X, Y` - after the event X is observed, Y has to hold on the entire subsequent path
+`after X, Y` - after the event X is observed, Y has to hold on the entire subsequent path.
 
-`until X, Y` - X holds at the current or future position, and Y has to hold until that position. At that position, Y does not have to hold anymore
+`until X, Y` - X holds at the current or future position, and Y has to hold until that position. At that position, Y does not have to hold anymore.
 
-`after_until X, Y, Z` - after the event X is observed, Z has to hold on the entire subsequent path up until Y happens, at that position Z does not have to hold anymore
+`after_until X, Y, Z` - after the event X is observed, Z has to hold on the entire subsequent path up until Y happens. At that position, Z does not have to hold anymore.
 
 `@{X, -Y}` - the value of the variable X in the point in time -Y
 
@@ -59,41 +59,41 @@ For any comparison operator X: `X{y}` - the values being compared will have an e
 
 ### Useful-Predicates
 
-The DSL also has shortcuts to express the absolute values of certain useful concepts of objects in a simulation
+The DSL also has shortcuts to express the absolute values of certain useful concepts of objects in a simulation.
 
-`X.position` - The position of the robot in the simulation
+`X.position` - The position of the robot in the simulation.
 
-`X.position.y` - The position in the y axis of the robot in the simulation (also works for x and z)
+`X.position.y` - The position in the y axis of the robot in the simulation (also works for x and z).
 
-`X.distance.Y` - The absolute distance between two objects in the simulation (x and y axis)
+`X.distance.Y` - The absolute distance between two objects in the simulation (x and y-axis).
 
-`X.distanceZ.Y` - The absolute distance between two objects in the simulation (x, y, and z axis)
+`X.distanceZ.Y` - The absolute distance between two objects in the simulation (x, y, and z-axis).
 
-`X.velocity` - The velocity of an object in the simulation (this refers to linear velocity)
+`X.velocity` - The velocity of an object in the simulation (this refers to linear velocity).
 
-`X.velocity.x` - The velocity in the x axis of an object in the simulation (this refers to linear velocity)
+`X.velocity.x` - The velocity in the x-axis of an object in the simulation (this refers to linear velocity).
 
-`X.localization_error` - The difference between the robot's perception of its position and the actual position in the simulation
+`X.localization_error` - The difference between the robot's perception of its position and the actual position in the simulation.
 
 *Yet to implement:*
 
-`X.orientation` - The orientation of an object in the simulation
+`X.orientation` - The orientation of an object in the simulation.
 
-`X.orientation_between.Y` - The orientation difference between two objects in the simulation
+`X.orientation_between.Y` - The orientation difference between two objects in the simulation.
 
-`X.velocity_error` - The difference between the robot's perception of its velocity and the actual velocity in the simulation (this refers to linear velocity)
+`X.velocity_error` - The difference between the robot's perception of its velocity and the actual velocity in the simulation (this refers to linear velocity).
 
-`X.velocity_angular` - The angular velocity of an object in the simulation
+`X.velocity_angular` - The angular velocity of an object in the simulation.
 
 ### Protected-Variables
 
 Variable names restricted to set determined monitoring parameters
 
-`_rate_` - Set the frame rate which properties are checked (By default the rate is 30hz)
+`_rate_` - Set the frame rate which properties are checked (By default, the rate is 30hz).
 
-`_timeout_` - Set the timeout for how long the verification will last (By default the timeout is 100 seconds)
+`_timeout_` - Set the timeout for how long the verification will last (By default, the timeout is 100 seconds).
 
-`_margin_` - Set the error margin for comparisons
+`_margin_` - Set the error margin for comparisons.
 
 ### Grammar
 ```
@@ -193,9 +193,9 @@ For instance, if we wanted to express that a robot always needs to stop when com
 _margin_ = 0.01
 after_until turtlebot3_burger.distance.stop_sign2 < 1, turtlebot3_burger.distance.stop_sign2 > 1, eventually turtlebot3_burger.velocity == 0
 ```
-Translating to a more human language we are saying that, after the turtlebot3 distance to the stop-sign2 is below the value of 1 in the simulator, up until the distance is again above 1, the turtlebot3 velocity will eventually be equal to 0.
+Translating into natural language, the property states in the first section that after the turtlebot3 distance to the stop-sign2 is below the value of 1 in the simulator, and in the second section that up until the distance is again above 1, then in the third section, the turtlebot3 velocity will eventually be equal to 0.
 
-After compiling the above property a python file capable of monitoring said property will be generated.
+After compiling the above property, a python file capable of monitoring said property will be generated.
 
 #### The robot doesn't stop at the stop sign:
 
@@ -216,10 +216,10 @@ After compiling the above property a python file capable of monitoring said prop
 eventually robot1.velocity > 2.0
 ```
 
-#### After a drone is at a certain altitude both rotors always have the same velocity up until the drone decreases to a certain altitude
+#### After a drone is at a certain altitude, both rotors always have the same velocity up until the drone decreases to a certain altitude
 ```
-# The language can't inherently have a way to interact with specific components of a robot
-# like the rotors, because it doesn't know which topic to get information from. The user
+# The language cannot inherently have a way to interact with specific components of a robot
+# like the rotors because it does not know which topic to get information from. The user
 # needs to declare these specific topics to be able to interact with them.
 decl rotor1_vel /drone_mov/rotor1 Vector3.linear.x
 decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
@@ -227,10 +227,10 @@ decl rotor2_vel /drone_mov/rotor2 Vector3.linear.x
 after_until drone.position.z > 5, drone.position.z < 5, rotor1_vel =={0.2} rotor2_vel
 ```
 
-#### The localization error (difference between the robot's perception of its location and the simulation actual location) of the robot is never above a certain value:
+#### The localization error (difference between the robot's perception of its location and the actual simulation location) of the robot is never above a specific value:
 ```
 # There are a set of specific topics that can be modeled by robot-like "position", "velocity", etc...
-# These will be used by the compiler to call specific functions that need this information
+# The compiler will use these to call specific functions that need this information
 model robot1:
     position /odom Odometry.pose.pose.position
     ;
@@ -250,7 +250,7 @@ never (robot_ori - robot_ori_prev1 > 12 or robot_ori - robot_ori_prev2 > 12 or r
 
 #### The car always stops at the stop sign:
 ```
-always after_until car1.distance.stop_sign2 < 1, car1.distance.stop_sign2 > 1, eventually car1.velocity =={0.01} 0
+after_until car1.distance.stop_sign2 < 1, car1.distance.stop_sign2 > 1, eventually car1.velocity =={0.01} 0
 ```
 
 #### A car is never at less than X distance from another car
@@ -258,7 +258,7 @@ always after_until car1.distance.stop_sign2 < 1, car1.distance.stop_sign2 > 1, e
 always car1.distance.car > 0.35
 ```
 
-#### Car1 being above 1 velocity implies that car2 is at least at 0.8 distance from car1. Up until they reach a certain location.
+#### Car1 being above 1 velocity implies that car2 is at least at 0.8 distance from car1 up until they reach a specific location.
 ```
 until (car1.position.x > 45 and car1.position.y > 45), always (car1.velocity > 1 implies car2.distance.car1 > 0.8)
 ```
@@ -266,9 +266,9 @@ until (car1.position.x > 45 and car1.position.y > 45), always (car1.velocity > 1
 ## Testing
 
 ### Docker
-You can test the monitor running alongside Gazebo and ROS without installing anything more than docker and a vnc viewer.
-In this methodology we take advantage of the [TheRobotCooperative](https://github.com/TheRobotCooperative/TheRobotCooperative) repository to build the docker image, every robot present in the repository can be tested.
-You can install TigerVNC in Ubuntu with the command:
+It is possible to test the monitor running alongside Gazebo and ROS without installing anything more than docker and a VNC viewer.
+In this methodology, we take advantage of the [TheRobotCooperative](https://github.com/TheRobotCooperative/TheRobotCooperative) repository to build the docker images. Every robot present in the repository can be tested.
+Install TigerVNC in Ubuntu with the command:
 ```
 $ apt-get install tigervnc-viewer
 ```
@@ -284,17 +284,17 @@ Build the image of the previous robot with all the project dependencies
 error-monitor-ros-gazebo$ docker build --build-arg robot=turtlebot3 -t turtlebot3_image_name .
 ```
 
-Run the docker image and [start the vnc viewer](https://github.com/TheRobotCooperative/TheRobotCooperative#using-vnc-to-provide-visualisation):
+Run the docker image and [start the VNC viewer](https://github.com/TheRobotCooperative/TheRobotCooperative#using-vnc-to-provide-visualisation):
 ```
 $ docker run --rm -it turtlebot3_image_name
 ```
 
-Inside the vnc viewer create a file with the properties to monitor. Then open a terminal and compile it to generate the monitor file: (make sure to use the python3.8 version for it is necessary for the compilation)
+Inside the VNC viewer, create a file with the properties to monitor. Then open a terminal and compile it to generate the monitor file: (make sure to use the python3.8 version for it is necessary for the compilation)
 ```
 error-monitor-ros-gazebo$ python3.8 language.py test.txt /ros_ws/src/test_pkg/src
 ```
 
-Run the Gazebo simulator (the 1st time might take a while), the monitor node, and the teleop node to command the robot: (in separate terminals)
+Run the Gazebo simulator (the first time might take a while), the monitor node, and the teleop node to command the robot: (in separate terminals)
 ```
 $ export TURTLEBOT3_MODEL="burger"
 $ roslaunch turtlebot3_gazebo turtlebot3_house.launch
@@ -308,16 +308,16 @@ $ roslaunch turtlebot3_teleop turtlebot3_teleop_key.launch
 ```
 
 ### Local
-You will need to adjust versions of the below software depending on your operating system
-Some Robots only have support up until some version of the below software
+There is a need to adjust versions of the below software depending on your operating system.
+Some Robots only have support up until some version of the below software.
 
 #### ROS
-To install ROS follow the link [ros_install](http://wiki.ros.org/ROS/Installation) and have in mind your operating system
+To install ROS, follow the link [ros_install](http://wiki.ros.org/ROS/Installation) and have in mind your operating system
 
-To create a ROS workspace on your computer to be able to run ROS projects follow the link [ros_workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
+To create a ROS workspace on your computer to be able to run ROS projects, follow the link [ros_workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace)
 
 #### Gazebo
-To install Gazebo in Ubuntu through the command line follow the link [gazebo_install](http://gazebosim.org/tutorials?tut=install_ubuntu). For any other method of installation follow the documentation on the official site [Gazebo](http://gazebosim.org/)
+To install Gazebo in Ubuntu through the command line, follow the link [gazebo_install](http://gazebosim.org/tutorials?tut=install_ubuntu). For any other method of installation, follow the documentation on the official site [Gazebo](http://gazebosim.org/)
 
 ## Assessment
 
