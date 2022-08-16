@@ -436,8 +436,12 @@ def compile_py(
             event_bool_l or event_bool_r,
             [event_l[0] + event_r[0], event_l[1] + event_r[1], event_l[2] + event_r[2]],
         )
-    elif node.type == "operand" or node.type == "operand_name":
+    elif node.type == "operand":
         return compile_py(node.args[0], ctx)
+    elif node.type == "operand_name":
+        var_name, *_ = compile_py(node.args[0], ctx)
+        new_var_name = "states[0]['" + var_name + "']"
+        return (new_var_name, *_)
     elif node.type == "operand_paren":
         expr, state, err1, err2, event_bool, event = compile_py(node.args[0], ctx)
         return "(" + expr + ")", "(" + state + ")", err1, err2, event_bool, event
